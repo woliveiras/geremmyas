@@ -65,11 +65,14 @@ safe_copy() {
 }
 
 # Copy a directory tree. Customizable files are preserved unless --force.
-# Usage: safe_copy_tree <src_dir> <dest_dir>
+# Usage: safe_copy_tree <src_dir> <dest_dir> [exclude_subdir]
 safe_copy_tree() {
-  local src_dir="$1" dest_dir="$2"
+  local src_dir="$1" dest_dir="$2" exclude_dir="${3:-}"
   find "$src_dir" -type f | while read -r src_file; do
     local rel_path="${src_file#"$src_dir"/}"
+    if [[ -n "$exclude_dir" ]] && [[ "$rel_path" == "$exclude_dir"/* ]]; then
+      continue
+    fi
     if is_customizable "$rel_path" && [[ -f "$dest_dir/$rel_path" ]] && [[ "$FORCE" == "false" ]]; then
       if ! diff -q "$src_file" "$dest_dir/$rel_path" &>/dev/null; then
         warn "Preserved (customized): $dest_dir/$rel_path"
@@ -255,6 +258,88 @@ detect_build_commands() {
     return
   fi
   printf '%s\n' "${lines[@]}"
+}
+
+detect_relevant_instructions() {
+  local files=()
+
+  # Universal — always included
+  files+=("testing.instructions.md")
+  files+=("security.instructions.md")
+
+  # Docker
+  { [[ -f "Dockerfile" ]] || [[ -f "docker-compose.yml" ]] \
+    || [[ -f "docker-compose.yaml" ]] || [[ -f "compose.yml" ]] \
+    || [[ -f "compose.yaml" ]]; } && files+=("docker.instructions.md")
+
+  # JavaScript/TypeScript ecosystem
+  if [[ -f "package.json" ]]; then
+    files+=("typescript.instructions.md")
+    grep -q '"react"' package.json 2>/dev/null && files+=("react.instructions.md")
+    grep -q '"astro"' package.json 2>/dev/null && files+=("astro-mdx.instructions.md")
+    grep -q '"@tanstack/react-query"' package.json 2>/dev/null && files+=("tanstack-query.instructions.md")
+    grep -q '"react-router"' package.json 2>/dev/null && files+=("react-router.instructions.md")
+    grep -q '"tailwindcss"' package.json 2>/dev/null && files+=("tailwind.instructions.md")
+    grep -q '"zod"' package.json 2>/dev/null && files+=("zod.instructions.md")
+    grep -q '"zustand"' package.json 2>/dev/null && files+=("zustand.instructions.md")
+    grep -q '"xstate"' package.json 2>/dev/null && files+=("xstate.instructions.md")
+    grep -qE '"(better-sqlite3|sql\.js|sqlite3)"' package.json 2>/dev/null && files+=("sqlite.instructions.md")
+  fi
+
+  # Go
+  if [[ -f "go.mod" ]]; then
+    files+=("go.instructions.md")
+    grep -q 'mattn/go-sqlite3' go.mod 2>/dev/null && files+=("sqlite.instructions.md")
+  fi
+
+  # Python
+  { [[ -f "pyproject.toml" ]] || [[ -f "requirements.txt" ]]; } && files+=("python.instructions.md")
+
+  # Kotlin/Java (Android)
+  if [[ -f "build.gradle.kts" ]] || [[ -f "build.gradle" ]]; then
+    files+=("kotlin.instructions.md")
+    grep -rqiE '(androidx\.room|sqlite)' . --include='*.gradle*' 2>/dev/null && files+=("sqlite.instructions.md")
+  fi
+
+  # Deduplicate
+  printf '%s\n' "${files[@]}" | sort -u
+}
+
+install_instructions() {
+  local src_dir="$INSTALL_DIR/project/.github/instructions"
+  local dest_dir="./.github/instructions"
+  local relevant skipped=0
+
+  relevant="$(detect_relevant_instructions)"
+
+  # If only universal instructions detected, install all as fallback
+  local specific_count
+  specific_count="$(echo "$relevant" | grep -cvxE '(testing|security)\.instructions\.md' || true)"
+
+  if [[ "$specific_count" -eq 0 ]]; then
+    info "No language/framework detected — installing all instructions."
+    for f in "$src_dir"/*.instructions.md; do
+      [[ -f "$f" ]] || continue
+      safe_copy "$f" "$dest_dir/$(basename "$f")"
+    done
+    return
+  fi
+
+  for f in "$src_dir"/*.instructions.md; do
+    [[ -f "$f" ]] || continue
+    local name
+    name="$(basename "$f")"
+    if echo "$relevant" | grep -qxF "$name"; then
+      safe_copy "$f" "$dest_dir/$name"
+    else
+      ((skipped++)) || true
+    fi
+  done
+
+  if [[ "$skipped" -gt 0 ]]; then
+    info "Skipped $skipped instruction files (not detected in this project)"
+    info "All instructions available at: ~/.copilot-configs/project/.github/instructions/"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -562,8 +647,11 @@ if [[ "$PROJECT" == "true" ]]; then
 
   info "Applying project template to $(pwd)..."
 
-  # Copy .github/ template
-  safe_copy_tree "$INSTALL_DIR/project/.github" "./.github"
+  # Copy .github/ template (instructions installed separately based on detection)
+  safe_copy_tree "$INSTALL_DIR/project/.github" "./.github" "instructions"
+
+  # Install only relevant instruction files
+  install_instructions
 
   # Copy mise.toml template (customizable — preserved on update)
   if [[ ! -f "./mise.toml" ]] || [[ "$FORCE" == "true" ]]; then
@@ -587,7 +675,7 @@ if [[ "$PROJECT" == "true" ]]; then
   if [[ "$CONFIGURE" != "true" ]]; then
     info "  - Configure: ~/.copilot-configs/install.sh --configure"
   fi
-  info "  - Remove instruction files for languages you don't use"
+  info "  - Add more instructions: ls ~/.copilot-configs/project/.github/instructions/"
   info "  - Uncomment tools in mise.toml for your stack"
   info "  - Edit .github/hooks/guardrails-rules.txt to customize guardrails"
   exit 0
