@@ -237,6 +237,8 @@ Recommended organization for future skills:
 | `requirements-interview` | Explore code and clarify requirements before PRD/spec work |
 | `generate-spec` | Fill a structured spec from direct input (no interview) |
 | `task-breakdown` | Convert PRD, specs, or `plan.md` into vertical tasks |
+| `afk-task-triage` | Classify local tasks as AFK/HITL and prepare agent-ready work |
+| `agent-brief` | Create durable local AFK briefs from specs, plans, and tasks |
 | `generate-tests-from-spec` | Generate unit tests from a spec's acceptance criteria |
 | `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
 | `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
@@ -258,6 +260,24 @@ Recommended organization for future skills:
 | `migrate-react-router` | Step-by-step guide for React Router v6 → v7 migration |
 | `model-state-with-xstate` | XState v5 recipes: React integration, actors, testing |
 | `manage-state-with-zustand` | Zustand v5 recipes: middleware setup, immer, XState sync |
+
+#### Local AFK Workflow
+
+AFK delegation is local-first. Use specs, `plan.md`, and `tasks.md` as the
+source of truth instead of GitHub Issues.
+
+1. Use `task-breakdown` to create vertical tasks with `type`, `blocked-by`,
+   acceptance criteria, verification, and an optional brief path.
+2. Use `afk-task-triage` to split broad tasks and classify each open task as
+   `AFK` or `HITL`.
+3. Use `agent-brief` for each AFK-ready task. Briefs live in
+   `specs/YYYY-MM-DD-<feature-slug>/agent-briefs/<task-slug>.md`, or
+   `docs/agent-briefs/YYYY-MM-DD-<task-slug>.md` for repo-level work.
+4. Use `session-handoff` only when transferring conversation state. Use
+   `agent-brief` when preparing an implementation contract for another agent.
+
+Do not create GitHub Issues, labels, or issue-state workflows unless explicitly
+requested.
 
 #### Domain Vocabulary
 

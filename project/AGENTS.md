@@ -51,6 +51,8 @@ Use these paths unless the project already documents a different convention:
 | Feature folder | `specs/YYYY-MM-DD-<feature-slug>/` |
 | Feature plan | `specs/YYYY-MM-DD-<feature-slug>/plan.md` |
 | Feature tasks | `specs/YYYY-MM-DD-<feature-slug>/tasks.md` |
+| AFK agent brief | `specs/YYYY-MM-DD-<feature-slug>/agent-briefs/<task-slug>.md` |
+| Repo-level agent brief | `docs/agent-briefs/YYYY-MM-DD-<task-slug>.md` |
 | Repo-level tasks | `tasks.md` |
 | Bugfix document | `docs/bugfixes/YYYY-MM-DD-<bug-slug>.md` |
 | Postmortem | `docs/postmortems/YYYY-MM-DD-<incident-slug>.md` |
@@ -67,10 +69,13 @@ kebab-case and should describe the user-visible capability or symptom.
 2. Write or update a PRD when the product behavior needs framing.
 3. Use `generate-spec` or `spec-writer` to create a testable spec.
 4. Use `task-breakdown` to create vertical tasks.
-5. Use `vertical-tdd` to implement one behavior at a time.
-6. Use `reviewer` for spec-driven review.
-7. Use `update-docs` when API, architecture, setup, or configuration changed.
-8. Use `git-commit` only after verification and explicit confirmation.
+5. Use `afk-task-triage` when tasks need AFK/HITL classification or agent
+   execution readiness.
+6. Use `agent-brief` before delegating a local AFK task to another agent.
+7. Use `vertical-tdd` to implement one behavior at a time.
+8. Use `reviewer` for spec-driven review.
+9. Use `update-docs` when API, architecture, setup, or configuration changed.
+10. Use `git-commit` only after verification and explicit confirmation.
 
 ### Existing Features
 
@@ -95,6 +100,10 @@ Use these skills instead of reimplementing their procedures inline:
 - `requirements-interview`: clarify product and technical requirements.
 - `generate-spec`: write a structured spec from known requirements.
 - `task-breakdown`: create vertical implementation tasks.
+- `afk-task-triage`: classify local tasks as AFK/HITL, split broad tasks, and
+  identify which tasks are ready for agent execution.
+- `agent-brief`: create a durable local brief for an AFK task under the relevant
+  spec folder or `docs/agent-briefs/`.
 - `generate-tests-from-spec`: generate tests from acceptance criteria.
 - `vertical-tdd`: implement one behavior per red-green-refactor cycle.
 - `bugfix-loop`: investigate and fix bugs with reproduction and regression.
@@ -103,6 +112,15 @@ Use these skills instead of reimplementing their procedures inline:
 - `update-docs`: sync documentation after implementation.
 - `session-handoff`: prepare another session or agent to continue.
 - `git-commit`: inspect staged changes and create a commit with confirmation.
+
+AFK task flow is local-first. Use specs, `plan.md`, `tasks.md`, and local agent
+briefs as the source of truth. Do not create GitHub Issues, labels, or issue
+state workflows unless the user explicitly asks.
+
+Use `agent-brief` to prepare execution context for another agent. Use
+`session-handoff` to summarize the current conversation or partially completed
+work for another session. A handoff is conversational continuity; an agent brief
+is an implementation contract.
 
 Use matching instruction files for local edits inside a technology. Use the
 workflow skills below when the task crosses files, requires sequencing, or has
