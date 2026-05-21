@@ -117,10 +117,19 @@ AFK task flow is local-first. Use specs, `plan.md`, `tasks.md`, and local agent
 briefs as the source of truth. Do not create GitHub Issues, labels, or issue
 state workflows unless the user explicitly asks.
 
+Only mark a task as AFK when desired behavior, acceptance criteria, and
+verification are clear enough for another agent to execute without human
+direction. Mark it HITL when product, architecture, UX, security, credential,
+production, destructive-operation, or ambiguity decisions remain.
+
 Use `agent-brief` to prepare execution context for another agent. Use
 `session-handoff` to summarize the current conversation or partially completed
 work for another session. A handoff is conversational continuity; an agent brief
 is an implementation contract.
+
+An AFK executor must read the brief, re-explore the codebase and source
+artifacts, avoid relying on stale line numbers, and report files changed,
+verification run, behavior checked, blockers, risks, and follow-ups.
 
 Use matching instruction files for local edits inside a technology. Use the
 workflow skills below when the task crosses files, requires sequencing, or has

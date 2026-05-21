@@ -266,6 +266,10 @@ Recommended organization for future skills:
 AFK delegation is local-first. Use specs, `plan.md`, and `tasks.md` as the
 source of truth instead of GitHub Issues.
 
+Use AFK when a task is clear enough for another agent to execute without asking
+for human direction. Use HITL when the work needs a product, architecture, UX,
+security, credential, production, or destructive-operation decision.
+
 1. Use `task-breakdown` to create vertical tasks with `type`, `blocked-by`,
    acceptance criteria, verification, and an optional brief path.
 2. Use `afk-task-triage` to split broad tasks and classify each open task as
@@ -273,8 +277,15 @@ source of truth instead of GitHub Issues.
 3. Use `agent-brief` for each AFK-ready task. Briefs live in
    `specs/YYYY-MM-DD-<feature-slug>/agent-briefs/<task-slug>.md`, or
    `docs/agent-briefs/YYYY-MM-DD-<task-slug>.md` for repo-level work.
-4. Use `session-handoff` only when transferring conversation state. Use
+4. Start a fresh agent/session with the brief as the task contract. The agent
+   should re-explore the codebase and source artifacts before editing.
+5. The executor reports files changed, tests/checks run, behavior verified,
+   blockers, risks, and follow-ups.
+6. Use `session-handoff` only when transferring conversation state. Use
    `agent-brief` when preparing an implementation contract for another agent.
+
+AFK briefs should avoid line numbers and fragile file paths. They can reference
+source artifacts, types, contracts, commands, configuration shapes, and behavior.
 
 Do not create GitHub Issues, labels, or issue-state workflows unless explicitly
 requested.
