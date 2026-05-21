@@ -5,76 +5,21 @@ applyTo: "**/store/**/*.ts, **/stores/**/*.ts"
 
 # Zustand v5 Conventions
 
-## When to use
-
-- **Shared UI state** multiple components need to read: auth credentials, theme, preferences
-- State that survives component unmounts but is not server state
-
-Do NOT use Zustand for:
-- Server state → TanStack Query
-- Local component state → `useState`/`useReducer`
-- URL state → router search params
-
-## Store structure
-
-Split state and actions into separate interfaces:
-
-```ts
-interface MyState {
-  value: string
-  count: number
-}
-
-interface MyActions {
-  setValue: (v: string) => void
-  increment: () => void
-  reset: () => void
-}
-
-export const useMyStore = create<MyState & MyActions>()(/* middleware */)
-```
-
-## Middleware
-
-**Order:** `devtools` outermost → `persist` → `immer` innermost.
-
-Canonical setup with persistence:
-
-```ts
-create<State & Actions>()(
-  devtools(
-    persist(
-      immer((set) => ({ /* state + actions */ })),
-      {
-        name: "app-<store-name>",
-        partialize: (state) => ({ key: state.key }),
-      },
-    ),
-    { name: "<StoreName>Store", enabled: import.meta.env.DEV },
-  ),
-)
-```
-
-Without persistence, drop the `persist()` wrapper.
-
-## Persistence rules
-
-- Use `partialize` — never persist derived state or functions
-- If data has its own persistence (manual `localStorage`), do NOT also use `persist`
-- Keys must be unique per store: `"appname-<store-name>"`
-
-## Selectors
-
-Select the minimum slice to avoid unnecessary re-renders:
-
-```ts
-// ✅ Granular
-const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-
-// ❌ Whole store — re-renders on any state change
-const store = useAuthStore()
-```
-
-Export only the hook (`useMyStore`), not the store object itself.
-
-For middleware variants, immer recipes, and XState sync patterns, use the `manage-state-with-zustand` skill.
+- Use Zustand for shared client state that survives component unmounts but is
+  not server state, URL state, or local component state.
+- Do not use Zustand for server cache; use TanStack Query. Do not use it for
+  URL state; use router search params.
+- Split state and actions into separate TypeScript interfaces, then compose the
+  store type.
+- Export the hook, not the raw store object, unless the project has an explicit
+  non-React integration boundary.
+- Middleware order: `devtools` outermost, then `persist`, then `immer`
+  innermost.
+- Use `partialize` for persisted stores; never persist functions, derived
+  values, or sensitive data.
+- Use unique persistence keys per store.
+- Select the minimum state slice in components to avoid broad rerenders.
+- If XState owns transitions, let Zustand mirror state for rendering; do not put
+  XState transition logic inside the store.
+- For middleware variants, Immer recipes, and XState sync patterns, use the
+  `manage-state-with-zustand` skill.
