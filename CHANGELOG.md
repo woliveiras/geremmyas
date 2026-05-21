@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [1.4.0](https://github.com/woliveiras/copilot-configs/compare/v1.3.0...v1.4.0) (2026-05-21)
+
+
+### Features
+
+* add AGENTS.md for project-level agent workflows and instructions; update global Copilot instructions for clarity ([d726e99](https://github.com/woliveiras/copilot-configs/commit/d726e994d64507b22dc464e81548fc8b299bee3f))
+* add bugfix loop skill documentation with process and template ([6f3f9eb](https://github.com/woliveiras/copilot-configs/commit/6f3f9ebe47a4377921a6d4fe0c145b13c3c8b375))
+* add generate-adr skill for creating Architectural Decision Records in MADR format ([16e69d3](https://github.com/woliveiras/copilot-configs/commit/16e69d364435941ca75cdd978bf0ab6fbb4afd67))
+* add generate-glossary skill and template for formalizing domain terminology ([b094309](https://github.com/woliveiras/copilot-configs/commit/b0943097c382f60d87d2d27c253ed1e57e9bf489))
+* add generate-spec skill and template for structured feature specifications ([29d8ead](https://github.com/woliveiras/copilot-configs/commit/29d8ead43ce2b6016c05d72920bc4ac5ad904c14))
+* add generate-tests-from-spec skill for generating unit tests from specifications ([701f4ee](https://github.com/woliveiras/copilot-configs/commit/701f4eeb5e63d1ea698a3fdd6b6e63e39e7cd246))
+* add SKILL.md for conducting requirements interviews to clarify product and technical ambiguity ([372bfd8](https://github.com/woliveiras/copilot-configs/commit/372bfd88ffafa2bba0611a469ef6faef66e31528))
+* add SKILL.md for generating git commit messages in Conventional Commits format ([d92a8f6](https://github.com/woliveiras/copilot-configs/commit/d92a8f6c9d591e52ad50b843007e741dbd32408e))
+* add SKILL.md for managing state with Zustand ([9130b99](https://github.com/woliveiras/copilot-configs/commit/9130b996e6a4530a46d9350b533707517cdb08ab))
+* add SKILL.md for migrating from React Router v6 to v7 ([9130b99](https://github.com/woliveiras/copilot-configs/commit/9130b996e6a4530a46d9350b533707517cdb08ab))
+* add SKILL.md for modeling state with XState ([9130b99](https://github.com/woliveiras/copilot-configs/commit/9130b996e6a4530a46d9350b533707517cdb08ab))
+* add SKILL.md for safe Git commit process with Conventional Commits format ([55e1d5e](https://github.com/woliveiras/copilot-configs/commit/55e1d5e1fab5a6f0e23b7f86bc2c2a13fa3027c3))
+* add SKILL.md for session handoff process to streamline transitions between Copilot sessions ([4ef51ce](https://github.com/woliveiras/copilot-configs/commit/4ef51ce78957b36c6dd9c1ef5c19a1001b8a0a6e))
+* add SKILL.md for skill authoring process to guide creation and revision of Copilot skills ([5d424c5](https://github.com/woliveiras/copilot-configs/commit/5d424c5860534e4ab5bac721be7ab4fc46179e7b))
+* add SKILL.md for task breakdown process to guide creation of tasks from PRD, spec, or plan ([92522f7](https://github.com/woliveiras/copilot-configs/commit/92522f78385b470638c3ad59248ba18261ceddf7))
+* add SKILL.md for updating project documentation after feature implementation ([7bf3ad0](https://github.com/woliveiras/copilot-configs/commit/7bf3ad04535a5847830c65a20c5f678ab06790c9))
+* add SKILL.md for validating with Zod ([9130b99](https://github.com/woliveiras/copilot-configs/commit/9130b996e6a4530a46d9350b533707517cdb08ab))
+* add SKILL.md for vertical TDD process to guide test-driven development ([e63f7bb](https://github.com/woliveiras/copilot-configs/commit/e63f7bb1b32f4939032270a9f5cd5557efced7cb))
+* enhance installation script to support exclusion of specific instruction files and improve relevant instruction detection ([1bd553b](https://github.com/woliveiras/copilot-configs/commit/1bd553b6324f690913da7924f503fe19f2b1e9d8))
+* enhance installer to support skill dependencies and improve instruction installation logic ([91538bf](https://github.com/woliveiras/copilot-configs/commit/91538bf2fd4217afe02d227869c95f8b8aef9582))
+* enhance reviewer and review prompts for clarity and spec alignment ([f283cb8](https://github.com/woliveiras/copilot-configs/commit/f283cb8ea252a9092daebe395bab9b9b3ff73bf5))
+* enhance security and testing documentation; add specific guidelines for Android, API, E2E, integration, and web security; update Python instructions and remove obsolete security file ([d6eeba4](https://github.com/woliveiras/copilot-configs/commit/d6eeba45a879edbc255df854de3748cb4a04536d))
+* refine spec-writing agent description and process for clarity and alignment with workflows ([99e814b](https://github.com/woliveiras/copilot-configs/commit/99e814bcde1a0b48eaefa99b18ae3543a8163891))
+* remove deprecated skills and templates from project ([3c91d18](https://github.com/woliveiras/copilot-configs/commit/3c91d186b93163309c2e5c577de7135a428e05b1))
+* remove mise.toml handling from project installation process and update README instructions ([4817aea](https://github.com/woliveiras/copilot-configs/commit/4817aea418e5f5fdd11837b48cc42cf4976ea3eb))
+* update agent documentation to reflect new skill formats and improve clarity ([c721fa5](https://github.com/woliveiras/copilot-configs/commit/c721fa5a738f8abd6e8c644516ffa1e134b0559a))
+* update skill references in documentation for React Router, XState, Zod, and Zustand ([41afcea](https://github.com/woliveiras/copilot-configs/commit/41afcea586b0ccc19e57444d5cc55e5baaa30112))
+* update SKILL.md files to clarify skill usage and improve documentation ([0807703](https://github.com/woliveiras/copilot-configs/commit/08077039d6c5544633d75c39b51966e10226e682))
+
+
+### Bug Fixes
+
+* correct skill names in review and SDD prompts for consistency ([52ce5f8](https://github.com/woliveiras/copilot-configs/commit/52ce5f8b86f247f414067a61dac1449631b2e363))
+* update descriptions in architect agent and generate-adr skill for clarity and consistency ([8b2e872](https://github.com/woliveiras/copilot-configs/commit/8b2e872f76b3db347fd3a76a10ffcb405400536c))
+
 ## [1.3.0](https://github.com/woliveiras/copilot-configs/compare/v1.2.0...v1.3.0) (2026-04-24)
 
 
