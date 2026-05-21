@@ -310,7 +310,10 @@ detect_relevant_instructions() {
     grep -q '"zod"' package.json 2>/dev/null && files+=("zod.instructions.md")
     grep -q '"zustand"' package.json 2>/dev/null && files+=("zustand.instructions.md")
     grep -q '"xstate"' package.json 2>/dev/null && files+=("xstate.instructions.md")
-    grep -qE '"(better-sqlite3|sql\.js|sqlite3)"' package.json 2>/dev/null && files+=("sqlite.instructions.md")
+    grep -qE '"(better-sqlite3|sql\.js|sqlite3)"' package.json 2>/dev/null && {
+      files+=("sqlite.instructions.md")
+      files+=("node-sqlite.instructions.md")
+    }
   fi
 
   # Go
@@ -318,7 +321,10 @@ detect_relevant_instructions() {
     files+=("go.instructions.md")
     files+=("api-security.instructions.md")
     grep -q 'labstack/echo' go.mod 2>/dev/null && files+=("echo.instructions.md")
-    grep -qE '(mattn/go-sqlite3|modernc\.org/sqlite)' go.mod 2>/dev/null && files+=("sqlite.instructions.md")
+    grep -qE '(mattn/go-sqlite3|modernc\.org/sqlite)' go.mod 2>/dev/null && {
+      files+=("sqlite.instructions.md")
+      files+=("go-sqlite.instructions.md")
+    }
     find . -name '*.go' -type f -exec grep -l '//go:embed' {} + 2>/dev/null \
       | grep -q . && files+=("go-embed.instructions.md")
     { [[ -f ".air.toml" ]] || [[ -f "air.toml" ]]; } && files+=("air.instructions.md")
@@ -346,13 +352,20 @@ detect_relevant_instructions() {
     }
     grep -qiE '(openai|anthropic|google-genai|litellm)' pyproject.toml requirements.txt 2>/dev/null \
       && files+=("llm-service.instructions.md")
+    grep -qiE '(sqlite|aiosqlite|sqlalchemy|alembic)' pyproject.toml requirements.txt 2>/dev/null && {
+      files+=("sqlite.instructions.md")
+      files+=("python-sqlite.instructions.md")
+    }
   fi
 
   # Kotlin/Java (Android)
   if [[ -f "build.gradle.kts" ]] || [[ -f "build.gradle" ]]; then
     files+=("kotlin.instructions.md")
     files+=("android-security.instructions.md")
-    grep -rqiE '(androidx\.room|sqlite)' . --include='*.gradle*' 2>/dev/null && files+=("sqlite.instructions.md")
+    grep -rqiE '(androidx\.room|sqlite)' . --include='*.gradle*' 2>/dev/null && {
+      files+=("sqlite.instructions.md")
+      files+=("android-sqlite.instructions.md")
+    }
   fi
 
   # Deduplicate

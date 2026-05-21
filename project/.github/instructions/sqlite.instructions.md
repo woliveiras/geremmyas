@@ -1,51 +1,25 @@
 ---
-description: "SQLite conventions with WAL mode, goose migrations, and Go patterns."
-applyTo: "**/*.sql, **/database/**/*.go, **/migrations/**"
+description: "SQLite conventions for schemas, migrations, pragmas, transactions, and query design across languages."
+applyTo: "**/*.sql, **/database/**/*, **/databases/**/*, **/db/**/*, **/storage/**/*, **/persistence/**/*, **/migrations/**, **/migrations/**/*, **/*sqlite*.*, **/*database*.*, **/*repository*.*"
 ---
 
-# SQLite Best Practices
+# SQLite Conventions
 
-## Driver: modernc.org/sqlite (pure Go, zero CGo)
-
-## Connection — Required Pragmas
-
-```go
-dsn := "file:app.db?_journal_mode=WAL&_busy_timeout=5000&_foreign_keys=ON&_synchronous=NORMAL"
-db.SetMaxOpenConns(1) // SQLite: one writer at a time
-```
-
-- `_journal_mode=WAL` — concurrent reads while writing
-- `_busy_timeout=5000` — wait on lock instead of immediate SQLITE_BUSY
-- `_foreign_keys=ON` — off by default, must enable explicitly
-- `SetMaxOpenConns(1)` — prevents write contention
-
-## Always Parameterized Queries
-
-Never concatenate strings into SQL. Always `?` placeholders.
-
-## Schema Conventions
-
+- Enable foreign keys explicitly for every application connection.
+- Use WAL mode for application databases that need concurrent reads while
+  writes happen.
+- Configure a busy timeout so lock contention waits briefly instead of failing
+  immediately.
+- Keep migrations append-only after they have been applied outside local
+  development.
+- Use transactions for multi-statement writes, migrations, and state changes
+  that must be atomic.
+- Never concatenate untrusted values into SQL. Use bound parameters from the
+  current language or ORM.
 - Primary keys: `INTEGER PRIMARY KEY AUTOINCREMENT`
 - Timestamps: `TEXT` in ISO 8601
 - Booleans: `INTEGER` (0/1) with `NOT NULL DEFAULT 0`
-- Always define indexes for columns in WHERE, JOIN, ORDER BY
-- Foreign keys: always `ON DELETE CASCADE` or `ON DELETE SET NULL`
-
-## Migrations (goose)
-
-- SQL-based in `migrations/`, named `001_initial_schema.sql`
-- Each file has `-- +goose Up` and `-- +goose Down`
-- Never modify an applied migration — create a new one
-- Run on app startup
-
-## Testing
-
-In-memory database for unit tests: `file::memory:?cache=shared&_foreign_keys=ON`
-
-## Anti-patterns
-
-- `SetMaxOpenConns > 1` — causes SQLITE_BUSY
-- Missing `_foreign_keys=ON` — constraints silently ignored
-- Missing `_busy_timeout` — immediate errors under load
-- String concatenation in queries
-- Not backing up WAL/SHM files alongside the main DB
+- Define indexes for columns used in `WHERE`, `JOIN`, and `ORDER BY`.
+- Choose `ON DELETE CASCADE`, `ON DELETE SET NULL`, or `RESTRICT`
+  deliberately; do not leave relationship behavior implicit.
+- Back up WAL/SHM files with the main database file when WAL mode is enabled.

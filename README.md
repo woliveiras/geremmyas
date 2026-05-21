@@ -152,8 +152,10 @@ examples and recipes.
 | `typescript.instructions.md` | `**/*.ts, **/*.tsx` | Strict mode, interfaces, named exports |
 | `nestjs.instructions.md` | NestJS modules, controllers, providers, and lifecycle files | Modules, DI, DTO validation, guards, interceptors, filters |
 | `fastify.instructions.md` | Fastify routes, plugins, and server files | Plugins, JSON Schema contracts, hooks, logging, errors |
+| `node-sqlite.instructions.md` | Node SQLite database/repository files | `node:sqlite`, `better-sqlite3`, prepared statements, transactions |
 | `go.instructions.md` | `**/*.go` | Error wrapping, table-driven tests, context |
 | `echo.instructions.md` | Echo handlers, routes, middleware, and server files | Handlers, middleware, context, centralized errors, graceful shutdown |
+| `go-sqlite.instructions.md` | Go SQLite database/repository files | `database/sql`, `modernc.org/sqlite`, DSN pragmas, connection limits |
 | `go-embed.instructions.md` | Go files in projects using `//go:embed` | `embed.FS`, package-relative paths, `fs.Sub`, read-only assets |
 | `air.instructions.md` | Air config and local Go dev containers | Hot reload config, excludes, disposable binaries, dev-only usage |
 | `python.instructions.md` | `**/*.py` | Python language-level conventions |
@@ -162,7 +164,9 @@ examples and recipes.
 | `langchain.instructions.md` | LangChain chains, agents, retrievers, and RAG files | Runnables, tools, retrieval, structured outputs, tracing |
 | `langgraph.instructions.md` | LangGraph graph, workflow, and agent files | State schemas, nodes, checkpoints, interrupts, resume |
 | `llm-service.instructions.md` | LLM service and agent integration files | Provider boundary, structured outputs, retries, limits, observability |
+| `python-sqlite.instructions.md` | Python SQLite database/repository files | `sqlite3`, SQLAlchemy SQLite, parameter binding, connection lifecycle |
 | `kotlin.instructions.md` | `**/*.kt` | MVVM, Hilt, Room, Compose |
+| `android-sqlite.instructions.md` | Android Room, DAO, entity, migration, and repository files | Room, DAOs, migrations, async queries, migration tests |
 | `react.instructions.md` | `**/*.tsx, **/*.jsx` | TanStack Query, feature-sliced, a11y |
 | `astro-mdx.instructions.md` | `**/*.mdx, **/*.astro` | Frontmatter, no H1, code fences |
 | `testing.instructions.md` | test files and test folders | General test design independent of framework |
@@ -173,7 +177,7 @@ examples and recipes.
 | `android-security.instructions.md` | Android Kotlin and manifest files | Storage, permissions, intents, networking |
 | `docker.instructions.md` | Docker and Compose files | Multi-stage builds, non-root users, no secrets |
 | `react-router.instructions.md` | Route modules | React Router v7 loaders, actions, typegen |
-| `sqlite.instructions.md` | SQL, database Go code, migrations | SQLite pragmas, `modernc.org/sqlite`, transactions, migrations |
+| `sqlite.instructions.md` | SQL, database, storage, repository, and migration files | SQLite schema, pragmas, transactions, indexes, migrations |
 | `tailwind.instructions.md` | Component TSX files | Tailwind CSS v4 utilities and pitfalls |
 | `tanstack-query.instructions.md` | hooks, API, query files | TanStack Query v5 hooks and keys |
 | `xstate.instructions.md` | `*.machine.ts` | XState v5 machines and actors |
