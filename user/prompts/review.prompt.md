@@ -4,6 +4,9 @@ description: "Quick code review checklist. Use for fast feedback without specs. 
 
 Review the provided code changes using this checklist:
 
+If a `GLOSSARY.md` or `CONTEXT.md` file exists, use that vocabulary when judging
+names, behavior, and user-facing language.
+
 ## Correctness
 - Does the code do what it claims to do?
 - Are edge cases handled?

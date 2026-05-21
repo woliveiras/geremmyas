@@ -14,7 +14,7 @@ If the feature is large, break it into vertical slices first.
 
 ## Step 2 — Tests
 
-Use the `test-from-spec` skill to generate tests from the approved spec's acceptance criteria.
+Use the `generate-tests-from-spec` skill to generate tests from the approved spec's acceptance criteria.
 Each criterion maps to at least one test. Tests must fail initially (red).
 
 **Gate:** Tests must be created and confirmed failing before proceeding.
@@ -35,7 +35,7 @@ Flag any acceptance criteria without tests, any tests without matching code, or 
 
 ## Step 5 — Docs (if needed)
 
-Use the `doc-updater` skill only if:
+Use the `update-docs` skill only if:
 - Public API changed (new endpoints, parameters, responses)
 - Architecture changed (new modules, boundaries, patterns)
 - Setup changed (new dependencies, build steps, env vars)
