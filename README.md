@@ -150,6 +150,8 @@ examples and recipes.
 | File | Applies To | Focus |
 |------|-----------|-------|
 | `typescript.instructions.md` | `**/*.ts, **/*.tsx` | Strict mode, interfaces, named exports |
+| `nestjs.instructions.md` | NestJS modules, controllers, providers, and lifecycle files | Modules, DI, DTO validation, guards, interceptors, filters |
+| `fastify.instructions.md` | Fastify routes, plugins, and server files | Plugins, JSON Schema contracts, hooks, logging, errors |
 | `go.instructions.md` | `**/*.go` | Error wrapping, table-driven tests, context |
 | `python.instructions.md` | `**/*.py` | Python language-level conventions |
 | `fastapi.instructions.md` | FastAPI route and API files | Routers, dependency injection, request/response models |

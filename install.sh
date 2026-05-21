@@ -136,6 +136,7 @@ detect_frameworks() {
     grep -q '"vue"' package.json 2>/dev/null && fws+=("Vue")
     grep -q '"svelte"' package.json 2>/dev/null && fws+=("Svelte")
     grep -q '"express"' package.json 2>/dev/null && fws+=("Express")
+    grep -q '"@nestjs/core"' package.json 2>/dev/null && fws+=("NestJS")
     grep -q '"fastify"' package.json 2>/dev/null && fws+=("Fastify")
     grep -q '"@tanstack/react-query"' package.json 2>/dev/null && fws+=("TanStack Query")
     grep -q '"react-router"' package.json 2>/dev/null && fws+=("React Router")
@@ -297,7 +298,10 @@ detect_relevant_instructions() {
   if [[ -f "package.json" ]]; then
     files+=("typescript.instructions.md")
     grep -qE '"(react|next|astro|vue|svelte)"' package.json 2>/dev/null && files+=("web-security.instructions.md")
-    grep -qE '"(express|fastify|next|hono|koa|nestjs)"' package.json 2>/dev/null && files+=("api-security.instructions.md")
+    { grep -qE '"(express|fastify|next|hono|koa)"' package.json 2>/dev/null \
+      || grep -q '"@nestjs/core"' package.json 2>/dev/null; } && files+=("api-security.instructions.md")
+    grep -q '"@nestjs/core"' package.json 2>/dev/null && files+=("nestjs.instructions.md")
+    grep -q '"fastify"' package.json 2>/dev/null && files+=("fastify.instructions.md")
     grep -q '"react"' package.json 2>/dev/null && files+=("react.instructions.md")
     grep -q '"astro"' package.json 2>/dev/null && files+=("astro-mdx.instructions.md")
     grep -q '"@tanstack/react-query"' package.json 2>/dev/null && files+=("tanstack-query.instructions.md")
