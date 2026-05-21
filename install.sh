@@ -325,12 +325,21 @@ detect_relevant_instructions() {
     files+=("python.instructions.md")
     if grep -qi 'fastapi' pyproject.toml requirements.txt 2>/dev/null; then
       files+=("fastapi.instructions.md")
+      files+=("pydantic.instructions.md")
       files+=("api-security.instructions.md")
     elif grep -qiE '(django|flask)' pyproject.toml requirements.txt 2>/dev/null; then
       files+=("api-security.instructions.md")
     fi
-    grep -qi 'langchain' pyproject.toml requirements.txt 2>/dev/null && files+=("langchain.instructions.md")
-    grep -qi 'langgraph' pyproject.toml requirements.txt 2>/dev/null && files+=("langgraph.instructions.md")
+    grep -qiE '(pydantic|pydantic-settings)' pyproject.toml requirements.txt 2>/dev/null \
+      && files+=("pydantic.instructions.md")
+    grep -qi 'langchain' pyproject.toml requirements.txt 2>/dev/null && {
+      files+=("langchain.instructions.md")
+      files+=("pydantic.instructions.md")
+    }
+    grep -qi 'langgraph' pyproject.toml requirements.txt 2>/dev/null && {
+      files+=("langgraph.instructions.md")
+      files+=("pydantic.instructions.md")
+    }
     grep -qiE '(openai|anthropic|google-genai|litellm)' pyproject.toml requirements.txt 2>/dev/null \
       && files+=("llm-service.instructions.md")
   fi
