@@ -289,10 +289,20 @@ detect_relevant_instructions() {
   files+=("e2e-testing.instructions.md")
   files+=("integration-testing.instructions.md")
 
-  # Docker
-  { [[ -f "Dockerfile" ]] || [[ -f "docker-compose.yml" ]] \
-    || [[ -f "docker-compose.yaml" ]] || [[ -f "compose.yml" ]] \
-    || [[ -f "compose.yaml" ]]; } && files+=("docker.instructions.md")
+  # Infra, CI/CD, and cloud
+  { [[ -f "Dockerfile" ]] || [[ -f ".dockerignore" ]] || find . -maxdepth 3 -name 'Dockerfile.*' -type f 2>/dev/null | grep -q .; } \
+    && files+=("docker.instructions.md")
+  { [[ -f "docker-compose.yml" ]] || [[ -f "docker-compose.yaml" ]] \
+    || [[ -f "compose.yml" ]] || [[ -f "compose.yaml" ]] \
+    || find . -maxdepth 3 \( -name 'docker-compose*.yml' -o -name 'docker-compose*.yaml' -o -name 'compose*.yml' -o -name 'compose*.yaml' \) -type f 2>/dev/null | grep -q .; } \
+    && files+=("docker-compose.instructions.md")
+  find .github/workflows -maxdepth 2 \( -name '*.yml' -o -name '*.yaml' \) -type f 2>/dev/null \
+    | grep -q . && files+=("github-actions.instructions.md")
+  find . -path './.terraform' -prune -o \( -name '*.tf' -o -name '*.tfvars' -o -name '*.tfvars.json' \) -type f -print 2>/dev/null \
+    | grep -q . && files+=("terraform.instructions.md")
+  { [[ -f "cloudbuild.yaml" ]] || [[ -f "cloudbuild.yml" ]] || [[ -f ".gcloudignore" ]] \
+    || find . -maxdepth 4 \( -name '*gcloud*.sh' -o -name '*gcp*.sh' -o -name 'cloudbuild*.yaml' -o -name 'cloudbuild*.yml' \) -type f 2>/dev/null | grep -q .; } \
+    && files+=("gcp.instructions.md")
 
   # JavaScript/TypeScript ecosystem
   if [[ -f "package.json" ]]; then

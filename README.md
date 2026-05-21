@@ -175,7 +175,11 @@ examples and recipes.
 | `api-security.instructions.md` | API handlers, controllers, routes, middleware | API input, authorization, logging, abuse controls |
 | `web-security.instructions.md` | browser UI and route components | XSS, redirects, client storage, client/server validation |
 | `android-security.instructions.md` | Android Kotlin and manifest files | Storage, permissions, intents, networking |
-| `docker.instructions.md` | Docker and Compose files | Multi-stage builds, non-root users, no secrets |
+| `docker.instructions.md` | Dockerfiles and `.dockerignore` files | Multi-stage builds, pinned images, non-root users, no baked secrets |
+| `docker-compose.instructions.md` | Docker Compose files | Healthchecks, networks, volumes, env files, local orchestration |
+| `github-actions.instructions.md` | GitHub Actions workflows and actions | Permissions, OIDC, pinned actions, concurrency, artifacts |
+| `gcp.instructions.md` | GCP CLI scripts, Cloud Build, and deploy scripts | Explicit project/account, ADC vs gcloud auth, impersonation |
+| `terraform.instructions.md` | Terraform `.tf` and `.tfvars` files | fmt, validate, remote state, lockfile, modules, imports, moved blocks |
 | `react-router.instructions.md` | Route modules | React Router v7 loaders, actions, typegen |
 | `sqlite.instructions.md` | SQL, database, storage, repository, and migration files | SQLite schema, pragmas, transactions, indexes, migrations |
 | `tailwind.instructions.md` | Component TSX files | Tailwind CSS v4 utilities and pitfalls |
