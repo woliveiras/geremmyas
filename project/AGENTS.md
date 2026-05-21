@@ -104,6 +104,26 @@ Use these skills instead of reimplementing their procedures inline:
 - `session-handoff`: prepare another session or agent to continue.
 - `git-commit`: inspect staged changes and create a commit with confirmation.
 
+Use matching instruction files for local edits inside a technology. Use the
+workflow skills below when the task crosses files, requires sequencing, or has
+approval/verification gates:
+
+- `terraform-change`: plan/review Terraform changes, imports, moves, state, or
+  apply/destroy decisions.
+- `gcloud-operation`: prepare or run Google Cloud CLI operations with explicit
+  project, account, and approval context.
+- `ci-workflow`: create, review, or debug GitHub Actions CI/CD workflows.
+- `llm-integration-review`: design/review LLM service integrations, tools,
+  structured outputs, retries, rate limits, and contract tests.
+- `langgraph-agent-design`: design LangGraph state, nodes, checkpoints,
+  interrupts, tools, and recovery behavior.
+- `supabase-workflow`: plan Supabase schema, RLS, Auth, Storage, Edge Function,
+  migration, and generated type changes.
+- `postgres-query-review`: review PostgreSQL queries, migrations, indexes, and
+  query plans.
+- `chromadb-rag-workflow`: design/review ChromaDB ingestion, collections,
+  metadata, retrieval, persistence, and evaluation.
+
 ## Agent Routing
 
 - Use `spec-writer` when requirements are unclear and a spec is needed.
