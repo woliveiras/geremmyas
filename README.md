@@ -12,9 +12,9 @@ Every project needs the same Copilot setup: language-specific instructions, code
 
 **What you get:**
 
-- **8 instruction files** covering Go, TypeScript, Python, Kotlin, React, Astro/MDX, testing, and security
+- **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
-- **11 skills** with templates for specs, tests, docs, migrations, ADRs, state management patterns, and conventional commits
+- **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
 - **4 global prompts** for code review, refactoring, test generation, and SDD workflow
 
@@ -26,10 +26,10 @@ copilot-configs/
     ├── mise.toml                      # Tool version management template
     └── .github/
         ├── copilot-instructions.md    # Project-level Copilot instructions
-        ├── instructions/              # 9 language & convention files
+        ├── instructions/              # Auto-applied language, framework, and convention files
         ├── agents/                    # 4 agents + 6 design references
         │   └── references/            # Deep modules, interface design, etc.
-        ├── skills/                    # 11 skills with asset templates
+        ├── skills/                    # Workflow and utility skills with asset templates
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 ```
 
@@ -112,6 +112,11 @@ Installed to `.github/` in your project root.
 
 #### Instructions (`.github/instructions/`)
 
+Instructions are short, auto-applied rules selected by `applyTo` globs. Use them
+for conventions that should be present whenever Copilot edits a matching file.
+Use skills for explicit workflows, and `assets/` or `references/` for long
+examples and recipes.
+
 | File | Applies To | Focus |
 |------|-----------|-------|
 | `typescript.instructions.md` | `**/*.ts, **/*.tsx` | Strict mode, interfaces, named exports |
@@ -122,6 +127,14 @@ Installed to `.github/` in your project root.
 | `astro-mdx.instructions.md` | `**/*.mdx, **/*.astro` | Frontmatter, no H1, code fences |
 | `testing.instructions.md` | `**/*.test.*, **/*.spec.*` | AAA pattern, self-contained tests |
 | `security.instructions.md` | `**` | OWASP baseline, no hardcoded secrets |
+| `docker.instructions.md` | Docker and Compose files | Multi-stage builds, non-root users, no secrets |
+| `react-router.instructions.md` | Route modules | React Router v7 loaders, actions, typegen |
+| `sqlite.instructions.md` | SQL, database Go code, migrations | WAL mode, pragmas, migrations |
+| `tailwind.instructions.md` | Component TSX files | Tailwind CSS v4 utilities and pitfalls |
+| `tanstack-query.instructions.md` | hooks, API, query files | TanStack Query v5 hooks and keys |
+| `xstate.instructions.md` | `*.machine.ts` | XState v5 machines and actors |
+| `zod.instructions.md` | schemas and API files | Zod v4 schemas and parsing |
+| `zustand.instructions.md` | store files | Zustand v5 stores and middleware |
 
 #### Agents (`.github/agents/`)
 
@@ -130,7 +143,7 @@ Installed to `.github/` in your project root.
 | `spec-writer` | Interviews you to produce a structured spec. Detects large scope and breaks into vertical slices. |
 | `explorer` | Read-only codebase mapper. Produces a structured project summary. |
 | `reviewer` | Reviews code against specs and tests as source of truth. |
-| `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves RFC or ADR. |
+| `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves ADRs or implementation plans. |
 
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
 
@@ -146,19 +159,34 @@ There are three review surfaces — each for a different context:
 
 #### Skills (`.github/skills/`)
 
+Skills are explicit capabilities. Workflow skills guide multi-step work; utility
+skills provide focused technical recipes or generated artifacts.
+
+Recommended organization for future skills:
+
+- `engineering`: PRD, specs, planning, tasks, TDD, bugfix, review, architecture, docs.
+- `productivity`: handoff, skill authoring, concise communication, alignment before execution.
+- `personal`: workflows specific to your setup that should not install by default.
+- `utils`: rare tools, migrations, setup helpers, and guardrails.
+
 | Skill | Purpose |
 |-------|---------|
-| `spec-template` | Fill a structured spec from direct input (no interview) |
-| `test-from-spec` | Generate unit tests from a spec's acceptance criteria |
-| `doc-updater` | Update `docs/` after implementing a feature |
-| `conventional-commit` | Write commit messages in Conventional Commits format |
-| `glossary` | Extract domain terminology into `GLOSSARY.md` |
-| `rfc-template` | Generate a structured RFC for architecture decisions |
-| `adr-template` | Record an Architectural Decision in MADR 4.0 format |
-| `zod-patterns` | Zod validation recipes (API clients, forms, localStorage) |
-| `react-router-migration` | Step-by-step guide for React Router v6 → v7 migration |
-| `xstate-patterns` | XState v5 recipes: React integration, actors, testing |
-| `zustand-patterns` | Zustand v5 recipes: middleware setup, immer, XState sync |
+| `requirements-interview` | Explore code and clarify requirements before PRD/spec work |
+| `generate-spec` | Fill a structured spec from direct input (no interview) |
+| `task-breakdown` | Convert PRD, specs, or `plan.md` into vertical tasks |
+| `generate-tests-from-spec` | Generate unit tests from a spec's acceptance criteria |
+| `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
+| `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
+| `update-docs` | Update `docs/` after implementing a feature |
+| `git-commit-message` | Write commit messages in Conventional Commits format |
+| `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
+| `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
+| `session-handoff` | Create a concise handoff for another session or agent |
+| `skill-authoring` | Create or revise Copilot skills using this repo's conventions |
+| `validate-with-zod` | Zod validation recipes (API clients, forms, localStorage) |
+| `migrate-react-router` | Step-by-step guide for React Router v6 → v7 migration |
+| `model-state-with-xstate` | XState v5 recipes: React integration, actors, testing |
+| `manage-state-with-zustand` | Zustand v5 recipes: middleware setup, immer, XState sync |
 
 #### Hooks (`.github/hooks/`)
 
@@ -183,11 +211,36 @@ This project is built around **Spec Driven Development** — specs and tests are
 ┌─────────┐     ┌──────────┐     ┌────────────┐     ┌──────────┐     ┌──────┐
 │  1.Spec │────▶│ 2.Tests  │────▶│ 3.Implement│────▶│ 4.Review │────▶│5.Docs│
 └─────────┘     └──────────┘     └────────────┘     └──────────┘     └──────┘
- @spec-writer    test-from-spec   Write code        @reviewer        doc-updater
- or              skill            to pass tests     agent            skill
- spec-template                    (never edit                        (if API/arch
- skill                            tests)                             changed)
+ @spec-writer    generate-tests-   Write code        @reviewer        update-docs
+ or              from-spec skill   to pass tests     agent            skill
+ generate-spec                     (never edit                        (if API/arch
+ skill                             tests)                             changed)
 ```
+
+### Workflow by Change Type
+
+For new features:
+
+1. Use `requirements-interview` to clarify the product and technical shape.
+2. Write or update a PRD.
+3. Use `@spec-writer` or `generate-spec` to create testable specs.
+4. Use `task-breakdown` to produce vertical tasks in `tasks.md`.
+5. Use `vertical-tdd` or `generate-tests-from-spec` depending on whether you are implementing now or only generating tests.
+6. Use `@reviewer` for spec-driven review.
+7. Use `update-docs` when public API, architecture, setup, or configuration changed.
+
+For existing features:
+
+1. Use `requirements-interview` to decide whether the product flow changes.
+2. If the product flow changes, update the PRD before writing specs.
+3. If the product flow does not change, write targeted specs and continue through tasks, tests, implementation, review, and docs.
+
+For bugs:
+
+1. Use `bugfix-loop` to document the bug and build a reproduction loop.
+2. Write a regression test at the correct boundary.
+3. Fix the code and rerun the original reproduction loop.
+4. Write a postmortem only when the bug was an outage.
 
 ### Quick Start — `/sdd` Prompt
 
@@ -214,13 +267,13 @@ The agent interviews you (one question at a time), then produces a structured sp
 If you already know the requirements and don't need an interview:
 
 ```
-Use the spec-template skill to create a spec for JWT auth
+Use the generate-spec skill to create a spec for JWT auth
 ```
 
 #### 2. Generate Tests
 
 ```
-Use the test-from-spec skill for specs/user-auth.md
+Use the generate-tests-from-spec skill for specs/user-auth.md
 ```
 
 Each acceptance criterion from the spec becomes at least one test. Tests must fail initially (red phase).
@@ -242,7 +295,7 @@ For quick reviews without specs, use the `/review` prompt instead.
 #### 5. Update Docs
 
 ```
-Use the doc-updater skill for the user-auth feature
+Use the update-docs skill for the user-auth feature
 ```
 
 Only needed when public API, architecture, or setup changed. Skip for internal-only changes.
@@ -253,9 +306,8 @@ When the feature involves significant design choices, use these before or alongs
 
 | Need | Tool | Output |
 |------|------|--------|
-| Explore architecture opportunities | `@architect` agent | RFC or ADR with 3 evaluated designs |
-| Record a quick decision | `adr-template` skill | ADR in `docs/decisions/` (MADR 4.0) |
-| Propose a change for review | `rfc-template` skill | RFC in `docs/rfcs/` |
+| Explore architecture opportunities | `@architect` agent | ADR or implementation plan with evaluated designs |
+| Record a quick decision | `generate-adr` skill | ADR in `docs/decisions/` (MADR 4.0) |
 
 ## Customization
 

@@ -65,14 +65,19 @@ safe_copy() {
 }
 
 # Copy a directory tree. Customizable files are preserved unless --force.
-# Usage: safe_copy_tree <src_dir> <dest_dir> [exclude_subdir]
+# Usage: safe_copy_tree <src_dir> <dest_dir> [space-separated exclude subdirs]
 safe_copy_tree() {
-  local src_dir="$1" dest_dir="$2" exclude_dir="${3:-}"
+  local src_dir="${1%/}" dest_dir="$2" excludes="${3:-}"
   find "$src_dir" -type f | while read -r src_file; do
     local rel_path="${src_file#"$src_dir"/}"
-    if [[ -n "$exclude_dir" ]] && [[ "$rel_path" == "$exclude_dir"/* ]]; then
-      continue
-    fi
+    local skip=false
+    for exclude in $excludes; do
+      if [[ "$rel_path" == "$exclude"/* ]]; then
+        skip=true
+        break
+      fi
+    done
+    [[ "$skip" == "true" ]] && continue
     if is_customizable "$rel_path" && [[ -f "$dest_dir/$rel_path" ]] && [[ "$FORCE" == "false" ]]; then
       if ! diff -q "$src_file" "$dest_dir/$rel_path" &>/dev/null; then
         warn "Preserved (customized): $dest_dir/$rel_path"
@@ -312,17 +317,12 @@ install_instructions() {
 
   relevant="$(detect_relevant_instructions)"
 
-  # If only universal instructions detected, install all as fallback
+  # If only universal instructions are detected, keep the install minimal.
   local specific_count
   specific_count="$(echo "$relevant" | grep -cvxE '(testing|security)\.instructions\.md' || true)"
 
   if [[ "$specific_count" -eq 0 ]]; then
-    info "No language/framework detected — installing all instructions."
-    for f in "$src_dir"/*.instructions.md; do
-      [[ -f "$f" ]] || continue
-      safe_copy "$f" "$dest_dir/$(basename "$f")"
-    done
-    return
+    info "No language/framework detected — installing universal instructions only."
   fi
 
   for f in "$src_dir"/*.instructions.md; do
@@ -339,6 +339,45 @@ install_instructions() {
   if [[ "$skipped" -gt 0 ]]; then
     info "Skipped $skipped instruction files (not detected in this project)"
     info "All instructions available at: ~/.copilot-configs/project/.github/instructions/"
+  fi
+}
+
+skill_dependency() {
+  case "$1" in
+    migrate-react-router)          echo "react-router" ;;
+    manage-state-with-zustand)     echo "zustand" ;;
+    model-state-with-xstate)       echo "xstate" ;;
+    validate-with-zod)             echo "zod" ;;
+    *)                             echo "" ;;
+  esac
+}
+
+install_skills() {
+  local src_dir="$INSTALL_DIR/project/.github/skills"
+  local dest_dir="./.github/skills"
+  local skipped=0
+
+  for skill_dir in "$src_dir"/*/; do
+    [[ ! -d "$skill_dir" ]] && continue
+    local skill_name
+    skill_name="$(basename "$skill_dir")"
+
+    local dep
+    dep="$(skill_dependency "$skill_name")"
+
+    if [[ -n "$dep" ]]; then
+      if ! { [[ -f "package.json" ]] && grep -q "\"$dep\"" package.json 2>/dev/null; }; then
+        ((skipped++)) || true
+        continue
+      fi
+    fi
+
+    safe_copy_tree "$skill_dir" "$dest_dir/$skill_name"
+  done
+
+  if [[ "$skipped" -gt 0 ]]; then
+    info "Skipped $skipped skills (not detected in this project)"
+    info "All skills available at: ~/.copilot-configs/project/.github/skills/"
   fi
 }
 
@@ -647,11 +686,12 @@ if [[ "$PROJECT" == "true" ]]; then
 
   info "Applying project template to $(pwd)..."
 
-  # Copy .github/ template (instructions installed separately based on detection)
-  safe_copy_tree "$INSTALL_DIR/project/.github" "./.github" "instructions"
+  # Copy .github/ template (instructions and skills installed separately based on detection)
+  safe_copy_tree "$INSTALL_DIR/project/.github" "./.github" "instructions skills"
 
-  # Install only relevant instruction files
+  # Install only relevant instruction files and skills
   install_instructions
+  install_skills
 
   echo ""
   ok "Project template applied!"
