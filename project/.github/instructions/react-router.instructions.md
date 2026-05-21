@@ -103,4 +103,4 @@ export function ErrorBoundary() {
 - `useNavigate()` for programmatic navigation
 - Prefer `<Link>` over `useNavigate()` when possible
 
-For migrating from v6, use the `react-router-migration` skill.
+For migrating from v6, use the `migrate-react-router` skill.

@@ -96,4 +96,4 @@ Wait for side effects, not state names: `await vi.waitFor(() => expect(mockFn).t
 
 Always call `actor.stop()` after each test.
 
-For full React integration, actor recipes, and testing patterns, use the `xstate-patterns` skill.
+For full React integration, actor recipes, and testing patterns, use the `model-state-with-xstate` skill.

@@ -82,4 +82,4 @@ src/lib/schemas/
 
 Do not maintain a parallel `types/` folder — schemas are the single source of truth for types.
 
-For validation recipes (API clients, forms, localStorage), use the `zod-patterns` skill.
+For validation recipes (API clients, forms, localStorage), use the `validate-with-zod` skill.

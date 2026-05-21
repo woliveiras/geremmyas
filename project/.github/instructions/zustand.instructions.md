@@ -77,4 +77,4 @@ const store = useAuthStore()
 
 Export only the hook (`useMyStore`), not the store object itself.
 
-For middleware variants, immer recipes, and XState sync patterns, use the `zustand-patterns` skill.
+For middleware variants, immer recipes, and XState sync patterns, use the `manage-state-with-zustand` skill.
