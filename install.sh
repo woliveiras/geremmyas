@@ -317,7 +317,11 @@ detect_relevant_instructions() {
   if [[ -f "go.mod" ]]; then
     files+=("go.instructions.md")
     files+=("api-security.instructions.md")
-    grep -q 'mattn/go-sqlite3' go.mod 2>/dev/null && files+=("sqlite.instructions.md")
+    grep -q 'labstack/echo' go.mod 2>/dev/null && files+=("echo.instructions.md")
+    grep -qE '(mattn/go-sqlite3|modernc\.org/sqlite)' go.mod 2>/dev/null && files+=("sqlite.instructions.md")
+    find . -name '*.go' -type f -exec grep -l '//go:embed' {} + 2>/dev/null \
+      | grep -q . && files+=("go-embed.instructions.md")
+    { [[ -f ".air.toml" ]] || [[ -f "air.toml" ]]; } && files+=("air.instructions.md")
   fi
 
   # Python
