@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.1.0](https://github.com/woliveiras/geremmyas/compare/v2.0.2...v2.1.0) (2026-05-22)
+
+
+### Features
+
+* add interactive init and global pack install ([7473b78](https://github.com/woliveiras/geremmyas/commit/7473b7805a464ad0ae6e7797065d8322ce9682f2))
+
 ## [2.0.2](https://github.com/woliveiras/geremmyas/compare/v2.0.1...v2.0.2) (2026-05-22)
 
 
