@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.2.0](https://github.com/woliveiras/geremmyas/compare/v2.1.0...v2.2.0) (2026-05-22)
+
+
+### Features
+
+* enhance runRemove with interactive mode and add isGlobalTarget function ([98745df](https://github.com/woliveiras/geremmyas/commit/98745df311d158b7fe37f8d9dfdba31b62ac15fb))
+
+
+### Documentation
+
+* add mise.toml and update contributing guide ([639c28a](https://github.com/woliveiras/geremmyas/commit/639c28a81d9e8cb9d78e13128be0611fb0f9f810))
+* document global install and mise environment setup ([06a6a43](https://github.com/woliveiras/geremmyas/commit/06a6a438f4785b1eccdfa4d9ccebbd407c9fe4b6))
+
 ## [2.1.0](https://github.com/woliveiras/geremmyas/compare/v2.0.2...v2.1.0) (2026-05-22)
 
 
