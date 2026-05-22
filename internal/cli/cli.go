@@ -200,12 +200,24 @@ func runAdd(args []string, w io.Writer, catalog Catalog) error {
 }
 
 func runRemove(args []string, w io.Writer, catalog Catalog) error {
-	if len(args) == 0 {
-		return errors.New("remove requires at least one pack")
-	}
 	cfg, err := readConfigFile(configFileName)
 	if err != nil {
 		return err
+	}
+
+	if len(args) == 0 {
+		if !isInteractive() {
+			return errors.New("remove requires at least one pack (or run in a terminal for interactive mode)")
+		}
+		selected, err := runInteractiveRemove(cfg.Packs)
+		if err != nil {
+			return err
+		}
+		if len(selected) == 0 {
+			fmt.Fprintln(w, "nothing to remove")
+			return nil
+		}
+		args = selected
 	}
 
 	remove := map[string]bool{}
@@ -328,6 +340,6 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	}
 
 	userDir, _ := vsCodeUserDir()
-	fmt.Fprintf(w, "installed %d packs globally to %s\n", len(packs), userDir)
+	fmt.Fprintf(w, "installed %d packs globally to %q\n", len(packs), userDir)
 	return nil
 }

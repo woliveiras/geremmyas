@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	geremmyas "github.com/woliveiras/geremmyas"
 )
@@ -46,6 +47,9 @@ func globalInstallPacks(packs []Pack) error {
 
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
+			if !isGlobalTarget(entry.Target) {
+				continue
+			}
 			if err := globalCopyEntry(userDir, entry); err != nil {
 				return fmt.Errorf("pack %q: %w", pack.Name, err)
 			}
@@ -53,6 +57,13 @@ func globalInstallPacks(packs []Pack) error {
 	}
 
 	return nil
+}
+
+// isGlobalTarget returns true for files that belong in the VS Code user-level
+// directory (inside .github/). Project-root files like AGENTS.md and mise.toml
+// are skipped during global install.
+func isGlobalTarget(target string) bool {
+	return strings.HasPrefix(target, ".github/") || strings.HasPrefix(target, ".github\\")
 }
 
 func globalCopyEntry(userDir string, entry FileEntry) error {

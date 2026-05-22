@@ -72,3 +72,30 @@ func isInteractive() bool {
 	}
 	return fi.Mode()&os.ModeCharDevice != 0
 }
+
+func runInteractiveRemove(installed []string) ([]string, error) {
+	if len(installed) == 0 {
+		return nil, fmt.Errorf("no packs installed")
+	}
+
+	options := make([]huh.Option[string], len(installed))
+	for i, p := range installed {
+		options[i] = huh.NewOption(p, p)
+	}
+
+	var selected []string
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewMultiSelect[string]().
+				Title("Select packs to remove").
+				Description("Use space to select, enter to confirm").
+				Options(options...).
+				Value(&selected),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return nil, err
+	}
+	return selected, nil
+}
