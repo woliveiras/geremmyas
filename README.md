@@ -41,8 +41,8 @@ geremmyas/
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 
 Global install (geremmyas global):
-  → ~/Library/Application Support/Code/User/.github/  (macOS)
-  → ~/.config/Code/User/.github/                      (Linux)
+  → ~/.agents/skills/           (user-level skills)
+  → ~/.copilot/instructions/    (user-level instructions)
 ```
 
 ## Install
@@ -147,9 +147,10 @@ geremmyas global
 ```
 
 Global packs are installed to:
-- **macOS**: `~/Library/Application Support/Code/User/.github/`
-- **Linux**: `~/.config/Code/User/.github/`
-- **Windows**: `%APPDATA%/Code/User/.github/`
+- **Skills**: `~/.agents/skills/`
+- **Instructions**: `~/.copilot/instructions/`
+
+These are the standard VS Code user-level paths, shared across all workspaces.
 
 You can also choose project vs global during interactive init:
 

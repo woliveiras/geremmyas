@@ -114,11 +114,14 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 			if err != nil {
 				return err
 			}
-			if err := globalInstallPacks(packs); err != nil {
+			count, err := globalInstallPacks(packs)
+			if err != nil {
 				return err
 			}
-			userDir, _ := vsCodeUserDir()
-			fmt.Fprintf(w, "installed %d packs globally to %s\n", len(globalPacks), userDir)
+			home := globalInstallDir()
+			fmt.Fprintf(w, "installed %d files globally:\n", count)
+			fmt.Fprintf(w, "  skills       → %s/.agents/skills/\n", home)
+			fmt.Fprintf(w, "  instructions → %s/.copilot/instructions/\n", home)
 		}
 
 		if len(projectPacks) == 0 && len(globalPacks) == 0 {
@@ -335,11 +338,14 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	if err := globalInstallPacks(packs); err != nil {
+	count, err := globalInstallPacks(packs)
+	if err != nil {
 		return err
 	}
 
-	userDir, _ := vsCodeUserDir()
-	fmt.Fprintf(w, "installed %d packs globally to %q\n", len(packs), userDir)
+	home := globalInstallDir()
+	fmt.Fprintf(w, "installed %d files globally:\n", count)
+	fmt.Fprintf(w, "  skills       → %s/.agents/skills/\n", home)
+	fmt.Fprintf(w, "  instructions → %s/.copilot/instructions/\n", home)
 	return nil
 }

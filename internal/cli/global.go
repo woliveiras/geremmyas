@@ -5,75 +5,64 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
 	geremmyas "github.com/woliveiras/geremmyas"
 )
 
-func vsCodeUserDir() (string, error) {
-	switch runtime.GOOS {
-	case "darwin":
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return "", err
-		}
-		return filepath.Join(home, "Library", "Application Support", "Code", "User"), nil
-	case "linux":
-		if dir := os.Getenv("XDG_CONFIG_HOME"); dir != "" {
-			return filepath.Join(dir, "Code", "User"), nil
-		}
-		home, err := os.UserHomeDir()
-		if err != nil {
-			return "", err
-		}
-		return filepath.Join(home, ".config", "Code", "User"), nil
-	case "windows":
-		appdata := os.Getenv("APPDATA")
-		if appdata == "" {
-			return "", fmt.Errorf("APPDATA not set")
-		}
-		return filepath.Join(appdata, "Code", "User"), nil
+// globalDestination resolves the user-level path for a given project target.
+// Returns empty string if the target has no user-level equivalent.
+func globalDestination(target string) (baseDir string, relPath string, ok bool) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", "", false
+	}
+
+	switch {
+	case strings.HasPrefix(target, ".github/skills/"):
+		rel := strings.TrimPrefix(target, ".github/skills/")
+		return filepath.Join(home, ".agents", "skills"), rel, true
+	case strings.HasPrefix(target, ".github/instructions/"):
+		rel := strings.TrimPrefix(target, ".github/instructions/")
+		return filepath.Join(home, ".copilot", "instructions"), rel, true
 	default:
-		return "", fmt.Errorf("unsupported platform %q", runtime.GOOS)
+		// agents, hooks, copilot-instructions.md, AGENTS.md, mise.toml
+		// are project-level only
+		return "", "", false
 	}
 }
 
-func globalInstallPacks(packs []Pack) error {
-	userDir, err := vsCodeUserDir()
-	if err != nil {
-		return fmt.Errorf("detecting VS Code user directory: %w", err)
-	}
+func globalInstallDir() string {
+	home, _ := os.UserHomeDir()
+	return home
+}
 
+func globalInstallPacks(packs []Pack) (int, error) {
+	count := 0
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
-			if !isGlobalTarget(entry.Target) {
+			baseDir, relPath, ok := globalDestination(entry.Target)
+			if !ok {
 				continue
 			}
-			if err := globalCopyEntry(userDir, entry); err != nil {
-				return fmt.Errorf("pack %q: %w", pack.Name, err)
+			if err := globalCopyEntry(baseDir, relPath, entry); err != nil {
+				return count, fmt.Errorf("pack %q: %w", pack.Name, err)
 			}
+			count++
 		}
 	}
-
-	return nil
+	return count, nil
 }
 
-// isGlobalTarget returns true for files that belong in the VS Code user-level
-// directory (inside .github/). Project-root files like AGENTS.md and mise.toml
-// are skipped during global install.
-func isGlobalTarget(target string) bool {
-	return strings.HasPrefix(target, ".github/") || strings.HasPrefix(target, ".github\\")
-}
-
-func globalCopyEntry(userDir string, entry FileEntry) error {
+func globalCopyEntry(baseDir, relPath string, entry FileEntry) error {
 	info, err := fs.Stat(geremmyas.EmbeddedFiles, entry.Source)
 	if err != nil {
 		return err
 	}
 
 	if !info.IsDir() {
-		return globalCopyFile(userDir, entry.Source, entry.Target)
+		dest := filepath.Join(baseDir, relPath)
+		return globalWriteFile(dest, entry.Source)
 	}
 
 	return fs.WalkDir(geremmyas.EmbeddedFiles, entry.Source, func(path string, d fs.DirEntry, err error) error {
@@ -87,18 +76,16 @@ func globalCopyEntry(userDir string, entry FileEntry) error {
 		if err != nil {
 			return err
 		}
-		target := filepath.Join(entry.Target, rel)
-		return globalCopyFile(userDir, path, target)
+		dest := filepath.Join(baseDir, relPath, rel)
+		return globalWriteFile(dest, path)
 	})
 }
 
-func globalCopyFile(userDir, source, target string) error {
+func globalWriteFile(dest, source string) error {
 	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, filepath.ToSlash(source))
 	if err != nil {
 		return err
 	}
-
-	dest := filepath.Join(userDir, target)
 	if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
 		return err
 	}
