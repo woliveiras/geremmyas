@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.4.0](https://github.com/woliveiras/geremmyas/compare/v2.3.0...v2.4.0) (2026-05-22)
+
+
+### Features
+
+* add 'project' command to install packs and update configuration, with interactive selection and file preservation options ([e35f136](https://github.com/woliveiras/geremmyas/commit/e35f1367a58a7ff6eeaf728ebc2d56a8f7a90cd5))
+* add systematic review protocol, threats to validity framework, venue submission checklists, and bibliography validation script ([0e3b0cc](https://github.com/woliveiras/geremmyas/commit/0e3b0cc25284652ba446dacd141d42558464f74a))
+
 ## [2.3.0](https://github.com/woliveiras/geremmyas/compare/v2.2.0...v2.3.0) (2026-05-22)
 
 
