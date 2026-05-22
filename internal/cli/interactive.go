@@ -8,52 +8,27 @@ import (
 	"github.com/charmbracelet/huh"
 )
 
-type packChoice struct {
-	Name        string
-	Description string
-	Level       string // "project", "global", "skip"
-}
-
 func runInteractiveInit(w io.Writer, catalog Catalog) (projectPacks []string, globalPacks []string, err error) {
 	if !isInteractive() {
 		return nil, nil, fmt.Errorf("interactive mode requires a terminal; use --packs flag instead")
 	}
 
-	choices := make([]packChoice, len(catalog.Packs))
-	for i, p := range catalog.Packs {
-		choices[i] = packChoice{
-			Name:        p.Name,
-			Description: p.Description,
-			Level:       "skip",
-		}
-	}
-
 	var projectSelected []string
 	var globalSelected []string
-
-	projectOptions := make([]huh.Option[string], len(catalog.Packs))
-	for i, p := range catalog.Packs {
-		projectOptions[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
-	}
-
-	globalOptions := make([]huh.Option[string], len(catalog.Packs))
-	for i, p := range catalog.Packs {
-		globalOptions[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
-	}
 
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
 				Title("Select packs to install in this project").
 				Description("Use space to select, enter to confirm").
-				Options(projectOptions...).
+				Options(packOptions(catalog)...).
 				Value(&projectSelected),
 		),
 		huh.NewGroup(
 			huh.NewMultiSelect[string]().
 				Title("Select packs to install globally (VS Code user-level)").
 				Description("These will be available in all your projects").
-				Options(globalOptions...).
+				Options(packOptions(catalog)...).
 				Value(&globalSelected),
 		),
 	)
@@ -63,6 +38,55 @@ func runInteractiveInit(w io.Writer, catalog Catalog) (projectPacks []string, gl
 	}
 
 	return projectSelected, globalSelected, nil
+}
+
+func runInteractivePackSelect(catalog Catalog, title, description string) ([]string, error) {
+	if !isInteractive() {
+		return nil, fmt.Errorf("interactive mode requires a terminal")
+	}
+
+	var selected []string
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewMultiSelect[string]().
+				Title(title).
+				Description(description).
+				Options(packOptions(catalog)...).
+				Value(&selected),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return nil, err
+	}
+	return selected, nil
+}
+
+func runInteractiveProjectForce() (bool, error) {
+	force := false
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewConfirm().
+				Title("Overwrite customizable project files?").
+				Description("Choose no to preserve existing AGENTS.md, mise.toml, Copilot instructions, and hooks.").
+				Affirmative("Overwrite").
+				Negative("Preserve").
+				Value(&force),
+		),
+	)
+
+	if err := form.Run(); err != nil {
+		return false, err
+	}
+	return force, nil
+}
+
+func packOptions(catalog Catalog) []huh.Option[string] {
+	options := make([]huh.Option[string], len(catalog.Packs))
+	for i, p := range catalog.Packs {
+		options[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
+	}
+	return options
 }
 
 func isInteractive() bool {

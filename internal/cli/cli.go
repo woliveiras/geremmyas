@@ -8,8 +8,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/charmbracelet/huh"
 )
 
 func Run(args []string, stdout, stderr io.Writer) int {
@@ -38,6 +36,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runAdd(args[1:], stdout, catalog)
 	case "remove":
 		runErr = runRemove(args[1:], stdout, catalog)
+	case "project":
+		runErr = runProject(args[1:], stdout, catalog)
 	case "global":
 		runErr = runGlobal(args[1:], stdout, catalog)
 	case "doctor":
@@ -62,6 +62,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas sync [--force]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
+	fmt.Fprintln(w, "  geremmyas project [--force] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global <pack>...")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
@@ -173,13 +174,8 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	fmt.Fprintf(w, "synced %d packs\n", len(packs))
-	fmt.Fprintf(w, "installed=%d updated=%d preserved=%d skipped=%d\n",
-		summary.Installed, summary.Updated, summary.Preserved, summary.Skipped)
-
-	if _, statErr := os.Stat(filepath.Join(root, "mise.toml")); statErr == nil {
-		fmt.Fprintln(w, "\nhint: run 'mise trust' to trust the mise.toml config file")
-	}
+	printSyncSummary(w, len(packs), summary)
+	printMiseHint(w, root)
 	return nil
 }
 
@@ -248,6 +244,72 @@ func runRemove(args []string, w io.Writer, catalog Catalog) error {
 	return nil
 }
 
+func runProject(args []string, w io.Writer, catalog Catalog) error {
+	fs := flag.NewFlagSet("project", flag.ContinueOnError)
+	fs.SetOutput(io.Discard)
+	force := fs.Bool("force", false, "overwrite customizable files")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+
+	packNames := fs.Args()
+	if len(packNames) == 0 && isInteractive() {
+		selected, err := runInteractivePackSelect(
+			catalog,
+			"Select packs to install in this project",
+			"Updates geremmyas.yml and syncs files into the current project",
+		)
+		if err != nil {
+			return err
+		}
+		if len(selected) == 0 {
+			fmt.Fprintln(w, "no packs selected")
+			return nil
+		}
+		packNames = selected
+
+		if !*force {
+			selectedForce, err := runInteractiveProjectForce()
+			if err != nil {
+				return err
+			}
+			*force = selectedForce
+		}
+	}
+
+	if len(packNames) == 0 {
+		return errors.New("project requires at least one pack name")
+	}
+
+	cfg, err := readConfigFile(configFileName)
+	if err != nil {
+		return err
+	}
+	cfg.Packs = uniqueStrings(append(cfg.Packs, packNames...))
+
+	packs, err := catalog.Resolve(cfg.Packs)
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(configFileName, []byte(formatConfig(cfg)), 0o644); err != nil {
+		return err
+	}
+	fmt.Fprintf(w, "updated %s\n", configFileName)
+
+	root, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+	if err != nil {
+		return err
+	}
+
+	printSyncSummary(w, len(packs), summary)
+	printMiseHint(w, root)
+	return nil
+}
+
 func runDoctor(w io.Writer, catalog Catalog) error {
 	if err := catalog.ValidateSources(); err != nil {
 		return err
@@ -299,29 +361,28 @@ func splitCSV(value string) []string {
 	return uniqueStrings(out)
 }
 
+func printSyncSummary(w io.Writer, packCount int, summary syncSummary) {
+	fmt.Fprintf(w, "synced %d packs\n", packCount)
+	fmt.Fprintf(w, "installed=%d updated=%d preserved=%d skipped=%d\n",
+		summary.Installed, summary.Updated, summary.Preserved, summary.Skipped)
+}
+
+func printMiseHint(w io.Writer, root string) {
+	if _, statErr := os.Stat(filepath.Join(root, "mise.toml")); statErr == nil {
+		fmt.Fprintln(w, "\nhint: run 'mise trust' to trust the mise.toml config file")
+	}
+}
+
 func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	if len(args) == 0 && isInteractive() {
-		// Interactive: show multi-select
-		var selected []string
-		options := make([]huh.Option[string], len(catalog.Packs))
-		for i, p := range catalog.Packs {
-			options[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
-		}
-
-		form := huh.NewForm(
-			huh.NewGroup(
-				huh.NewMultiSelect[string]().
-					Title("Select packs to install globally").
-					Description("Installed to VS Code user-level directory").
-					Options(options...).
-					Value(&selected),
-			),
+		selected, err := runInteractivePackSelect(
+			catalog,
+			"Select packs to install globally",
+			"Installed to VS Code user-level directory",
 		)
-
-		if err := form.Run(); err != nil {
+		if err != nil {
 			return err
 		}
-
 		if len(selected) == 0 {
 			fmt.Fprintln(w, "no packs selected")
 			return nil

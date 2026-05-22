@@ -146,6 +146,26 @@ geremmyas sync
 Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
 Run `geremmyas doctor` to validate the catalog and local config.
 
+Install packs into the current project and update `geremmyas.yml` in one step:
+
+```bash
+geremmyas project python-api data-postgres
+```
+
+Or use interactive selection:
+
+```bash
+geremmyas project
+```
+
+`geremmyas project` preserves customizable project files by default, including
+`AGENTS.md`, `mise.toml`, `.github/copilot-instructions.md`, and guardrail
+hooks. Use `--force` to overwrite those files during sync:
+
+```bash
+geremmyas project --force core
+```
+
 ### Global Install
 
 Install packs to your VS Code user-level directory so they apply across all projects:

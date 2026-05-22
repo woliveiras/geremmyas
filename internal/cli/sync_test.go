@@ -98,6 +98,96 @@ func TestRunInitAndAdd(t *testing.T) {
 	}
 }
 
+func TestRunProjectAddsPackAndSyncsFiles(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"project", "python-api"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(filepath.Join(root, configFileName))
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	text := string(data)
+	if !strings.Contains(text, "  - core\n") || !strings.Contains(text, "  - python-api\n") {
+		t.Fatalf("config content missing packs:\n%s", text)
+	}
+	mustExist(t, filepath.Join(root, ".github/instructions/python.instructions.md"))
+}
+
+func TestRunProjectPreservesCustomizableFilesByDefault(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	agentsPath := filepath.Join(root, "AGENTS.md")
+	if err := os.WriteFile(agentsPath, []byte("custom\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	if code := Run([]string{"project", "core"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(agentsPath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if string(data) != "custom\n" {
+		t.Fatalf("AGENTS.md = %q, want custom content", string(data))
+	}
+}
+
+func TestRunProjectForceOverwritesCustomizableFiles(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	agentsPath := filepath.Join(root, "AGENTS.md")
+	if err := os.WriteFile(agentsPath, []byte("custom\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	if code := Run([]string{"project", "--force", "core"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(agentsPath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if string(data) == "custom\n" {
+		t.Fatal("AGENTS.md was preserved, want overwritten content")
+	}
+}
+
+func withTempCwd(t *testing.T) string {
+	t.Helper()
+	cwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Getwd returned error: %v", err)
+	}
+	root := t.TempDir()
+	if err := os.Chdir(root); err != nil {
+		t.Fatalf("Chdir returned error: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := os.Chdir(cwd); err != nil {
+			t.Fatalf("restore Chdir returned error: %v", err)
+		}
+	})
+	return root
+}
+
 func mustExist(t *testing.T, path string) {
 	t.Helper()
 	if _, err := os.Stat(path); err != nil {
