@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.0.2](https://github.com/woliveiras/geremmyas/compare/v2.0.1...v2.0.2) (2026-05-22)
+
+
+### Bug Fixes
+
+* build and upload binaries in release workflow ([c6e0142](https://github.com/woliveiras/geremmyas/commit/c6e014205ffcedaf10194ffd82cabf93ae62cceb))
+* correct install examples in README ([49928ff](https://github.com/woliveiras/geremmyas/commit/49928ff7325c5db83b3e4491e455ed466338610a))
+* show mise trust hint after sync installs mise.toml ([a3e1dbd](https://github.com/woliveiras/geremmyas/commit/a3e1dbd1fb67e40d38688c0f79e9d303154528e3))
+
 ## [2.0.1](https://github.com/woliveiras/geremmyas/compare/v2.0.0...v2.0.1) (2026-05-22)
 
 
