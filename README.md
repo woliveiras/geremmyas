@@ -129,6 +129,20 @@ packs:
   - data-postgres
 ```
 
+Optional writing and research packs:
+
+| Pack | Use when |
+|------|----------|
+| `blog` | Reviewing and rewriting technical blog posts while preserving the author's voice |
+| `research` | Writing, reviewing, and planning scientific papers, SLRs, peer reviews, and empirical case studies |
+
+Add them to a repository:
+
+```bash
+geremmyas add blog research
+geremmyas sync
+```
+
 Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
 Run `geremmyas doctor` to validate the catalog and local config.
 
@@ -137,7 +151,7 @@ Run `geremmyas doctor` to validate the catalog and local config.
 Install packs to your VS Code user-level directory so they apply across all projects:
 
 ```bash
-geremmyas global sdd python-ai infra-terraform
+geremmyas global sdd python-ai infra-terraform blog research
 ```
 
 Or use interactive selection:
@@ -323,6 +337,9 @@ Recommended organization for future skills:
 | `migrate-react-router` | Step-by-step guide for React Router v6 → v7 migration |
 | `model-state-with-xstate` | XState v5 recipes: React integration, actors, testing |
 | `manage-state-with-zustand` | Zustand v5 recipes: middleware setup, immer, XState sync |
+| `text-review` | Rewrite technical blog drafts while preserving voice and facts (`blog` pack) |
+| `scientific-paper` | Create, review, critique, and validate scientific papers (`research` pack) |
+| `scientific-case-study-research` | Design empirical SE case studies with protocol, triangulation, and validity checks (`research` pack) |
 
 #### Local AFK Workflow
 

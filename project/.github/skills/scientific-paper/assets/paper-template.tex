@@ -1,0 +1,395 @@
+\documentclass[11pt,a4paper]{article}
+
+% =============================================================
+% ANONYMIZATION TOGGLE
+% Set \anonymizedtrue  for double-blind submission
+% Set \anonymizedfalse for arXiv, preprint, camera-ready
+% Change ONLY THIS LINE:
+\newif\ifanonymized
+\anonymizedfalse
+% =============================================================
+
+% --- Core packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{cleveref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{authblk}
+\usepackage{microtype}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+\usepackage{hyperref}
+\ifanonymized
+  \hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black,
+    pdfauthor={},
+    pdftitle={},
+  }
+\else
+  \hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black,
+  }
+\fi
+
+\lstset{
+  basicstyle=\small\ttfamily,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  aboveskip=8pt,
+  belowskip=8pt,
+}
+
+% =============================================================
+% TITLE AND AUTHORS
+% Replace the placeholders below with your paper's content.
+% =============================================================
+
+\title{[Paper Title: Concise, Specific, Informative]}
+
+\ifanonymized
+  \author{[Anonymous for review]}
+  \date{}
+\else
+  \author{William Oliveira\\
+  Independent Researcher\\
+  ORCID: 0000-0000-0000-0000\\
+  \texttt{contact@woliveiras.com}}
+  \date{[Month YYYY]}
+\fi
+
+% =============================================================
+
+\begin{document}
+
+% --- Title page ---
+\begin{titlepage}
+  \centering
+  \vspace*{\fill}
+  {\LARGE\bfseries [Paper Title]\par}
+  \vspace{2em}
+  \ifanonymized
+    {\large [Anonymous for review]\par}
+  \else
+    {\large William Oliveira\par}
+    \vspace{0.5em}
+    {\normalsize Independent Researcher\par}
+    {\normalsize ORCID: 0000-0000-0000-0000\par}
+    {\normalsize \texttt{contact@woliveiras.com}\par}
+    \vspace{1em}
+    {\normalsize [Month YYYY]\par}
+  \fi
+  \vspace*{\fill}
+\end{titlepage}
+
+% --- Abstract page ---
+\begin{titlepage}
+  \vspace*{\fill}
+  \begin{abstract}
+% Structured abstract: Background / Objective / Method / Results / Conclusion
+% Background: What is the context? Why does this problem exist?
+% Objective: What is the specific goal of this paper?
+% Method: What study type and approach did you use? (≤2 sentences)
+% Results: What did you find? (include at least ONE specific result)
+% Conclusion: What does this mean? What should practitioners/researchers do?
+[Background: context and motivation in 1–2 sentences.]
+[Objective: the specific goal of this paper in 1 sentence.]
+[Method: study design and approach in 1–2 sentences.]
+[Results: key findings - include at least one specific result.]
+[Conclusion: takeaway and implications in 1–2 sentences.]
+  \end{abstract}
+  \vspace*{\fill}
+\end{titlepage}
+
+% --- Table of contents (remove for conference papers) ---
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+% =============================================================
+\section{Introduction}
+\label{sec:introduction}
+% =============================================================
+% Checklist:
+% [ ] Problem is concrete (not "X is important")
+% [ ] Gap is supported with evidence (cite or explain why gap exists)
+% [ ] Research questions are numbered and scoped
+% [ ] Contributions are numbered and match what is delivered
+% [ ] Paper organization paragraph at the end
+
+[Motivation: describe the problem and its practical impact. Be concrete.]
+
+[Gap: what existing work does NOT address. Support with citations.]
+
+We investigate the following research questions:
+
+\begin{itemize}
+  \item \textbf{RQ1:} [First research question - specific, measurable, scoped.]
+  \item \textbf{RQ2:} [Second research question.]
+  % \item \textbf{RQ3:} [Third research question, if applicable.]
+\end{itemize}
+
+Our contributions are:
+\begin{enumerate}
+  \item [First contribution - specific and verifiable.]
+  \item [Second contribution.]
+  % \item [Third contribution, if applicable.]
+\end{enumerate}
+
+The remainder of this paper is organized as follows.
+\Cref{sec:background} reviews background and related work.
+\Cref{sec:study-design} describes the study design.
+\Cref{sec:results} presents the findings.
+\Cref{sec:discussion} discusses implications.
+\Cref{sec:threats} addresses threats to validity.
+\Cref{sec:conclusion} concludes.
+
+
+% =============================================================
+\section{Background and Related Work}
+\label{sec:background}
+% =============================================================
+% Checklist:
+% [ ] Background covers concepts needed to understand the paper
+% [ ] Related work describes what others did AND what they did NOT do
+% [ ] Gap statement at end of related work section
+
+\subsection{[Core Concept 1]}
+\label{sec:background-concept1}
+
+[Background explanation. Cite foundational sources~\cite{FIXME}.]
+
+\subsection{[Core Concept 2]}
+\label{sec:background-concept2}
+
+[Background explanation.]
+
+\subsection{Related Work}
+\label{sec:related-work}
+
+[Summary of related work - organized by theme or approach. For each group of papers, state what they study and what they do NOT address.]
+
+% Positioning table (uncomment and fill for ≥5 related papers):
+% \begin{table}[ht]
+% \centering
+% \small
+% \caption{Comparison of related work. ✓ = studied, △ = partially, ✗ = not studied.}
+% \label{tab:related-work}
+% \begin{tabular}{lccc}
+% \toprule
+% Study & Dimension A & Dimension B & Dimension C \\
+% \midrule
+% Paper A~\cite{A} & ✓ & △ & ✗ \\
+% Paper B~\cite{B} & ✓ & ✓ & ✗ \\
+% \textbf{This paper} & ✓ & ✓ & ✓ \\
+% \bottomrule
+% \end{tabular}
+% \end{table}
+
+Unlike prior work, this paper addresses [gap] by [approach].
+
+
+% =============================================================
+\section{Study Design}
+\label{sec:study-design}
+% =============================================================
+% Checklist:
+% [ ] Study type is named (case study / benchmarking / experiment / SLR / survey)
+% [ ] Subjects/objects described with enough detail for replication judgment
+% [ ] Data collection method and instruments described
+% [ ] Analysis procedure described (how categories/metrics were derived)
+
+\subsection{Study Type and Goals}
+
+This paper presents [a benchmarking study / a practitioner case study / a controlled experiment / ...].
+The goal is to [GQM: analyze X for the purpose of Y with respect to Z from the viewpoint of W in the context of V].
+
+\subsection{Subjects / Experimental Units}
+
+[Describe what was studied: hardware, models, system, dataset, participants - whatever is the unit of study. Include exact versions, sizes, specifications.]
+
+\subsection{Data Collection}
+
+[Describe how data was collected: instruments, measurements, sources. For benchmarking: specify N per condition, warm-up runs, run order, thermal policy, system isolation. For case study: data sources, classification criteria.]
+
+\subsection{Analysis Procedure}
+
+[Describe how raw data was analyzed: statistical tests (justify choices), coding scheme for qualitative data, aggregation method.]
+
+\subsection{Replication Package}
+
+\ifanonymized
+  The replication package (data, scripts, and analysis notebooks) will be made available upon acceptance at [anonymous repository link].
+\else
+  The replication package is available at: \url{https://github.com/[FIXME]/[FIXME]}.
+\fi
+
+
+% =============================================================
+\section{Results}
+\label{sec:results}
+% =============================================================
+% Checklist:
+% [ ] Each subsection answers one RQ
+% [ ] Subsection title states the finding, not just the question
+% [ ] Figures/tables are referenced in text before they appear
+% [ ] Mean AND variance reported for all quantitative results
+% [ ] Statistical tests and p-values + effect sizes reported
+
+\subsection{RQ1: [Restate the question]}
+\label{sec:rq1}
+
+% Tip: The subsection title should encode the answer, e.g.:
+% "RQ1: On Radxa Rock 5B, throughput scales sublinearly with model size"
+
+[Present findings for RQ1. Reference figures and tables.]
+
+% Example table:
+% \begin{table}[ht]
+% \centering
+% \small
+% \caption{[Description of what the table shows].}
+% \label{tab:rq1-results}
+% \begin{tabularx}{\textwidth}{lXX}
+% \toprule
+% \textbf{Condition} & \textbf{Mean ± SD} & \textbf{[Metric]} \\
+% \midrule
+% Condition A & 45.2 ± 3.1 & ... \\
+% Condition B & 38.7 ± 2.8 & ... \\
+% \bottomrule
+% \end{tabularx}
+% \end{table}
+
+\textbf{Answer to RQ1:} [1–2 sentence direct answer to the research question.]
+
+\subsection{RQ2: [Restate the question]}
+\label{sec:rq2}
+
+[Present findings for RQ2.]
+
+\textbf{Answer to RQ2:} [1–2 sentence direct answer.]
+
+
+% =============================================================
+\section{Discussion}
+\label{sec:discussion}
+% =============================================================
+% Checklist:
+% [ ] Interpretation of results (why do findings look like this?)
+% [ ] Comparison to related work (agrees / contradicts / extends?)
+% [ ] Implications for practitioners (actionable recommendations)
+% [ ] Implications for researchers (open questions, future work directions)
+% [ ] Limitations (honest scope bounds - different from threats to validity)
+
+\subsection{Interpretation}
+
+[Why do the results look like this? Provide explanations grounded in the data.]
+
+\subsection{Comparison to Related Work}
+
+[How do findings agree or disagree with related work? If they disagree, explain why.]
+
+\subsection{Implications for Practitioners}
+
+\begin{enumerate}
+  \item \textbf{[Heuristic / recommendation 1]:} [Explanation.]
+  \item \textbf{[Heuristic / recommendation 2]:} [Explanation.]
+\end{enumerate}
+
+\subsection{Implications for Researchers}
+
+[What questions does this work open? What follow-on studies are needed?]
+
+
+% =============================================================
+\section{Threats to Validity}
+\label{sec:threats}
+% =============================================================
+% Use Wohlin framework: Construct / Internal / External / Conclusion
+% For each threat: name it → describe it → state your mitigation (or acknowledge if unmitigated)
+
+\subsection{Construct Validity}
+
+[Threats to whether measured constructs match intended theoretical constructs.]
+
+\subsection{Internal Validity}
+
+[Threats to whether observed effects are caused by the treatment (experiments, case studies).]
+
+\subsection{External Validity}
+
+[Threats to generalizability. Be specific about context factors that bound applicability.]
+
+\subsection{Conclusion Validity}
+
+[Threats to whether statistical conclusions are correct: power, test assumptions, multiple comparisons.]
+
+
+% =============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% =============================================================
+% Checklist:
+% [ ] Each RQ answered explicitly (1 sentence per RQ)
+% [ ] No new claims not present in the paper body
+% [ ] Future work is specific (not "more research is needed")
+
+[Summary of motivation and approach in 2–3 sentences.]
+
+In answer to our research questions:
+\textbf{RQ1:} [Direct answer.]
+\textbf{RQ2:} [Direct answer.]
+
+[Broader takeaway: what does this mean for the field?]
+
+Future work includes [specific next step 1] and [specific next step 2].
+
+
+% =============================================================
+% BIBLIOGRAPHY
+% =============================================================
+
+\bibliographystyle{plain}
+\bibliography{references}
+% Or with biblatex: \printbibliography
+
+
+% =============================================================
+% DATA AVAILABILITY (required by most venues)
+% =============================================================
+\section*{Data Availability}
+\ifanonymized
+  Data and scripts will be made publicly available upon acceptance.
+\else
+  Data, scripts, and analysis notebooks are available at: \url{https://github.com/[FIXME]/[FIXME]}
+  under the MIT license (scripts) and CC BY 4.0 (paper).
+\fi
+
+
+% =============================================================
+% ACKNOWLEDGMENTS (hidden in blind submissions)
+% =============================================================
+\ifanonymized
+  % [Acknowledgments hidden for blind review]
+\else
+  \section*{Acknowledgments}
+  [Funding sources, reviewers, etc. If none: This research received no external funding.]
+\fi
+
+\end{document}

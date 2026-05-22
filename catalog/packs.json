@@ -43,6 +43,21 @@
       ]
     },
     {
+      "name": "blog",
+      "description": "Opinionated blog post review and rewriting workflow for technical authors.",
+      "files": [
+        { "source": "project/.github/skills/text-review", "target": ".github/skills/text-review" }
+      ]
+    },
+    {
+      "name": "research",
+      "description": "Scientific paper, literature review, peer review, and empirical case study workflows.",
+      "files": [
+        { "source": "project/.github/skills/scientific-paper", "target": ".github/skills/scientific-paper" },
+        { "source": "project/.github/skills/scientific-case-study-research", "target": ".github/skills/scientific-case-study-research" }
+      ]
+    },
+    {
       "name": "typescript-base",
       "description": "TypeScript baseline instructions.",
       "files": [

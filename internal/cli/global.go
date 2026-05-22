@@ -45,27 +45,32 @@ func globalInstallPacks(packs []Pack) (int, error) {
 			if !ok {
 				continue
 			}
-			if err := globalCopyEntry(baseDir, relPath, entry); err != nil {
+			copied, err := globalCopyEntry(baseDir, relPath, entry)
+			if err != nil {
 				return count, fmt.Errorf("pack %q: %w", pack.Name, err)
 			}
-			count++
+			count += copied
 		}
 	}
 	return count, nil
 }
 
-func globalCopyEntry(baseDir, relPath string, entry FileEntry) error {
+func globalCopyEntry(baseDir, relPath string, entry FileEntry) (int, error) {
 	info, err := fs.Stat(geremmyas.EmbeddedFiles, entry.Source)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if !info.IsDir() {
 		dest := filepath.Join(baseDir, relPath)
-		return globalWriteFile(dest, entry.Source)
+		if err := globalWriteFile(dest, entry.Source); err != nil {
+			return 0, err
+		}
+		return 1, nil
 	}
 
-	return fs.WalkDir(geremmyas.EmbeddedFiles, entry.Source, func(path string, d fs.DirEntry, err error) error {
+	count := 0
+	err = fs.WalkDir(geremmyas.EmbeddedFiles, entry.Source, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -77,8 +82,16 @@ func globalCopyEntry(baseDir, relPath string, entry FileEntry) error {
 			return err
 		}
 		dest := filepath.Join(baseDir, relPath, rel)
-		return globalWriteFile(dest, path)
+		if err := globalWriteFile(dest, path); err != nil {
+			return err
+		}
+		count++
+		return nil
 	})
+	if err != nil {
+		return count, err
+	}
+	return count, nil
 }
 
 func globalWriteFile(dest, source string) error {
