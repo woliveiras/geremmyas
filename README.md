@@ -498,7 +498,13 @@ All synced files are meant to be edited. After running `geremmyas sync`:
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+```bash
+mise trust && mise install   # setup Go toolchain
+go test ./...                # run tests
+go build ./cmd/geremmyas     # build binary
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
 
 ## Changelog
 
