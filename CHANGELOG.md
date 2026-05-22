@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.0.1](https://github.com/woliveiras/geremmyas/compare/v2.0.0...v2.0.1) (2026-05-22)
+
+
+### Bug Fixes
+
+* allow release workflow to publish release-please releases ([4f34c77](https://github.com/woliveiras/geremmyas/commit/4f34c77bfa9766505e4a977f817b243678530d89))
+* update permissions and token configuration in release workflow ([ff8fa4c](https://github.com/woliveiras/geremmyas/commit/ff8fa4c17bb23a4d28c3a3c1ecb943384c4e7bf2))
+* use manifest mode for release-please action ([225ae5f](https://github.com/woliveiras/geremmyas/commit/225ae5f15decee725d8d751b0707a9c6d259a196))
+
 ## [2.0.0](https://github.com/woliveiras/geremmyas/compare/v1.5.0...v2.0.0) (2026-05-22)
 
 
