@@ -9,6 +9,10 @@ Opinionated GitHub Copilot configurations for VS Code.
 Agents, skills, instructions, hooks, prompts, and a pack-based CLI named
 `geremmyas`.
 
+<p align="center">
+  <img src=".github/assets/geremmyas-logo.png" alt="Geremmyas Logo" width="200"/>
+</p>
+
 ## Why?
 
 Every project needs the same Copilot setup: language-specific instructions, code review prompts, testing conventions, security guardrails. Instead of copying files between repos, install once and apply everywhere.
