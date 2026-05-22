@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.3.0](https://github.com/woliveiras/geremmyas/compare/v2.2.0...v2.3.0) (2026-05-22)
+
+
+### Features
+
+* update global installation paths for skills and instructions ([06dcf61](https://github.com/woliveiras/geremmyas/commit/06dcf6174aa8a6411892264d79eaea7d721961d1))
+
+
+### Miscellaneous
+
+* add symlink for project AGENTS.md and .github directory ([d0539fd](https://github.com/woliveiras/geremmyas/commit/d0539fd4ac2aca7c63f8e4e037213b26c5390deb))
+
 ## [2.2.0](https://github.com/woliveiras/geremmyas/compare/v2.1.0...v2.2.0) (2026-05-22)
 
 
