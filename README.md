@@ -53,10 +53,16 @@ The installer downloads the latest release binary to `~/.local/bin/geremmyas`.
 When run from a local checkout, it can also build the binary with Go if a release
 asset is not available yet.
 
-Use `XDG_BIN_HOME` to choose another install directory. Use `GEREMMYAS_INSTALL_SOURCE=checkout` when testing the installer from a local clone:
+Use `XDG_BIN_HOME` to choose another install directory:
 
 ```bash
-XDG_BIN_HOME="$HOME/bin" bash install.sh
+curl -fsSL https://raw.githubusercontent.com/woliveiras/geremmyas/main/install.sh | XDG_BIN_HOME="$HOME/bin" bash
+```
+
+From a local checkout, use `GEREMMYAS_INSTALL_SOURCE=checkout` to build from source:
+
+```bash
+XDG_BIN_HOME="$HOME/bin" ./install.sh
 ```
 
 ## Update
