@@ -1,4 +1,4 @@
-# Contributing to copilot-configs
+# Contributing to geremmyas
 
 Thanks for your interest in contributing! This project is a personal set of GitHub Copilot configurations, but contributions that improve quality, fix bugs, or add useful defaults are welcome.
 
@@ -37,7 +37,7 @@ Thanks for your interest in contributing! This project is a personal set of GitH
 
 ## Reporting Issues
 
-Use [GitHub Issues](https://github.com/woliveiras/copilot-configs/issues) with the provided templates. Include your OS and VS Code version when reporting install problems.
+Use [GitHub Issues](https://github.com/woliveiras/geremmyas/issues) with the provided templates. Include your OS and VS Code version when reporting install problems.
 
 ## Code of Conduct
 

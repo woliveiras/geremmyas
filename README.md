@@ -1,10 +1,12 @@
-# copilot-configs
+# geremmyas
 
-[![CI](https://github.com/woliveiras/copilot-configs/actions/workflows/ci.yml/badge.svg)](https://github.com/woliveiras/copilot-configs/actions/workflows/ci.yml)
+[![CI](https://github.com/woliveiras/geremmyas/actions/workflows/ci.yml/badge.svg)](https://github.com/woliveiras/geremmyas/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ShellCheck](https://img.shields.io/badge/shell-ShellCheck-brightgreen)](https://www.shellcheck.net/)
 
-**Dotfiles for AI** — opinionated GitHub Copilot configurations for VS Code. Agents, skills, instructions, hooks, and prompts. One command to install.
+**Dotfiles for AI** — opinionated GitHub Copilot configurations for VS Code.
+Agents, skills, instructions, hooks, prompts, and a pack-based CLI named
+`geremmyas`.
 
 ## Why?
 
@@ -12,15 +14,16 @@ Every project needs the same Copilot setup: language-specific instructions, code
 
 **What you get:**
 
+- **Pack-based project installs** with `geremmyas.yml`, so each repository gets only the instructions and skills it needs
 - **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
 - **AGENTS.md** project contract for agent workflows, artifact locations, and operating rules
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
 - **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
-- **4 global prompts** for code review, refactoring, test generation, and SDD workflow
+- **Prompt templates** for code review, refactoring, test generation, and SDD workflow
 
 ```
-copilot-configs/
+geremmyas/
 ├── install.sh / uninstall.sh          # Install scripts
 ├── user/
 │   ├── copilot-instructions.md        # Global bootstrap that points agents to local AGENTS.md
@@ -39,94 +42,104 @@ copilot-configs/
 
 ## Install
 
+Install or update the `geremmyas` binary:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/woliveiras/geremmyas/main/install.sh | bash
 ```
 
-This clones the repo to `~/.copilot-configs/` and copies global prompts plus a
-small Copilot instruction bootstrap to your VS Code user directory.
+The installer downloads the latest release binary to `~/.local/bin/geremmyas`.
+When run from a local checkout, it can also build the binary with Go if a release
+asset is not available yet.
+
+Use `XDG_BIN_HOME` to choose another install directory. Use `GEREMMYAS_INSTALL_SOURCE=checkout` when testing the installer from a local clone:
+
+```bash
+XDG_BIN_HOME="$HOME/bin" bash install.sh
+```
 
 ## Update
 
-Run the same install command again:
+Run the same installer again:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/woliveiras/copilot-configs/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/woliveiras/geremmyas/main/install.sh | bash
 ```
 
-The installer pulls the latest version and updates your global prompts automatically. Files that are identical to the latest version are silently skipped.
-
-For project-level files, re-run `--project` inside your repo:
+Or from a local checkout:
 
 ```bash
-~/.copilot-configs/install.sh --project
+./install.sh update
 ```
-
-Managed files (instructions, agents, skills, hooks) are updated to the latest version. Customizable files (`AGENTS.md`, `copilot-instructions.md`, `guardrails-rules.txt`) are preserved. Use `--force` to overwrite everything, including customized files.
 
 ## Uninstall
 
-```bash
-~/.copilot-configs/uninstall.sh
-```
-
-Removes the `~/.copilot-configs/` directory and global prompts from VS Code. Project-level files (`.github/` in your repos) are not touched — remove them manually if needed.
-
-## Project Setup
-
-After installing, apply project-level configs to any repository:
+Remove the binary:
 
 ```bash
-~/.copilot-configs/install.sh --project
+curl -fsSL https://raw.githubusercontent.com/woliveiras/geremmyas/main/install.sh | bash -s -- uninstall
 ```
 
-To also configure `copilot-instructions.md` placeholders interactively:
+Or from a local checkout:
 
 ```bash
-~/.copilot-configs/install.sh --project --configure
+./install.sh uninstall
 ```
 
-The `--configure` flag offers two modes:
-- **Interactive** — answer questions about your project
-- **Auto-detect** — detects stack, directories and build commands from manifest files
+## Usage
 
-You can also run `--configure` standalone on an existing project to reconfigure:
+Create a config in a repository:
 
 ```bash
-~/.copilot-configs/install.sh --configure
+geremmyas init
 ```
 
-Run from inside your project directory.
+Install the declared packs:
+
+```bash
+geremmyas sync
+```
+
+List available packs:
+
+```bash
+geremmyas list
+```
+
+Example `geremmyas.yml`:
+
+```yaml
+version: 1
+packs:
+  - core
+  - sdd
+  - afk
+  - python-api
+  - data-postgres
+```
+
+Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
+Run `geremmyas doctor` to validate the catalog and local config.
 
 ## What's Included
 
-### Global (user-level)
 
-Prompts are installed to `~/Library/Application Support/Code/User/prompts/`
-(macOS) or `~/.config/Code/User/prompts/` (Linux).
+### User-level Templates
 
-The global `copilot-instructions.md` bootstrap is installed to the VS Code user
-directory. It is intentionally small: it tells agents to look for `AGENTS.md` in
-the active workspace and follow the project-local file when present.
-Depending on your Copilot client/settings, user-level instruction files may need
-to be referenced from the VS Code custom instructions settings. The project-local
-`AGENTS.md` remains the reliable contract installed into each repository.
-
-Skills can be installed globally as reusable capabilities, but `AGENTS.md`
-should be project-level by default because it contains repository-specific
-paths, workflows, commands, and artifact locations. Any global `AGENTS.md` or
-global instruction should be treated as a template/default, not as the active
-contract for every repository.
+The `user/` directory contains optional prompt and instruction templates. The
+binary installer does not copy these files globally. Repository setup is driven
+by `geremmyas.yml` and `geremmyas sync`.
 
 | File | Purpose |
 |------|---------|
-| `copilot-instructions.md` | Global bootstrap: find and follow local `AGENTS.md` |
-| `review.prompt.md` | Structured code review checklist |
-| `refactor.prompt.md` | Refactor preserving behavior |
-| `test.prompt.md` | Generate unit tests matching project patterns |
-| `sdd.prompt.md` | Full SDD cycle: spec → test → implement → review → docs |
+| `user/copilot-instructions.md` | Bootstrap template: find and follow local `AGENTS.md` |
+| `user/prompts/review.prompt.md` | Structured code review checklist |
+| `user/prompts/refactor.prompt.md` | Refactor preserving behavior |
+| `user/prompts/test.prompt.md` | Generate unit tests matching project patterns |
+| `user/prompts/sdd.prompt.md` | Full SDD cycle: spec -> test -> implement -> review -> docs |
 
 ### Project-level
+
 
 Installed to the project root and `.github/`.
 
@@ -427,11 +440,11 @@ When the feature involves significant design choices, use these before or alongs
 
 ## Customization
 
-All files are meant to be edited. After running `--project`:
+All synced files are meant to be edited. After running `geremmyas sync`:
 
 1. **Review `AGENTS.md`** — adjust artifact paths, workflow rules, and skill routing for the repository
 2. **Edit `.github/copilot-instructions.md`** — fill in project name, description, directory structure, and build commands
-3. **Add more instructions** — copy from `~/.copilot-configs/project/.github/instructions/`
+3. **Add more packs** — run `geremmyas add <pack>` and `geremmyas sync`
 4. **Tune guardrails** — add or remove rules in `guardrails-rules.txt`
 
 ## Contributing

@@ -26,27 +26,29 @@ jobs:
           shellcheck uninstall.sh
           shellcheck project/.github/hooks/scripts/block-dangerous-commands.sh
 
-  yaml-lint:
-    name: YAML Frontmatter Check
+  structure:
+    name: Structure Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - name: Check markdown files exist
+      - name: Check expected files
         run: |
-          echo "Checking file structure..."
           test -f install.sh
           test -f uninstall.sh
           test -f README.md
+          test -f go.mod
+          test -f catalog/packs.json
+          test -d cmd/geremmyas
+          test -d internal/cli
           test -d user/prompts
           test -d project/.github/instructions
           test -d project/.github/agents
           test -d project/.github/skills
           test -d project/.github/hooks
-          echo "All expected files and directories present."
 
   install-test:
-    name: Install Script Test
+    name: Binary Installer Test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -54,22 +56,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Simulate global install (skip git clone, use checkout)
-        run: |
-          mkdir -p "$HOME/.copilot-configs"
-          cp -R . "$HOME/.copilot-configs/"
-          echo "Simulated install from checkout."
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
 
-      - name: Test install (project)
+      - name: Install binary from local checkout
         run: |
-          mkdir -p /tmp/test-project && cd /tmp/test-project
-          bash "$HOME/.copilot-configs/install.sh" --project
-          test -f .github/copilot-instructions.md
-          test -d .github/instructions
-          test -d .github/agents
-          test -d .github/skills
-          test -d .github/hooks
-          echo "Project install verified."
+          export XDG_BIN_HOME="$RUNNER_TEMP/bin"
+          GEREMMYAS_INSTALL_SOURCE=checkout bash install.sh install
+          test -x "$XDG_BIN_HOME/geremmyas"
+          "$XDG_BIN_HOME/geremmyas" list
 
-      - name: Test uninstall
-        run: bash uninstall.sh
+      - name: Uninstall binary
+        run: |
+          export XDG_BIN_HOME="$RUNNER_TEMP/bin"
+          bash install.sh uninstall
+          test ! -e "$XDG_BIN_HOME/geremmyas"
