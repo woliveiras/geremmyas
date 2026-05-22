@@ -31,7 +31,7 @@ geremmyas/
 │   └── prompts/                       # Global prompts (review, refactor, test)
 └── project/
     ├── AGENTS.md                      # Project-level operating contract for agents
-    ├── mise.toml                      # Tool version management template
+    ├── mise.toml                      # Tool version management (keeps env consistent)
     └── .github/
         ├── copilot-instructions.md    # Project-level Copilot instructions
         ├── instructions/              # Auto-applied language, framework, and convention files
@@ -39,6 +39,10 @@ geremmyas/
         │   └── references/            # Deep modules, interface design, etc.
         ├── skills/                    # Workflow and utility skills with asset templates
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
+
+Global install (geremmyas global):
+  → ~/Library/Application Support/Code/User/.github/  (macOS)
+  → ~/.config/Code/User/.github/                      (Linux)
 ```
 
 ## Install
@@ -127,6 +131,44 @@ packs:
 
 Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
 Run `geremmyas doctor` to validate the catalog and local config.
+
+### Global Install
+
+Install packs to your VS Code user-level directory so they apply across all projects:
+
+```bash
+geremmyas global sdd python-ai infra-terraform
+```
+
+Or use interactive selection:
+
+```bash
+geremmyas global
+```
+
+Global packs are installed to:
+- **macOS**: `~/Library/Application Support/Code/User/.github/`
+- **Linux**: `~/.config/Code/User/.github/`
+- **Windows**: `%APPDATA%/Code/User/.github/`
+
+You can also choose project vs global during interactive init:
+
+```bash
+geremmyas init
+```
+
+### mise (Environment Consistency)
+
+Every project sync includes a `mise.toml` template for consistent tool versions.
+After sync, activate it:
+
+```bash
+mise trust
+mise install
+```
+
+This ensures all contributors use the same Go, Node, Python (or whatever tools
+the project needs) versions without manual setup.
 
 ## What's Included
 
