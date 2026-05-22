@@ -128,6 +128,10 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 	fmt.Fprintf(w, "synced %d packs\n", len(packs))
 	fmt.Fprintf(w, "installed=%d updated=%d preserved=%d skipped=%d\n",
 		summary.Installed, summary.Updated, summary.Preserved, summary.Skipped)
+
+	if _, statErr := os.Stat(filepath.Join(root, "mise.toml")); statErr == nil {
+		fmt.Fprintln(w, "\nhint: run 'mise trust' to trust the mise.toml config file")
+	}
 	return nil
 }
 
