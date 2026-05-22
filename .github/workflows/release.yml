@@ -8,6 +8,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
+  actions: read
 
 jobs:
   release-please:
@@ -17,3 +19,4 @@ jobs:
       - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
+          token: ${{ secrets.GITHUB_TOKEN }}
