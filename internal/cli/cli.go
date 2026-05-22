@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/charmbracelet/huh"
 )
 
 func Run(args []string, stdout, stderr io.Writer) int {
@@ -36,6 +38,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runAdd(args[1:], stdout, catalog)
 	case "remove":
 		runErr = runRemove(args[1:], stdout, catalog)
+	case "global":
+		runErr = runGlobal(args[1:], stdout, catalog)
 	case "doctor":
 		runErr = runDoctor(stdout, catalog)
 	default:
@@ -58,6 +62,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas sync [--force]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
+	fmt.Fprintln(w, "  geremmyas global <pack>...")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
 
@@ -71,7 +76,7 @@ func runList(w io.Writer, catalog Catalog) error {
 func runInit(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
-	packsFlag := fs.String("packs", "core,sdd,afk", "comma-separated pack names")
+	packsFlag := fs.String("packs", "", "comma-separated pack names")
 	force := fs.Bool("force", false, "overwrite existing geremmyas.yml")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -84,10 +89,50 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	cfg := Config{Version: 1, Packs: splitCSV(*packsFlag)}
-	if len(cfg.Packs) == 0 {
-		cfg = defaultConfig()
+	// Interactive mode when no --packs flag and terminal is available
+	if *packsFlag == "" && isInteractive() {
+		projectPacks, globalPacks, err := runInteractiveInit(w, catalog)
+		if err != nil {
+			return err
+		}
+
+		// Install project-level packs
+		if len(projectPacks) > 0 {
+			cfg := Config{Version: 1, Packs: projectPacks}
+			if _, err := catalog.Resolve(cfg.Packs); err != nil {
+				return err
+			}
+			if err := os.WriteFile(configPath, []byte(formatConfig(cfg)), 0o644); err != nil {
+				return err
+			}
+			fmt.Fprintf(w, "created %s with %d packs\n", configFileName, len(projectPacks))
+		}
+
+		// Install global packs
+		if len(globalPacks) > 0 {
+			packs, err := catalog.Resolve(globalPacks)
+			if err != nil {
+				return err
+			}
+			if err := globalInstallPacks(packs); err != nil {
+				return err
+			}
+			userDir, _ := vsCodeUserDir()
+			fmt.Fprintf(w, "installed %d packs globally to %s\n", len(globalPacks), userDir)
+		}
+
+		if len(projectPacks) == 0 && len(globalPacks) == 0 {
+			fmt.Fprintln(w, "no packs selected")
+		}
+		return nil
 	}
+
+	// Non-interactive: use --packs flag or defaults
+	packsList := splitCSV(*packsFlag)
+	if len(packsList) == 0 {
+		packsList = defaultConfig().Packs
+	}
+	cfg := Config{Version: 1, Packs: packsList}
 	if _, err := catalog.Resolve(cfg.Packs); err != nil {
 		return err
 	}
@@ -237,4 +282,52 @@ func splitCSV(value string) []string {
 		}
 	}
 	return uniqueStrings(out)
+}
+
+func runGlobal(args []string, w io.Writer, catalog Catalog) error {
+	if len(args) == 0 && isInteractive() {
+		// Interactive: show multi-select
+		var selected []string
+		options := make([]huh.Option[string], len(catalog.Packs))
+		for i, p := range catalog.Packs {
+			options[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
+		}
+
+		form := huh.NewForm(
+			huh.NewGroup(
+				huh.NewMultiSelect[string]().
+					Title("Select packs to install globally").
+					Description("Installed to VS Code user-level directory").
+					Options(options...).
+					Value(&selected),
+			),
+		)
+
+		if err := form.Run(); err != nil {
+			return err
+		}
+
+		if len(selected) == 0 {
+			fmt.Fprintln(w, "no packs selected")
+			return nil
+		}
+		args = selected
+	}
+
+	if len(args) == 0 {
+		return errors.New("global requires at least one pack name")
+	}
+
+	packs, err := catalog.Resolve(args)
+	if err != nil {
+		return err
+	}
+
+	if err := globalInstallPacks(packs); err != nil {
+		return err
+	}
+
+	userDir, _ := vsCodeUserDir()
+	fmt.Fprintf(w, "installed %d packs globally to %s\n", len(packs), userDir)
+	return nil
 }
