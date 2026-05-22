@@ -4,7 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ShellCheck](https://img.shields.io/badge/shell-ShellCheck-brightgreen)](https://www.shellcheck.net/)
 
-**Dotfiles for AI** — opinionated GitHub Copilot configurations for VS Code.
+Opinionated GitHub Copilot configurations for VS Code.
+
 Agents, skills, instructions, hooks, prompts, and a pack-based CLI named
 `geremmyas`.
 
