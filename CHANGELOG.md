@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.0.0](https://github.com/woliveiras/geremmyas/compare/v1.5.0...v2.0.0) (2026-05-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* geremmyas is now the primary CLI and the shell installer only manages the geremmyas binary.
+
+### Features
+
+* add AFK task triage and agent brief skills, update task breakdown and agents documentation ([6e96b1a](https://github.com/woliveiras/geremmyas/commit/6e96b1ae035f88b27d516d8ba46a75721111e4e4))
+* enhance AFK task guidelines and clarify agent brief requirements ([57c7dca](https://github.com/woliveiras/geremmyas/commit/57c7dca2059363aee9811f5b98cbaacac9fe8307))
+* release geremmyas 2.0 ([8afed42](https://github.com/woliveiras/geremmyas/commit/8afed42bfaf0457df6eb9bf61a6979c6480b1009))
+* update documentation for React Router, Tailwind CSS, XState, Zod, and Zustand conventions ([9aab9f9](https://github.com/woliveiras/geremmyas/commit/9aab9f9522905460eed351f5eb7cc715c22873b3))
+
+
+### Bug Fixes
+
+* remove unnecessary prefix from project description in README ([ecc18b6](https://github.com/woliveiras/geremmyas/commit/ecc18b6716294215eea412eb6e130ca99748de92))
+
 ## [1.5.0](https://github.com/woliveiras/geremmyas/compare/v1.4.0...v1.5.0) (2026-05-21)
 
 
