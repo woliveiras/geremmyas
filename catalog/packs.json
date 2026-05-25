@@ -57,6 +57,13 @@
       ]
     },
     {
+      "name": "daily",
+      "description": "Daily scrum standup workflow for recording work progress and preparing meeting notes from git commits, PRs, and session history.",
+      "files": [
+        { "source": "project/.github/skills/daily", "target": ".github/skills/daily" }
+      ]
+    },
+    {
       "name": "research",
       "description": "Scientific paper, literature review, peer review, and empirical case study workflows.",
       "files": [
