@@ -307,6 +307,13 @@
         { "source": "project/.github/instructions/android-security.instructions.md", "target": ".github/instructions/android-security.instructions.md" },
         { "source": "project/.github/instructions/android-sqlite.instructions.md", "target": ".github/instructions/android-sqlite.instructions.md" }
       ]
+    },
+    {
+      "name": "premortem",
+      "description": "Premortem skill for stress-testing plans, decisions, and launches before committing.",
+      "files": [
+        { "source": "project/.github/skills/premortem", "target": ".github/skills/premortem" }
+      ]
     }
   ]
 }

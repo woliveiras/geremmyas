@@ -139,6 +139,7 @@ Optional writing, research, and demo packs:
 |------|----------|
 | `blog` | Reviewing and rewriting technical blog posts while preserving the author's voice |
 | `brag-me` | Preparing local demo brag decks from merged PRs, commits, cloud metrics, issue trackers, and manual notes |
+| `premortem` | Stress-testing plans, decisions, and launches by assuming failure and working backward |
 | `research` | Writing, reviewing, and planning scientific papers, SLRs, peer reviews, and empirical case studies |
 
 Add them to a repository:
@@ -371,6 +372,7 @@ Recommended organization for future skills:
 | `text-review` | Rewrite technical blog drafts while preserving voice and facts (`blog` pack) |
 | `scientific-paper` | Create, review, critique, and validate scientific papers (`research` pack) |
 | `scientific-case-study-research` | Design empirical SE case studies with protocol, triangulation, and validity checks (`research` pack) |
+| `premortem` | Run a premortem on plans, decisions, or launches — assumes failure and works backward to find blind spots (`premortem` pack) |
 
 #### Local AFK Workflow
 
