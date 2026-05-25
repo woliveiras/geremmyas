@@ -50,6 +50,13 @@
       ]
     },
     {
+      "name": "brag-me",
+      "description": "Demo brag repository workflow for preparing Reveal.js presentations from PRs, commits, cloud metrics, issue trackers, and manual notes.",
+      "files": [
+        { "source": "project/.github/skills/brag-me", "target": ".github/skills/brag-me" }
+      ]
+    },
+    {
       "name": "research",
       "description": "Scientific paper, literature review, peer review, and empirical case study workflows.",
       "files": [

@@ -65,6 +65,30 @@ func TestSyncPacksPreservesCustomizableFiles(t *testing.T) {
 	}
 }
 
+func TestSyncBragMePackCopiesSkillAssets(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	packs, err := catalog.Resolve([]string{"brag-me"})
+	if err != nil {
+		t.Fatalf("Resolve returned error: %v", err)
+	}
+
+	root := t.TempDir()
+	summary, err := syncPacks(root, packs, syncOptions{})
+	if err != nil {
+		t.Fatalf("syncPacks returned error: %v", err)
+	}
+	if summary.Installed == 0 {
+		t.Fatalf("Installed = %d, want > 0", summary.Installed)
+	}
+
+	mustExist(t, filepath.Join(root, ".github/skills/brag-me/SKILL.md"))
+	mustExist(t, filepath.Join(root, ".github/skills/brag-me/assets/brag-template.md"))
+	mustExist(t, filepath.Join(root, ".github/skills/brag-me/assets/reveal-template.html"))
+}
+
 func TestRunInitAndAdd(t *testing.T) {
 	cwd, err := os.Getwd()
 	if err != nil {

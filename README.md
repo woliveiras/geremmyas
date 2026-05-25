@@ -133,19 +133,26 @@ packs:
   - data-postgres
 ```
 
-Optional writing and research packs:
+Optional writing, research, and demo packs:
 
 | Pack | Use when |
 |------|----------|
 | `blog` | Reviewing and rewriting technical blog posts while preserving the author's voice |
+| `brag-me` | Preparing local demo brag decks from merged PRs, commits, cloud metrics, issue trackers, and manual notes |
 | `research` | Writing, reviewing, and planning scientific papers, SLRs, peer reviews, and empirical case studies |
 
 Add them to a repository:
 
 ```bash
-geremmyas add blog research
+geremmyas add blog research brag-me
 geremmyas sync
 ```
+
+Use `brag-me` from Copilot or another compatible agent to create or refresh a
+demo under `me/brag-me/YYYY-MM-DD-highlight/`. The skill fills
+`YYYY-MM-DD-brag.md` from available evidence such as merged PRs, git commits,
+GCP data, Sentry issues, and manual notes, then generates an offline
+Reveal.js-style `index.html` deck that opens directly in a browser.
 
 Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
 Run `geremmyas doctor` to validate the catalog and local config.
