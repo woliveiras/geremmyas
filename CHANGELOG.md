@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.8.0](https://github.com/woliveiras/geremmyas/compare/v2.7.0...v2.8.0) (2026-05-25)
+
+
+### Features
+
+* add premortem skill for stress-testing plans and decisions ([0b9aa73](https://github.com/woliveiras/geremmyas/commit/0b9aa7322887ec67ab5cff82bd62e65d288f259f))
+* restructure GitHub directory to link project resources ([c9efd47](https://github.com/woliveiras/geremmyas/commit/c9efd47258b7db7969b2c2940b15b96d77bbc512))
+
 ## [2.7.0](https://github.com/woliveiras/geremmyas/compare/v2.6.0...v2.7.0) (2026-05-25)
 
 
