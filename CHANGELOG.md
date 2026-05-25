@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.7.0](https://github.com/woliveiras/geremmyas/compare/v2.6.0...v2.7.0) (2026-05-25)
+
+
+### Features
+
+* add daily workflow for scrum standup and meeting notes ([2340295](https://github.com/woliveiras/geremmyas/commit/23402959dfe44a683aa6d5bc48f750d6233f4f36))
+
 ## [2.6.0](https://github.com/woliveiras/geremmyas/compare/v2.5.0...v2.6.0) (2026-05-25)
 
 
