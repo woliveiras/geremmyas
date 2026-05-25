@@ -110,6 +110,7 @@ Use these skills instead of reimplementing their procedures inline:
 - `generate-glossary`: create or update domain vocabulary.
 - `generate-adr`: record durable architecture decisions.
 - `update-docs`: sync documentation after implementation.
+- `daily`: record daily work progress and prepare scrum standup notes.
 - `session-handoff`: prepare another session or agent to continue.
 - `git-commit`: inspect staged changes and create a commit with confirmation.
 
