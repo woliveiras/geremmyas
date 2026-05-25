@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.6.0](https://github.com/woliveiras/geremmyas/compare/v2.5.0...v2.6.0) (2026-05-25)
+
+
+### Features
+
+* add daily skill and template for recording work progress and standup notes ([3422c1a](https://github.com/woliveiras/geremmyas/commit/3422c1ab966bf7c0a37ec9945440678e0f63738a))
+
 ## [2.5.0](https://github.com/woliveiras/geremmyas/compare/v2.4.0...v2.5.0) (2026-05-25)
 
 
