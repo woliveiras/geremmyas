@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.5.0](https://github.com/woliveiras/geremmyas/compare/v2.4.0...v2.5.0) (2026-05-25)
+
+
+### Features
+
+* add 'brag-me' pack for generating demo presentations with Reveal.js ([3c1b33a](https://github.com/woliveiras/geremmyas/commit/3c1b33a6ba5d4ea177e31c69e0c1a49a38beb828))
+* add logo to README for enhanced branding ([4f15cc3](https://github.com/woliveiras/geremmyas/commit/4f15cc3083476db1f4f15078e114f878e694cdad))
+
 ## [2.4.0](https://github.com/woliveiras/geremmyas/compare/v2.3.0...v2.4.0) (2026-05-22)
 
 
