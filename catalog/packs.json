@@ -73,9 +73,18 @@
     },
     {
       "name": "typescript-base",
-      "description": "TypeScript baseline instructions.",
+      "description": "TypeScript baseline instructions with strict compiler, type modeling, and security at boundaries.",
       "files": [
-        { "source": "project/.github/instructions/typescript.instructions.md", "target": ".github/instructions/typescript.instructions.md" }
+        { "source": "project/.github/instructions/typescript.instructions.md", "target": ".github/instructions/typescript.instructions.md" },
+        { "source": "project/.github/instructions/typescript-security.instructions.md", "target": ".github/instructions/typescript-security.instructions.md" }
+      ]
+    },
+    {
+      "name": "typescript-ci",
+      "description": "TypeScript CI/CD pipeline setup skill (tsc, ESLint, Prettier, tests, audit).",
+      "depends": ["typescript-base"],
+      "files": [
+        { "source": "project/.github/skills/typescript-ci-setup", "target": ".github/skills/typescript-ci-setup" }
       ]
     },
     {
