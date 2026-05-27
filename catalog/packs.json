@@ -192,8 +192,7 @@
       "files": [
         { "source": "project/.github/instructions/rust.instructions.md", "target": ".github/instructions/rust.instructions.md" },
         { "source": "project/.github/instructions/rust-async.instructions.md", "target": ".github/instructions/rust-async.instructions.md" },
-        { "source": "project/.github/instructions/rust-unsafe.instructions.md", "target": ".github/instructions/rust-unsafe.instructions.md" },
-        { "source": "project/.github/skills/rust-review", "target": ".github/skills/rust-review" }
+        { "source": "project/.github/instructions/rust-unsafe.instructions.md", "target": ".github/instructions/rust-unsafe.instructions.md" }
       ]
     },
     {
@@ -214,9 +213,10 @@
     },
     {
       "name": "go-base",
-      "description": "Go baseline instructions.",
+      "description": "Go baseline instructions with code quality, concurrency, and security rules.",
       "files": [
-        { "source": "project/.github/instructions/go.instructions.md", "target": ".github/instructions/go.instructions.md" }
+        { "source": "project/.github/instructions/go.instructions.md", "target": ".github/instructions/go.instructions.md" },
+        { "source": "project/.github/instructions/go-security.instructions.md", "target": ".github/instructions/go-security.instructions.md" }
       ]
     },
     {
@@ -243,6 +243,14 @@
       "files": [
         { "source": "project/.github/instructions/go-embed.instructions.md", "target": ".github/instructions/go-embed.instructions.md" },
         { "source": "project/.github/instructions/air.instructions.md", "target": ".github/instructions/air.instructions.md" }
+      ]
+    },
+    {
+      "name": "go-ci",
+      "description": "Go CI pipeline setup skill with formatting, vetting, testing, vulnerability scanning, and container builds.",
+      "depends": ["go-base", "infra-ci"],
+      "files": [
+        { "source": "project/.github/skills/go-ci-setup", "target": ".github/skills/go-ci-setup" }
       ]
     },
     {
