@@ -158,9 +158,18 @@
     },
     {
       "name": "python-base",
-      "description": "Python baseline instructions.",
+      "description": "Python baseline instructions with code quality, async, and security rules.",
       "files": [
-        { "source": "project/.github/instructions/python.instructions.md", "target": ".github/instructions/python.instructions.md" }
+        { "source": "project/.github/instructions/python.instructions.md", "target": ".github/instructions/python.instructions.md" },
+        { "source": "project/.github/instructions/python-security.instructions.md", "target": ".github/instructions/python-security.instructions.md" }
+      ]
+    },
+    {
+      "name": "python-ci",
+      "description": "Python CI pipeline setup skill with linting, type checking, testing, security scanning, and Trusted Publishing.",
+      "depends": ["python-base", "infra-ci"],
+      "files": [
+        { "source": "project/.github/skills/python-ci-setup", "target": ".github/skills/python-ci-setup" }
       ]
     },
     {
