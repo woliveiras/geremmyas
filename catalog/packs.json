@@ -187,6 +187,32 @@
       ]
     },
     {
+      "name": "rust-base",
+      "description": "Rust baseline instructions for idiomatic code, async/Tokio, and unsafe/FFI boundaries.",
+      "files": [
+        { "source": "project/.github/instructions/rust.instructions.md", "target": ".github/instructions/rust.instructions.md" },
+        { "source": "project/.github/instructions/rust-async.instructions.md", "target": ".github/instructions/rust-async.instructions.md" },
+        { "source": "project/.github/instructions/rust-unsafe.instructions.md", "target": ".github/instructions/rust-unsafe.instructions.md" },
+        { "source": "project/.github/skills/rust-review", "target": ".github/skills/rust-review" }
+      ]
+    },
+    {
+      "name": "rust-ci",
+      "description": "Rust CI/CD pipeline setup skill with fmt, clippy, test, audit, Miri, and fuzzing.",
+      "depends": ["rust-base"],
+      "files": [
+        { "source": "project/.github/skills/rust-ci-setup", "target": ".github/skills/rust-ci-setup" }
+      ]
+    },
+    {
+      "name": "rust-release",
+      "description": "Rust release engineering skill for crate publishing, binary distribution, and cross-compilation.",
+      "depends": ["rust-base"],
+      "files": [
+        { "source": "project/.github/skills/rust-release", "target": ".github/skills/rust-release" }
+      ]
+    },
+    {
       "name": "go-base",
       "description": "Go baseline instructions.",
       "files": [
