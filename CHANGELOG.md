@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [2.9.0](https://github.com/woliveiras/geremmyas/compare/v2.8.0...v2.9.0) (2026-05-27)
+
+
+### Features
+
+* add Rust skills ([ad8e8aa](https://github.com/woliveiras/geremmyas/commit/ad8e8aa3830658ecc79b104aff82eecc06ac4a86))
+* enhance Android instructions with security guidelines and add CI/CD setup skill ([4bd8996](https://github.com/woliveiras/geremmyas/commit/4bd8996d516a0bc75da3fadf1d4a73bb06e533fd))
+* enhance Python instructions with security guidelines and add CI setup skill ([aeaae7e](https://github.com/woliveiras/geremmyas/commit/aeaae7ed4b35ca5b9d16b3941e48a138fc64e557))
+* enhance TypeScript instructions with security guidelines and add CI setup skill ([bc783cb](https://github.com/woliveiras/geremmyas/commit/bc783cb2928a10dd16de0611b70d5b00c3c6adce))
+* update Go instructions and add Go CI setup skill; remove Rust review skill ([0e76cc8](https://github.com/woliveiras/geremmyas/commit/0e76cc8c6cf2ac7a96ae53a8ab09c87d9813fb26))
+
 ## [2.8.0](https://github.com/woliveiras/geremmyas/compare/v2.7.0...v2.8.0) (2026-05-25)
 
 
