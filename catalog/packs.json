@@ -353,11 +353,19 @@
     },
     {
       "name": "android",
-      "description": "Android Kotlin, security, and SQLite instructions.",
+      "description": "Android Kotlin with architecture, security, Room, and static analysis instructions.",
       "files": [
         { "source": "project/.github/instructions/kotlin.instructions.md", "target": ".github/instructions/kotlin.instructions.md" },
         { "source": "project/.github/instructions/android-security.instructions.md", "target": ".github/instructions/android-security.instructions.md" },
         { "source": "project/.github/instructions/android-sqlite.instructions.md", "target": ".github/instructions/android-sqlite.instructions.md" }
+      ]
+    },
+    {
+      "name": "android-ci",
+      "description": "Android CI/CD pipeline setup skill (lint, detekt, ktlint, tests, R8, Fastlane).",
+      "depends": ["android"],
+      "files": [
+        { "source": "project/.github/skills/android-ci-setup", "target": ".github/skills/android-ci-setup" }
       ]
     },
     {
