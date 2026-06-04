@@ -11,6 +11,9 @@
 *.swp
 *.swo
 
+# Build
+geremmyas
+
 # OS
 Thumbs.db
 
