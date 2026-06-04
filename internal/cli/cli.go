@@ -58,7 +58,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  geremmyas list")
-	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd,afk] [--force]")
+	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--force]")
 	fmt.Fprintln(w, "  geremmyas sync [--force]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")

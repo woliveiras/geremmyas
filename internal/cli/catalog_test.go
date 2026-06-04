@@ -8,7 +8,7 @@ func TestLoadCatalogAndResolveDependencies(t *testing.T) {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
 
-	packs, err := catalog.Resolve([]string{"afk"})
+	packs, err := catalog.Resolve([]string{"sdd"})
 	if err != nil {
 		t.Fatalf("Resolve returned error: %v", err)
 	}
@@ -17,7 +17,7 @@ func TestLoadCatalogAndResolveDependencies(t *testing.T) {
 	for _, pack := range packs {
 		got = append(got, pack.Name)
 	}
-	want := []string{"core", "sdd", "afk"}
+	want := []string{"core", "sdd"}
 	if len(got) != len(want) {
 		t.Fatalf("resolved packs = %v, want %v", got, want)
 	}

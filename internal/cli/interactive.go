@@ -68,7 +68,7 @@ func runInteractiveProjectForce() (bool, error) {
 		huh.NewGroup(
 			huh.NewConfirm().
 				Title("Overwrite customizable project files?").
-				Description("Choose no to preserve existing AGENTS.md, mise.toml, Copilot instructions, and hooks.").
+				Description("Choose no to preserve existing AGENTS.md, specs/README.md, mise.toml, Copilot instructions, and hooks.").
 				Affirmative("Overwrite").
 				Negative("Preserve").
 				Value(&force),

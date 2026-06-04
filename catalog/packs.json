@@ -29,17 +29,8 @@
         { "source": "project/.github/skills/git-commit", "target": ".github/skills/git-commit" },
         { "source": "project/.github/skills/generate-glossary", "target": ".github/skills/generate-glossary" },
         { "source": "project/.github/skills/generate-adr", "target": ".github/skills/generate-adr" },
-        { "source": "project/.github/skills/session-handoff", "target": ".github/skills/session-handoff" },
-        { "source": "project/.github/skills/skill-authoring", "target": ".github/skills/skill-authoring" }
-      ]
-    },
-    {
-      "name": "afk",
-      "description": "Local AFK delegation workflow with task triage and durable agent briefs.",
-      "depends": ["sdd"],
-      "files": [
-        { "source": "project/.github/skills/afk-task-triage", "target": ".github/skills/afk-task-triage" },
-        { "source": "project/.github/skills/agent-brief", "target": ".github/skills/agent-brief" }
+        { "source": "project/.github/skills/skill-authoring", "target": ".github/skills/skill-authoring" },
+        { "source": "project/templates/specs/README.md", "target": "specs/README.md" }
       ]
     },
     {
@@ -54,13 +45,6 @@
       "description": "Demo brag repository workflow for preparing Reveal.js presentations from PRs, commits, cloud metrics, issue trackers, and manual notes.",
       "files": [
         { "source": "project/.github/skills/brag-me", "target": ".github/skills/brag-me" }
-      ]
-    },
-    {
-      "name": "daily",
-      "description": "Daily scrum standup workflow for recording work progress and preparing meeting notes from git commits, PRs, and session history.",
-      "files": [
-        { "source": "project/.github/skills/daily", "target": ".github/skills/daily" }
       ]
     },
     {

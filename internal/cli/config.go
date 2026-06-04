@@ -19,7 +19,7 @@ type Config struct {
 func defaultConfig() Config {
 	return Config{
 		Version: 1,
-		Packs:   []string{"core", "sdd", "afk"},
+		Packs:   []string{"core", "sdd"},
 	}
 }
 

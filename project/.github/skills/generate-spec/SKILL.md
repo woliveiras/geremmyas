@@ -5,8 +5,9 @@ description: "Generate a structured spec from direct input. Use when: you alread
 
 # Generate Spec
 
-Generate a structured feature specification using the template below.
-Use this when you already know the requirements and just need them formatted.
+Generate a structured feature specification and the mandatory companion
+artifacts `plan.md` and `tasks.md` in a numbered feature folder. Keep
+`specs/README.md` in sync as the specs index.
 
 ## When to Use
 
@@ -18,51 +19,63 @@ For unclear requirements that need exploration, use the `spec-writer` agent inst
 
 ## File Location and Naming
 
-Default location:
+Always use a numbered feature folder with all three artifacts:
 
 ```text
-specs/YYYY-MM-DD-<feature-slug>.md
+specs/README.md                      # index (families, status, numbering)
+specs/NNNN-<feature-slug>/spec.md
+specs/NNNN-<feature-slug>/plan.md
+specs/NNNN-<feature-slug>/tasks.md
 ```
 
-Use the local date when the spec is created. Use lowercase kebab-case for
-`<feature-slug>`, based on the user-visible capability, for example:
+Allocate `NNNN` using the rules in `specs/README.md` (next global number or next
+slot in the family's reserved block). Example:
 
 ```text
-specs/2026-05-21-jwt-authentication.md
-specs/2026-05-21-invoice-export.md
+specs/0042-jwt-authentication/spec.md
+specs/0042-jwt-authentication/plan.md
+specs/0042-jwt-authentication/tasks.md
 ```
 
-If the feature already has a folder with multiple artifacts, save the spec as:
-
-```text
-specs/YYYY-MM-DD-<feature-slug>/spec.md
-```
-
-Use the folder form only when the feature also needs related artifacts such as
-`plan.md`, `tasks.md`, research notes, or multiple specs. Do not create a folder
-just to hold a single spec.
-
-If a relevant spec already exists, update it instead of creating a duplicate.
-Do not add a second timestamp when updating an existing spec.
+If `specs/README.md` is missing, create it from the geremmyas template or copy
+the structure documented in `AGENTS.md`.
 
 ## Procedure
 
-1. Ask the user for the feature name, brief description, and whether this is a
-   new feature, feature expansion, or documentation of an existing decision.
-2. Check for an existing matching spec in `specs/`.
-3. Choose the file path using the rules above.
-4. Fill in the [spec template](./assets/spec-template.md).
-5. Save the completed spec to the chosen path.
+1. Ask the user for the feature name, brief description, family (if any), phase,
+   and whether this is a new feature, expansion, or documenting an existing
+   decision.
+2. Read `specs/README.md` and list existing `specs/NNNN-*` folders.
+3. Allocate the next spec number and create or update the feature folder.
+4. Fill in [spec template](./assets/spec-template.md) with correct frontmatter
+   (`spec`, `title`, `family`, `phase`, `status: Draft`) and save as `spec.md`.
+5. Write `plan.md` with implementation sequencing and dependencies.
+6. Write initial `tasks.md` using `task-breakdown` conventions (vertical
+   slices, checkboxes, `test-type` per task).
+7. **Update `specs/README.md`:** add or update the row in the correct family/
+   phase table (Spec link, Title, Status `Draft`, Depends on / Origin).
+   Reserve or extend family blocks in the numbering table when needed.
+8. **Approval gate:** Present a summary of `spec.md`, `plan.md`, `tasks.md`, and
+   the index row to the user and **stop**. Do not generate tests or production
+   code until the user explicitly approves the spec.
+9. After user approval, set `status: Approved` in `spec.md` frontmatter and
+   update the Status column in `specs/README.md` to `Approved`.
 
 ## Output
 
 Use the template from [assets/spec-template.md](./assets/spec-template.md).
-Ensure every acceptance criterion is testable (maps to at least one unit test).
+Ensure every acceptance criterion is testable (maps to at least one test).
+Define test strategy in the spec (unit vs integration vs both).
 
 ## Rules
 
-- Do not leave placeholder text in the saved spec.
+- Do not leave placeholder text in saved artifacts (including `spec: "0000"`).
 - Keep acceptance criteria in Given/When/Then form when possible.
-- Use `GLOSSARY.md` or `CONTEXT.md` vocabulary when either exists.
-- Put implementation sequencing in `plan.md` or `tasks.md`, not in the spec.
-- Put accepted architectural decisions in an ADR, not only in the spec.
+- Use `GLOSSARY.md` vocabulary when it exists.
+- Put implementation sequencing in `plan.md`, not in the spec body.
+- Put task list and progress in `tasks.md`, not only in the spec.
+- Put accepted architectural decisions in an ADR when the bar is met (complex and
+  hard to reverse), not only in the spec.
+- Do not implement or write feature tests before spec approval.
+- When a spec reaches **Implemented**, update frontmatter and `specs/README.md`
+  (status + links to PRs/commits in `spec.md`).

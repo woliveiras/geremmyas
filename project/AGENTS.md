@@ -21,24 +21,41 @@ If a global instruction conflicts with this file, this file wins.
   bugfix document, or user request.
 - Do not modify tests just to make them pass. If a test appears wrong, revisit
   the spec or acceptance criteria first.
-- Do not create ADRs for routine or easy-to-reverse choices.
+- Do not write production code for a feature that has a PRD but no spec. The PRD
+  frames the problem; the spec defines testable behavior. Both must exist before
+  implementation.
+- Always create a bugfix document in `docs/bugfixes/` for every bug. No
+  exceptions.
+- Always write a regression test for every bug fix. No exceptions.
+- Do not create postmortems unless the bug caused a production outage.
+- Do not create ADRs unless the decision is complex AND hard to reverse.
 - Do not create `CONSTITUTION.md` by default. Use this file for operational
   rules unless the user explicitly asks for a separate constitution.
-- Do not commit, amend, or push without explicit user confirmation.
+- Do not commit, amend, or push without explicit user confirmation and without
+  commit permission granted during `requirements-interview`.
 - Preserve user changes. Never revert unrelated work.
+- Keep each feature's `tasks.md` checkbox state current during work: mark `- [~]`
+  when starting a task and `- [x]` when it is done. Do not leave stale
+  checkboxes.
+
+## Approval Gates
+
+These gates are mandatory. Do not skip them when using skills or agents
+directly (not only when using the SDD prompt).
+
+- **Spec gate:** After creating or updating `spec.md`, `plan.md`, and
+  `tasks.md`, present the spec to the user and **stop**. Do not write production
+  code or tests for the feature until the user explicitly approves the spec.
+- **Bugfix gate:** After documenting reproduction and a proposed fix in the
+  bugfix document, present the proposal to the user and **stop**. Do not apply
+  the fix until the user explicitly approves.
 
 ## Domain Vocabulary
 
-Read `GLOSSARY.md` or `CONTEXT.md` before writing PRDs, specs, tests, reviews,
+Read `GLOSSARY.md` before writing PRDs, specs, tests, reviews,
 bugfix documents, ADRs, or user-facing copy.
 
-For new projects, prefer `GLOSSARY.md`. If the repository already uses
-`CONTEXT.md`, preserve that convention. If both exist, read both and treat
-`GLOSSARY.md` as canonical terminology and `CONTEXT.md` as broader domain
-context unless the project says otherwise. If they conflict, ask before editing
-either file.
-
-Absence of both files does not block work.
+Absence of this file does not block work.
 
 ## Artifact Locations
 
@@ -46,111 +63,110 @@ Use these paths unless the project already documents a different convention:
 
 | Artifact | Default path |
 | --- | --- |
+| Specs index | `specs/README.md` (families, status tables, numbering) |
 | PRD | `docs/prds/YYYY-MM-DD-<feature-slug>.md` |
-| Spec | `specs/YYYY-MM-DD-<feature-slug>.md` |
-| Feature folder | `specs/YYYY-MM-DD-<feature-slug>/` |
-| Feature plan | `specs/YYYY-MM-DD-<feature-slug>/plan.md` |
-| Feature tasks | `specs/YYYY-MM-DD-<feature-slug>/tasks.md` |
-| AFK agent brief | `specs/YYYY-MM-DD-<feature-slug>/agent-briefs/<task-slug>.md` |
-| Repo-level agent brief | `docs/agent-briefs/YYYY-MM-DD-<task-slug>.md` |
+| Feature folder | `specs/NNNN-<feature-slug>/` |
+| Feature spec | `specs/NNNN-<feature-slug>/spec.md` |
+| Feature plan | `specs/NNNN-<feature-slug>/plan.md` |
+| Feature tasks | `specs/NNNN-<feature-slug>/tasks.md` |
 | Repo-level tasks | `tasks.md` |
 | Bugfix document | `docs/bugfixes/YYYY-MM-DD-<bug-slug>.md` |
 | Postmortem | `docs/postmortems/YYYY-MM-DD-<incident-slug>.md` |
 | ADR | `docs/decisions/NNNN-title-with-dashes.md` |
 
-Use the local date when creating timestamped files. Slugs are lowercase
-kebab-case and should describe the user-visible capability or symptom.
+Use the local date when creating timestamped PRDs, bugfixes, and postmortems.
+Spec folders use a **global four-digit number** plus slug: `NNNN-<feature-slug>`.
+Slugs are lowercase kebab-case and describe the user-visible capability.
+
+Read and maintain `specs/README.md` when creating, approving, or completing a
+spec: update family tables, status, and reserved blocks as needed.
+
+For every new feature, always create the feature folder with **all three**
+artifacts: `spec.md`, `plan.md`, and `tasks.md`. Do not implement until all
+three exist and the user has approved the spec.
 
 ## Workflows
 
 ### New Features
 
-1. Use `requirements-interview` to explore code and clarify requirements.
-2. Write or update a PRD when the product behavior needs framing.
-3. Use `generate-spec` or `spec-writer` to create a testable spec.
-4. Use `task-breakdown` to create vertical tasks.
-5. Use `afk-task-triage` when tasks need AFK/HITL classification or agent
-   execution readiness.
-6. Use `agent-brief` before delegating a local AFK task to another agent.
-7. Use `vertical-tdd` to implement one behavior at a time.
+1. Use `requirements-interview` to explore code and clarify requirements. At
+   the start, ask whether the agent may create git commits or the developer
+   handles commits. Store the answer for the session.
+2. Decide whether a PRD is needed (product behavior framing) or a spec alone
+   is enough (behavior already clear).
+3. If a PRD is needed: write or update the PRD, then write the spec from the
+   PRD. **Do not write production code until the spec exists.**
+4. Always create the feature folder with `spec.md`, `plan.md`, and `tasks.md`
+   (use `generate-spec`, `task-breakdown`, and/or `spec-writer` as needed).
+5. **Approval gate:** Present the spec (and plan/tasks summary) to the user.
+   Stop and wait for explicit approval before implementation or test generation
+   for the feature.
+6. For each task in `tasks.md`, choose test type (`unit`, `integration`, or
+   `both`) from the spec's test strategy and task scope.
+7. Use `vertical-tdd` to implement one behavior at a time (red-green-refactor).
 8. Use `reviewer` for spec-driven review.
 9. Use `update-docs` when API, architecture, setup, or configuration changed.
-10. Use `git-commit` only after verification and explicit confirmation.
+10. Use `git-commit` only after verification, explicit confirmation, and only
+    if the user granted commit permission in step 1. Otherwise report changed
+    files and leave committing to the developer.
 
 ### Existing Features
 
 1. Decide whether the product flow changes.
-2. If the product flow changes, update the PRD first.
-3. If the product flow does not change, write targeted specs.
-4. Continue through tasks, tests, implementation, review, and docs.
+2. If the product flow changes, update the PRD first, then update the spec.
+3. If the product flow does not change, write or update targeted specs in the
+   feature folder (`spec.md`, `plan.md`, `tasks.md` as needed).
+4. **Approval gate** applies when the spec changes materially.
+5. Continue through tasks, tests, implementation, review, and docs.
 
 ### Bugs
 
 1. Use `bugfix-loop`.
-2. Save the bugfix document under `docs/bugfixes/`.
+2. Always save the bugfix document under `docs/bugfixes/`.
 3. Build a reproduction loop before changing production code.
-4. Add or update a regression test at the correct boundary.
-5. Apply the fix and rerun the original reproduction.
-6. Write a postmortem only when the bug was an outage.
+4. Document hypotheses and proposed fix; **approval gate:** present the
+   proposal and stop until the user approves.
+5. Add or update a regression test at the correct boundary (mandatory).
+6. Apply the fix and rerun the original reproduction.
+7. Write a postmortem only when the bug was a production outage.
+
+## Progress and resumption
+
+When switching sessions, tools, or pausing work:
+
+- Read `specs/README.md` for spec status across the repository.
+- Open the feature folder `specs/NNNN-<slug>/` for durable truth on one feature.
+- Use `tasks.md` checkboxes as the progress signal: `- [ ]` pending, `- [~]`
+  in progress, `- [x]` done.
+- Update checkboxes as work moves; do not create separate handoff documents.
+- Resume by reading `spec.md`, `plan.md`, and `tasks.md`, then continue from
+  the `- [~]` task or the first `- [ ]` after completed work.
 
 ## Skill Routing
 
 Use these skills instead of reimplementing their procedures inline:
 
-- `requirements-interview`: clarify product and technical requirements.
-- `generate-spec`: write a structured spec from known requirements.
-- `task-breakdown`: create vertical implementation tasks.
-- `afk-task-triage`: classify local tasks as AFK/HITL, split broad tasks, and
-  identify which tasks are ready for agent execution.
-- `agent-brief`: create a durable local brief for an AFK task under the relevant
-  spec folder or `docs/agent-briefs/`.
-- `generate-tests-from-spec`: generate tests from acceptance criteria.
+- `requirements-interview`: clarify product and technical requirements; commit
+  permission at start.
+- `generate-spec`: write spec, plan, and tasks in a feature folder.
+- `task-breakdown`: create or update vertical tasks in `tasks.md`.
+- `generate-tests-from-spec`: generate tests from acceptance criteria (after
+  spec approval).
 - `vertical-tdd`: implement one behavior per red-green-refactor cycle.
 - `bugfix-loop`: investigate and fix bugs with reproduction and regression.
 - `generate-glossary`: create or update domain vocabulary.
-- `generate-adr`: record durable architecture decisions.
+- `generate-adr`: record durable architecture decisions (bar: complex and hard
+  to reverse).
 - `update-docs`: sync documentation after implementation.
-- `daily`: record daily work progress and prepare scrum standup notes.
-- `session-handoff`: prepare another session or agent to continue.
 - `git-commit`: inspect staged changes and create a commit with confirmation.
 
-AFK task flow is local-first. Use specs, `plan.md`, `tasks.md`, and local agent
-briefs as the source of truth. Do not create GitHub Issues, labels, or issue
-state workflows unless the user explicitly asks.
+Do not create GitHub Issues, labels, or issue state workflows unless the user
+explicitly asks.
 
-Only mark a task as AFK when desired behavior, acceptance criteria, and
-verification are clear enough for another agent to execute without human
-direction. Mark it HITL when product, architecture, UX, security, credential,
-production, destructive-operation, or ambiguity decisions remain.
-
-Use `agent-brief` to prepare execution context for another agent. Use
-`session-handoff` to summarize the current conversation or partially completed
-work for another session. A handoff is conversational continuity; an agent brief
-is an implementation contract.
-
-An AFK executor must read the brief, re-explore the codebase and source
-artifacts, avoid relying on stale line numbers, and report files changed,
-verification run, behavior checked, blockers, risks, and follow-ups.
-
-Use matching instruction files for local edits inside a technology. Use the
-workflow skills below when the task crosses files, requires sequencing, or has
-approval/verification gates:
-
-- `terraform-change`: plan/review Terraform changes, imports, moves, state, or
-  apply/destroy decisions.
-- `gcloud-operation`: prepare or run Google Cloud CLI operations with explicit
-  project, account, and approval context.
-- `ci-workflow`: create, review, or debug GitHub Actions CI/CD workflows.
-- `llm-integration-review`: design/review LLM service integrations, tools,
-  structured outputs, retries, rate limits, and contract tests.
-- `langgraph-agent-design`: design LangGraph state, nodes, checkpoints,
-  interrupts, tools, and recovery behavior.
-- `supabase-workflow`: plan Supabase schema, RLS, Auth, Storage, Edge Function,
-  migration, and generated type changes.
-- `postgres-query-review`: review PostgreSQL queries, migrations, indexes, and
-  query plans.
-- `chromadb-rag-workflow`: design/review ChromaDB ingestion, collections,
-  metadata, retrieval, persistence, and evaluation.
+Use matching `.github/instructions/*.instructions.md` for edits in a single
+technology, and any workflow skills installed from geremmyas packs (for example
+Terraform, GCP, CI, LLM, Supabase, Postgres, ChromaDB) when the task crosses
+files, needs sequencing, or has approval or verification gates.
 
 ## Agent Routing
 

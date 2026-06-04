@@ -128,7 +128,6 @@ version: 1
 packs:
   - core
   - sdd
-  - afk
   - python-api
   - data-postgres
 ```
@@ -171,8 +170,8 @@ geremmyas project
 ```
 
 `geremmyas project` preserves customizable project files by default, including
-`AGENTS.md`, `mise.toml`, `.github/copilot-instructions.md`, and guardrail
-hooks. Use `--force` to overwrite those files during sync:
+`AGENTS.md`, `specs/README.md`, `mise.toml`, `.github/copilot-instructions.md`,
+and guardrail hooks. Use `--force` to overwrite those files during sync:
 
 ```bash
 geremmyas project --force core
@@ -337,7 +336,7 @@ their core rules live in the matching instruction files.
 Recommended organization for future skills:
 
 - `engineering`: PRD, specs, planning, tasks, TDD, bugfix, review, architecture, docs.
-- `productivity`: handoff, skill authoring, concise communication, alignment before execution.
+- `productivity`: skill authoring, concise communication, alignment before execution.
 - `personal`: workflows specific to your setup that should not install by default.
 - `utils`: rare tools, migrations, setup helpers, and guardrails.
 
@@ -345,17 +344,14 @@ Recommended organization for future skills:
 |-------|---------|
 | `requirements-interview` | Explore code and clarify requirements before PRD/spec work |
 | `generate-spec` | Fill a structured spec from direct input (no interview) |
-| `task-breakdown` | Convert PRD, specs, or `plan.md` into vertical tasks |
-| `afk-task-triage` | Classify local tasks as AFK/HITL and prepare agent-ready work |
-| `agent-brief` | Create durable local AFK briefs from specs, plans, and tasks |
-| `generate-tests-from-spec` | Generate unit tests from a spec's acceptance criteria |
+| `task-breakdown` | Convert PRD, specs, or `plan.md` into vertical tasks with checkboxes |
+| `generate-tests-from-spec` | Generate unit or integration tests from approved spec criteria |
 | `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
 | `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
 | `update-docs` | Update `docs/` after implementing a feature |
 | `git-commit` | Review staged changes and create a Conventional Commit with confirmation |
 | `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
-| `session-handoff` | Create a concise handoff for another session or agent |
 | `skill-authoring` | Create or revise Copilot skills using this repo's conventions |
 | `terraform-change` | Plan and review Terraform changes with approval gates |
 | `gcloud-operation` | Prepare safe Google Cloud CLI operations with explicit project/account context |
@@ -374,31 +370,39 @@ Recommended organization for future skills:
 | `scientific-case-study-research` | Design empirical SE case studies with protocol, triangulation, and validity checks (`research` pack) |
 | `premortem` | Run a premortem on plans, decisions, or launches — assumes failure and works backward to find blind spots (`premortem` pack) |
 
-#### Local AFK Workflow
+#### Specs index (`specs/README.md`)
 
-AFK delegation is local-first. Use specs, `plan.md`, and `tasks.md` as the
-source of truth instead of GitHub Issues.
+The `sdd` pack installs `specs/README.md` as the repository index: **families**,
+reserved number blocks, **status** lifecycle (`Draft` → `Approved` →
+`Implemented`), and per-family tables (Spec, Title, Status, Depends on).
 
-Use AFK when a task is clear enough for another agent to execute without asking
-for human direction. Use HITL when the work needs a product, architecture, UX,
-security, credential, production, or destructive-operation decision.
+Each spec folder uses a global number:
 
-1. Use `task-breakdown` to create vertical tasks with `type`, `blocked-by`,
-   acceptance criteria, verification, and an optional brief path.
-2. Use `afk-task-triage` to split broad tasks and classify each open task as
-   `AFK` or `HITL`.
-3. Use `agent-brief` for each AFK-ready task. Briefs live in
-   `specs/YYYY-MM-DD-<feature-slug>/agent-briefs/<task-slug>.md`, or
-   `docs/agent-briefs/YYYY-MM-DD-<task-slug>.md` for repo-level work.
-4. Start a fresh agent/session with the brief as the task contract. The agent
-   should re-explore the codebase and source artifacts before editing.
-5. The executor reports files changed, tests/checks run, behavior verified,
-   blockers, risks, and follow-ups.
-6. Use `session-handoff` only when transferring conversation state. Use
-   `agent-brief` when preparing an implementation contract for another agent.
+```text
+specs/README.md
+specs/NNNN-<feature-slug>/spec.md    # YAML frontmatter: spec, family, phase, status
+specs/NNNN-<feature-slug>/plan.md
+specs/NNNN-<feature-slug>/tasks.md
+```
 
-AFK briefs should avoid line numbers and fragile file paths. They can reference
-source artifacts, types, contracts, commands, configuration shapes, and behavior.
+Agents update `specs/README.md` when creating, approving, or completing a spec.
+
+#### Interactive workflow and progress
+
+Work is interactive: the human approves specs and bugfix proposals before
+implementation. Every feature uses a folder with **all three** artifacts (see
+above).
+
+`tasks.md` uses checkboxes for progress (`[ ]` pending, `[~]` in progress,
+`[x]` done). Agents must keep checkboxes current while working. Each task
+includes a `test-type` (`unit`, `integration`, or `both`).
+
+Use `specs/README.md` for status across specs. When resuming work, read the
+feature folder (`spec.md`, `plan.md`, `tasks.md`) and continue from the
+in-progress or next pending task.
+
+At the start of `requirements-interview`, the agent asks whether it may create
+git commits or the developer handles commits.
 
 Do not create GitHub Issues, labels, or issue-state workflows unless explicitly
 requested.

@@ -49,12 +49,15 @@ docs/postmortems/YYYY-MM-DD-<incident-slug>.md
 5. Instrument only the boundary needed to test the current hypothesis. Tag any
    temporary logs clearly so they can be removed.
 6. Convert the minimized reproduction into a regression test at the correct
-   seam.
-7. Apply the fix, then rerun the regression test and the original reproduction
+   seam (mandatory before applying the fix).
+7. **Approval gate:** Present the bugfix document, hypotheses, proposed fix, and
+   regression test plan to the user and **stop**. Do not apply the fix until the
+   user explicitly approves.
+8. Apply the fix, then rerun the regression test and the original reproduction
    loop.
-8. Remove temporary instrumentation and record the actual cause.
-9. If the bug was an outage, write a postmortem. If it was not an outage, stop
-   at the bugfix document and regression test.
+9. Remove temporary instrumentation and record the actual cause.
+10. If the bug was an outage, write a postmortem. If it was not an outage, stop
+    at the bugfix document and regression test.
 
 ## Bugfix Document Template
 
@@ -131,9 +134,12 @@ One or two sentences describing the broken behavior and the expected behavior.
 
 ## Rules
 
+- Always create or update a bugfix document. No exceptions.
+- Always write a regression test for every bug fix. No exceptions.
+- Do not apply a fix before the user approves the bugfix proposal (approval gate).
 - Do not guess a fix before reproduction unless the user explicitly accepts the
   risk.
-- Do not create a postmortem for every bug.
+- Do not create a postmortem unless the bug caused a production outage.
 - Create `docs/bugfixes/` and `docs/postmortems/` lazily, only when the first
   document of each type is needed.
 - If no correct regression seam exists, document that as an architecture finding.

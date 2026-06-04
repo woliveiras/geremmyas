@@ -107,6 +107,7 @@ func isCustomizableTarget(target string) bool {
 	target = filepath.ToSlash(filepath.Clean(target))
 	switch target {
 	case "AGENTS.md",
+		"specs/README.md",
 		"mise.toml",
 		".github/copilot-instructions.md",
 		".github/hooks/guardrails-rules.txt":

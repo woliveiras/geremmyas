@@ -169,6 +169,34 @@ func TestRunProjectPreservesCustomizableFilesByDefault(t *testing.T) {
 	}
 }
 
+func TestRunProjectPreservesSpecsReadmeByDefault(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"project", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("first project exit code = %d, output: %s", code, out.String())
+	}
+	readmePath := filepath.Join(root, "specs", "README.md")
+	if err := os.WriteFile(readmePath, []byte("# Custom specs index\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	if code := Run([]string{"project", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("second project exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(readmePath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	if string(data) != "# Custom specs index\n" {
+		t.Fatalf("specs/README.md = %q, want custom content", string(data))
+	}
+}
+
 func TestRunProjectForceOverwritesCustomizableFiles(t *testing.T) {
 	root := withTempCwd(t)
 
