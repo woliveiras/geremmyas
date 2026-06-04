@@ -62,9 +62,10 @@ func ExtractGitDates(data *DashboardData, opts GitOptions) error {
 	}
 	head := strings.TrimSpace(string(out))
 
-	logArgs := []string{"log", "--all", "-p", "--format=COMMIT:%H %aI", "--", "specs/*/spec.md"}
+	pathspecs := specGitPathspecs()
+	logArgs := append([]string{"log", "--all", "-p", "--format=COMMIT:%H %aI", "--"}, pathspecs...)
 	if cache.LastCommit != "" && !opts.NoCache {
-		logArgs = []string{"log", cache.LastCommit+"..HEAD", "-p", "--format=COMMIT:%H %aI", "--", "specs/*/spec.md"}
+		logArgs = append([]string{"log", cache.LastCommit + "..HEAD", "-p", "--format=COMMIT:%H %aI", "--"}, pathspecs...)
 	}
 	logOut, err := git(logArgs...).Output()
 	if err != nil && cache.LastCommit == "" {
@@ -72,8 +73,9 @@ func ExtractGitDates(data *DashboardData, opts GitOptions) error {
 	}
 	mergeGitLog(string(logOut), cache.Specs)
 
-	createOut, _ := git("log", "--all", "--diff-filter=A", "--name-only",
-		"--format=COMMIT:%H %aI", "--", "specs/*/spec.md").Output()
+	createArgs := append([]string{"log", "--all", "--diff-filter=A", "--name-only",
+		"--format=COMMIT:%H %aI", "--"}, pathspecs...)
+	createOut, _ := git(createArgs...).Output()
 	mergeCreationDates(string(createOut), cache.Specs)
 
 	cache.LastCommit = head
@@ -107,11 +109,8 @@ func mergeGitLog(output string, specs map[string]specGit) {
 			continue
 		}
 		if strings.HasPrefix(line, "diff --git") {
-			if i := strings.Index(line, "specs/"); i >= 0 {
-				end := strings.Index(line[i:], " ")
-				if end > 0 {
-					currentFile = strings.TrimPrefix(line[i:i+end], "b/")
-				}
+			if path, ok := extractSpecFileFromDiff(line); ok {
+				currentFile = path
 			}
 			continue
 		}
@@ -145,7 +144,7 @@ func mergeCreationDates(output string, specs map[string]specGit) {
 			}
 			continue
 		}
-		if strings.HasPrefix(line, "specs/") && strings.HasSuffix(line, "spec.md") {
+		if isSpecMarkdownGitPath(line) {
 			entry := specs[line]
 			if entry.CreatedAt == "" {
 				entry.CreatedAt = currentDate
@@ -153,6 +152,37 @@ func mergeCreationDates(output string, specs map[string]specGit) {
 			specs[line] = entry
 		}
 	}
+}
+
+func specGitPathspecs() []string {
+	return []string{"specs/*/spec.md", "docs/specs/*/spec.md"}
+}
+
+func isSpecMarkdownGitPath(p string) bool {
+	if !strings.HasSuffix(p, "/spec.md") {
+		return false
+	}
+	return strings.HasPrefix(p, "specs/") || strings.HasPrefix(p, "docs/specs/")
+}
+
+func extractSpecFileFromDiff(line string) (string, bool) {
+	for _, prefix := range []string{"docs/specs/", "specs/"} {
+		i := strings.Index(line, prefix)
+		if i < 0 {
+			continue
+		}
+		rest := line[i:]
+		end := strings.Index(rest, " ")
+		if end > 0 {
+			rest = rest[:end]
+		}
+		rest = strings.TrimPrefix(rest, "b/")
+		rest = strings.TrimPrefix(rest, "a/")
+		if isSpecMarkdownGitPath(rest) {
+			return rest, true
+		}
+	}
+	return "", false
 }
 
 func specNumFromPath(path string) int {

@@ -64,6 +64,15 @@ type Bugfix struct {
 	Body  string
 }
 
+// Postmortem is a post-incident document.
+type Postmortem struct {
+	Slug  string
+	Title string
+	Date  string
+	Path  string
+	Body  string
+}
+
 // SpecDates holds git-derived timestamps for a spec.
 type SpecDates struct {
 	Number        int
@@ -95,10 +104,11 @@ type LinkIndex struct {
 
 // DashboardData is the full parsed dashboard model.
 type DashboardData struct {
-	Families  []Family
-	PRDs      []PRD
-	Bugfixes  []Bugfix
-	Warnings  []Warning
+	Families     []Family
+	PRDs         []PRD
+	Bugfixes     []Bugfix
+	Postmortems  []Postmortem
+	Warnings     []Warning
 	Dates     map[int]SpecDates
 	Metrics   Metrics
 	Links     LinkIndex

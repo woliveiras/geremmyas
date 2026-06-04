@@ -182,6 +182,9 @@ func RenderDashboard(data DashboardData, outputDir string) error {
 	if err := renderBugfixPages(tmpl, outputDir, base, data); err != nil {
 		return err
 	}
+	if err := renderPostmortemPages(tmpl, outputDir, base, data); err != nil {
+		return err
+	}
 	return renderListPages(tmpl, outputDir, base, data)
 }
 
@@ -271,6 +274,25 @@ func renderBugfixPages(tmpl *template.Template, outputDir string, base pageBase,
 	return nil
 }
 
+func renderPostmortemPages(tmpl *template.Template, outputDir string, base pageBase, data DashboardData) error {
+	for _, pm := range data.Postmortems {
+		body, _ := renderMarkdown(pm.Body)
+		dir := filepath.Join(outputDir, "postmortems", pm.Slug)
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+		if err := renderTemplate(tmpl, filepath.Join(dir, "index.html"), "doc.html", docPage{
+			pageBase: baseWithNav(base, "postmortems", pm.Title),
+			Title:    pm.Title,
+			Date:     pm.Date,
+			BodyHTML: body,
+		}); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func renderListPages(tmpl *template.Template, outputDir string, base pageBase, data DashboardData) error {
 	var prdItems []listItem
 	for _, prd := range data.PRDs {
@@ -313,10 +335,33 @@ func renderListPages(tmpl *template.Template, outputDir string, base pageBase, d
 	if err := os.MkdirAll(filepath.Join(outputDir, "bugfixes"), 0o755); err != nil {
 		return err
 	}
-	return renderTemplate(tmpl, filepath.Join(outputDir, "bugfixes", "index.html"), "list.html", listPage{
+	if err := renderTemplate(tmpl, filepath.Join(outputDir, "bugfixes", "index.html"), "list.html", listPage{
 		pageBase: baseWithNav(base, "bugfixes", "Bugfixes"),
 		Items:    bfItems,
 		Empty:    emptyBF,
+	}); err != nil {
+		return err
+	}
+
+	var pmItems []listItem
+	for _, pm := range data.Postmortems {
+		pmItems = append(pmItems, listItem{
+			Title: pm.Title,
+			Date:  pm.Date,
+			Href:  "/postmortems/" + pm.Slug + "/index.html",
+		})
+	}
+	emptyPM := ""
+	if len(pmItems) == 0 {
+		emptyPM = "No postmortems"
+	}
+	if err := os.MkdirAll(filepath.Join(outputDir, "postmortems"), 0o755); err != nil {
+		return err
+	}
+	return renderTemplate(tmpl, filepath.Join(outputDir, "postmortems", "index.html"), "list.html", listPage{
+		pageBase: baseWithNav(base, "postmortems", "Postmortems"),
+		Items:    pmItems,
+		Empty:    emptyPM,
 	})
 }
 

@@ -45,66 +45,70 @@ func ParseTaskStats(content string) TaskStats {
 	return stats
 }
 
-// ScanSpecs walks specs/ and returns grouped dashboard data.
+// SpecRoots are relative paths scanned for NNNN-slug spec folders.
+var SpecRoots = []string{"specs", "docs/specs"}
+
+// ScanSpecs walks SpecRoots under root and returns grouped dashboard data.
 func ScanSpecs(root string) (DashboardData, error) {
 	data := DashboardData{
 		Dates: make(map[int]SpecDates),
 		Links: LinkIndex{
-			SpecsByNumber:   make(map[int]*SpecSummary),
-			PRDByPath:       make(map[string]*PRD),
-			OriginToSpecs:   make(map[string][]int),
-			Dependents:      make(map[int][]int),
+			SpecsByNumber: make(map[int]*SpecSummary),
+			PRDByPath:     make(map[string]*PRD),
+			OriginToSpecs: make(map[string][]int),
+			Dependents:    make(map[int][]int),
 		},
 	}
-	specsDir := filepath.Join(root, "specs")
-	entries, err := os.ReadDir(specsDir)
-	if os.IsNotExist(err) {
-		return data, nil
-	}
-	if err != nil {
-		return DashboardData{}, err
-	}
-
-	seen := map[int]bool{}
+	seen := map[int]string{}
 	var specs []SpecSummary
 
-	for _, ent := range entries {
-		if !ent.IsDir() {
+	for _, rel := range SpecRoots {
+		specsDir := filepath.Join(root, rel)
+		entries, err := os.ReadDir(specsDir)
+		if os.IsNotExist(err) {
 			continue
 		}
-		m := specDirPattern.FindStringSubmatch(ent.Name())
-		if m == nil {
-			data.Warnings = append(data.Warnings, Warning{
-				Path:    filepath.Join(specsDir, ent.Name()),
-				Message: "folder name does not match NNNN-slug pattern",
-			})
-			continue
-		}
-		num, _ := strconv.Atoi(m[1])
-		if seen[num] {
-			data.Warnings = append(data.Warnings, Warning{
-				Path:    filepath.Join(specsDir, ent.Name()),
-				Message: fmt.Sprintf("duplicate spec number %04d", num),
-			})
-			continue
-		}
-		seen[num] = true
-
-		dir := filepath.Join(specsDir, ent.Name())
-		spec, warn, err := parseSpecDir(dir, num, m[2])
 		if err != nil {
+			return DashboardData{}, err
+		}
+		for _, ent := range entries {
+			if !ent.IsDir() {
+				continue
+			}
+			m := specDirPattern.FindStringSubmatch(ent.Name())
+			if m == nil {
+				data.Warnings = append(data.Warnings, Warning{
+					Path:    filepath.Join(specsDir, ent.Name()),
+					Message: "folder name does not match NNNN-slug pattern",
+				})
+				continue
+			}
+			num, _ := strconv.Atoi(m[1])
+			dir := filepath.Join(specsDir, ent.Name())
+			if prev, ok := seen[num]; ok {
+				data.Warnings = append(data.Warnings, Warning{
+					Path: dir,
+					Message: fmt.Sprintf("duplicate spec number %04d (already in %s)", num, prev),
+				})
+				continue
+			}
+			seen[num] = rel
+
+			spec, warn, err := parseSpecDir(dir, num, m[2])
+			if err != nil {
+				if warn != nil {
+					data.Warnings = append(data.Warnings, *warn)
+				}
+				if !errors.Is(err, errSkipSpec) {
+					data.Warnings = append(data.Warnings, Warning{Path: dir, Message: err.Error()})
+				}
+				continue
+			}
 			if warn != nil {
 				data.Warnings = append(data.Warnings, *warn)
 			}
-			if !errors.Is(err, errSkipSpec) {
-				data.Warnings = append(data.Warnings, Warning{Path: dir, Message: err.Error()})
-			}
-			continue
+			specs = append(specs, spec)
 		}
-		if warn != nil {
-			data.Warnings = append(data.Warnings, *warn)
-		}
-		specs = append(specs, spec)
 	}
 
 	sort.Slice(specs, func(i, j int) bool { return specs[i].Number < specs[j].Number })
@@ -237,6 +241,19 @@ func ScanBugfixes(root string) ([]Bugfix, []Warning, error) {
 	return out, warns, nil
 }
 
+// ScanPostmortems scans docs/postmortems/*.md.
+func ScanPostmortems(root string) ([]Postmortem, []Warning, error) {
+	docs, warns, err := scanDocs(root, "docs/postmortems")
+	if err != nil {
+		return nil, warns, err
+	}
+	out := make([]Postmortem, len(docs))
+	for i, p := range docs {
+		out[i] = Postmortem(p)
+	}
+	return out, warns, nil
+}
+
 func scanDocs(root, sub string) ([]PRD, []Warning, error) {
 	dir := filepath.Join(root, sub)
 	entries, err := os.ReadDir(dir)
@@ -300,7 +317,7 @@ func normalizePath(p string) string {
 	return filepath.ToSlash(p)
 }
 
-// LoadAll parses specs, PRDs, and bugfixes under root.
+// LoadAll parses specs, PRDs, bugfixes, and postmortems under root.
 func LoadAll(root string) (DashboardData, error) {
 	data, err := ScanSpecs(root)
 	if err != nil {
@@ -321,5 +338,11 @@ func LoadAll(root string) (DashboardData, error) {
 	}
 	data.Bugfixes = bugfixes
 	data.Warnings = append(data.Warnings, w2...)
+	postmortems, w3, err := ScanPostmortems(root)
+	if err != nil {
+		return data, err
+	}
+	data.Postmortems = postmortems
+	data.Warnings = append(data.Warnings, w3...)
 	return data, nil
 }

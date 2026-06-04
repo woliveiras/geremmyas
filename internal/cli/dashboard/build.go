@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 )
 
 // BuildOptions configures a full dashboard build.
@@ -35,9 +34,8 @@ func Build(opts BuildOptions) (DashboardData, error) {
 	if err := RenderDashboard(data, opts.OutputDir); err != nil {
 		return data, err
 	}
-	readme := GenerateReadme(data)
-	readmePath := filepath.Join(opts.Root, "specs", "README.md")
-	if err := os.WriteFile(readmePath, []byte(readme), 0o644); err != nil {
+	readmePaths, err := WriteSpecReadmes(opts.Root, data)
+	if err != nil {
 		return data, err
 	}
 	if opts.Quiet != nil {
@@ -45,7 +43,9 @@ func Build(opts BuildOptions) (DashboardData, error) {
 			fmt.Fprintf(opts.Quiet, "warning: %s: %s\n", w.Path, w.Message)
 		}
 		fmt.Fprintf(opts.Quiet, "dashboard: %s\n", opts.OutputDir)
-		fmt.Fprintf(opts.Quiet, "updated specs/README.md\n")
+		for _, p := range readmePaths {
+			fmt.Fprintf(opts.Quiet, "updated %s\n", p)
+		}
 	}
 	return data, nil
 }

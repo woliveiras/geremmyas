@@ -80,6 +80,100 @@ status: Draft
 	}
 }
 
+func TestScanSpecsDocsSpecs(t *testing.T) {
+	root := t.TempDir()
+	writeSpecAt(t, root, "docs/specs", "0010-docs-root", `---
+title: From docs/specs
+family: platform
+phase: 1
+status: Draft
+---
+`, "")
+	data, err := ScanSpecs(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var found bool
+	for _, fam := range data.Families {
+		for _, ph := range fam.Phases {
+			for _, s := range ph.Specs {
+				if s.Number == 10 {
+					found = true
+					if s.Title != "From docs/specs" {
+						t.Fatalf("title = %q", s.Title)
+					}
+				}
+			}
+		}
+	}
+	if !found {
+		t.Fatal("spec 0010 under docs/specs not found")
+	}
+}
+
+func TestScanSpecsDuplicateAcrossRoots(t *testing.T) {
+	root := t.TempDir()
+	writeSpecAt(t, root, "specs", "0005-dup", "---\ntitle: Root\nfamily: f\nphase: 0\nstatus: Draft\n---\n", "")
+	writeSpecAt(t, root, "docs/specs", "0005-dup", "---\ntitle: Docs\nfamily: f\nphase: 0\nstatus: Draft\n---\n", "")
+	data, err := ScanSpecs(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	count := 0
+	for _, fam := range data.Families {
+		for _, ph := range fam.Phases {
+			count += len(ph.Specs)
+		}
+	}
+	if count != 1 {
+		t.Fatalf("want 1 spec, got %d", count)
+	}
+	dupWarn := false
+	for _, w := range data.Warnings {
+		if strings.Contains(w.Message, "duplicate spec number 0005") {
+			dupWarn = true
+		}
+	}
+	if !dupWarn {
+		t.Fatal("expected duplicate warning for docs/specs copy")
+	}
+}
+
+func TestScanPostmortems(t *testing.T) {
+	root := t.TempDir()
+	dir := filepath.Join(root, "docs", "postmortems")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(dir, "2026-04-01-outage.md")
+	if err := os.WriteFile(path, []byte("# Outage\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	pms, _, err := ScanPostmortems(root)
+	if err != nil || len(pms) != 1 || pms[0].Date != "2026-04-01" {
+		t.Fatalf("postmortems = %+v err=%v", pms, err)
+	}
+}
+
+func TestWriteSpecReadmesBothRoots(t *testing.T) {
+	root := t.TempDir()
+	for _, rel := range []string{"specs", "docs/specs"} {
+		if err := os.MkdirAll(filepath.Join(root, rel), 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	data := DashboardData{Families: []Family{{Name: "F", Phases: []Phase{{Specs: []SpecSummary{{
+		Number: 1, Title: "T", Status: "Draft",
+	}}}}}}}
+	written, err := WriteSpecReadmes(root, data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(written) != 2 {
+		t.Fatalf("written = %v", written)
+	}
+}
+
 func TestScanPRDs(t *testing.T) {
 	root := t.TempDir()
 	dir := filepath.Join(root, "docs", "prds")
@@ -117,9 +211,9 @@ func TestScanSpecsPerformance(t *testing.T) {
 	}
 }
 
-func writeSpec(t *testing.T, root, folder, specBody, tasks string) {
+func writeSpecAt(t *testing.T, root, specRoot, folder, specBody, tasks string) {
 	t.Helper()
-	dir := filepath.Join(root, "specs", folder)
+	dir := filepath.Join(root, specRoot, folder)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -131,6 +225,10 @@ func writeSpec(t *testing.T, root, folder, specBody, tasks string) {
 			t.Fatal(err)
 		}
 	}
+}
+
+func writeSpec(t *testing.T, root, folder, specBody, tasks string) {
+	writeSpecAt(t, root, "specs", folder, specBody, tasks)
 }
 
 func formatSpecDir(n int) string {

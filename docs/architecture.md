@@ -168,13 +168,15 @@ to overwrite customized files).
 
 ## Dashboard (`dashboard`)
 
-`geremmyas dashboard` scans `specs/`, `docs/prds/`, and `docs/bugfixes/`, then
-writes a static site under `.geremmyas/dashboard/` (default). Implementation
+`geremmyas dashboard` scans spec folders under `specs/` and `docs/specs/`
+(either or both), plus `docs/prds/`, `docs/bugfixes/`, and `docs/postmortems/`,
+then writes a static site under `.geremmyas/dashboard/` (default). Implementation
 lives in `internal/cli/dashboard/` with embedded templates under
 `internal/cli/dashboard/dashboard_assets/`.
 
 Pipeline: **parse** → optional **git dates** (`.geremmyas-cache/gitdates.json`)
-→ **metrics** → **render HTML** → overwrite **`specs/README.md`** (compact index).
+→ **metrics** → **render HTML** → overwrite **`README.md`** in each existing
+spec root (`specs/`, `docs/specs/`) with the same compact index.
 
 | Flag | Effect |
 | --- | --- |
@@ -184,9 +186,12 @@ Pipeline: **parse** → optional **git dates** (`.geremmyas-cache/gitdates.json`
 | `--serve` | Serve output on `127.0.0.1` (default port 8080) |
 | `--watch` | Re-run full pipeline on `specs/` / `docs/` changes (implies `--serve`) |
 
+Duplicate spec numbers across roots: first root in `SpecRoots` wins (`specs/`
+before `docs/specs/`); the other folder is skipped with a warning.
+
 `sync` still **preserves** hand-written `specs/README.md`; `dashboard`
-**replaces** it by design (see PRD). Recommend `.geremmyas-cache/` in
-`.gitignore`.
+**replaces** README under each spec root by design (see PRD). Recommend
+`.geremmyas-cache/` in `.gitignore`.
 
 ## `user/` directory
 

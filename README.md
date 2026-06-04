@@ -190,9 +190,11 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 
 **Defaults:** non-interactive `init` writes `core` and `sdd`.
 
-**Dashboard:** writes `.geremmyas/dashboard/` (static HTML). Use `--serve` for
-`http://localhost:8080`; `--watch` rebuilds on `specs/` and `docs/` changes.
-Git metrics use `.geremmyas-cache/` (add to `.gitignore`). See
+**Dashboard:** writes `.geremmyas/dashboard/` (static HTML). Scans `specs/` and
+`docs/specs/` (project-dependent), plus `docs/prds/`, `docs/bugfixes/`, and
+`docs/postmortems/`. Use `--serve` for `http://localhost:8080`; `--watch`
+rebuilds on `specs/` and `docs/` changes. Git metrics use `.geremmyas-cache/`
+(add to `.gitignore`). See
 [docs/prds/2026-06-04-dashboard.md](docs/prds/2026-06-04-dashboard.md).
 
 **Sync output:** `installed`, `updated`, `preserved`, `skipped` — see
