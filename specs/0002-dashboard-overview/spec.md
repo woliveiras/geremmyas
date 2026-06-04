@@ -3,7 +3,7 @@ spec: "0002"
 title: Dashboard overview HTML generation
 family: platform
 phase: 0
-status: Approved
+status: Implemented
 owner: ""
 depends_on: [1]
 origin: "docs/prds/2026-06-04-dashboard.md"

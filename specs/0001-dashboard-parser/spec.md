@@ -3,7 +3,7 @@ spec: "0001"
 title: Dashboard spec parser
 family: platform
 phase: 0
-status: Approved
+status: Implemented
 owner: ""
 depends_on: []
 origin: "docs/prds/2026-06-04-dashboard.md"

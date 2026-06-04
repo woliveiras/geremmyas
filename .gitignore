@@ -13,3 +13,6 @@
 
 # OS
 Thumbs.db
+
+# geremmyas dashboard output and cache
+.geremmyas/

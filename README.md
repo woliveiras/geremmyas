@@ -186,8 +186,14 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 | `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
 | `global [--targets ...] [--force] <pack>...` | User-level install: Copilot paths + optional Cursor/Claude/OpenCode generators |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
+| `dashboard [--output DIR] [--serve] [--port PORT] [--watch] [--no-git] [--no-cache]` | Generate HTML spec dashboard + compact `specs/README.md` index |
 
 **Defaults:** non-interactive `init` writes `core` and `sdd`.
+
+**Dashboard:** writes `.geremmyas/dashboard/` (static HTML). Use `--serve` for
+`http://localhost:8080`; `--watch` rebuilds on `specs/` and `docs/` changes.
+Git metrics use `.geremmyas-cache/` (add to `.gitignore`). See
+[docs/prds/2026-06-04-dashboard.md](docs/prds/2026-06-04-dashboard.md).
 
 **Sync output:** `installed`, `updated`, `preserved`, `skipped` — see
 [docs/architecture.md](docs/architecture.md).

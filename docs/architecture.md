@@ -9,6 +9,7 @@ user-level VS Code paths.
 
 ```text
 cmd/geremmyas/          CLI entrypoint
+internal/cli/dashboard/ Dashboard parser, renderer, git metrics, serve/watch
 internal/cli/           Commands, catalog, config, sync, global install
 catalog/packs.json      Pack manifest (names, depends, source → target)
 project/                Canonical files synced into consumer repos
@@ -164,6 +165,28 @@ Not installed globally: `AGENTS.md`, `mise.toml`, project-level agents/hooks,
 Global **file copies** always overwrite. Generated files follow the same
 preserve/overwrite rules as project sync (`geremmyas:generated` marker, `--force`
 to overwrite customized files).
+
+## Dashboard (`dashboard`)
+
+`geremmyas dashboard` scans `specs/`, `docs/prds/`, and `docs/bugfixes/`, then
+writes a static site under `.geremmyas/dashboard/` (default). Implementation
+lives in `internal/cli/dashboard/` with embedded templates under
+`internal/cli/dashboard/dashboard_assets/`.
+
+Pipeline: **parse** → optional **git dates** (`.geremmyas-cache/gitdates.json`)
+→ **metrics** → **render HTML** → overwrite **`specs/README.md`** (compact index).
+
+| Flag | Effect |
+| --- | --- |
+| `--output DIR` | Output directory (default `.geremmyas/dashboard`) |
+| `--no-git` | Skip git log; metrics page shows unavailable state |
+| `--no-cache` | Full git rescan |
+| `--serve` | Serve output on `127.0.0.1` (default port 8080) |
+| `--watch` | Re-run full pipeline on `specs/` / `docs/` changes (implies `--serve`) |
+
+`sync` still **preserves** hand-written `specs/README.md`; `dashboard`
+**replaces** it by design (see PRD). Recommend `.geremmyas-cache/` in
+`.gitignore`.
 
 ## `user/` directory
 

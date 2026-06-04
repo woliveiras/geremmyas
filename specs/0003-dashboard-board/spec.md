@@ -3,7 +3,7 @@ spec: "0003"
 title: Dashboard board view
 family: platform
 phase: 1
-status: Approved
+status: Implemented
 owner: ""
 depends_on: [2]
 origin: "docs/prds/2026-06-04-dashboard.md"
