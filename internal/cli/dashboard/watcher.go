@@ -4,34 +4,54 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
 )
 
 // WatchDirs debounces filesystem events and calls onChange.
-func WatchDirs(dirs []string, debounce time.Duration, onChange func()) error {
+// Call the returned stop function when watching is no longer needed (e.g. on
+// server shutdown); it closes the watcher and ends the background goroutine.
+func WatchDirs(dirs []string, debounce time.Duration, onChange func()) (stop func(), err error) {
 	w, err := fsnotify.NewWatcher()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	for _, dir := range dirs {
 		if err := addWatchRecursive(w, dir); err != nil {
 			_ = w.Close()
-			return err
+			return nil, err
 		}
 	}
+	var (
+		closeOnce sync.Once
+		done      = make(chan struct{})
+	)
+	stop = func() {
+		closeOnce.Do(func() {
+			_ = w.Close()
+			close(done)
+		})
+	}
 	go func() {
-		defer w.Close()
+		defer stop()
 		var timer *time.Timer
-		trigger := func() {
+		stopTimer := func() {
 			if timer != nil {
 				timer.Stop()
+				timer = nil
 			}
+		}
+		trigger := func() {
+			stopTimer()
 			timer = time.AfterFunc(debounce, onChange)
 		}
 		for {
 			select {
+			case <-done:
+				stopTimer()
+				return
 			case ev, ok := <-w.Events:
 				if !ok {
 					return
@@ -50,7 +70,7 @@ func WatchDirs(dirs []string, debounce time.Duration, onChange func()) error {
 			}
 		}
 	}()
-	return nil
+	return stop, nil
 }
 
 func addWatchRecursive(w *fsnotify.Watcher, root string) error {

@@ -61,15 +61,17 @@ func runDashboard(args []string, w io.Writer) error {
 			filepath.Join(root, "specs"),
 			filepath.Join(root, "docs"),
 		}
-		if err := dashboard.WatchDirs(dirs, 300*time.Millisecond, func() {
+		stopWatch, err := dashboard.WatchDirs(dirs, 300*time.Millisecond, func() {
 			if err := build(); err != nil {
 				fmt.Fprintf(w, "rebuild error: %v\n", err)
 				return
 			}
 			srv.NotifyReload()
-		}); err != nil {
+		})
+		if err != nil {
 			return err
 		}
+		defer stopWatch()
 	}
 	return srv.Run()
 }
