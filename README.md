@@ -4,10 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ShellCheck](https://img.shields.io/badge/shell-ShellCheck-brightgreen)](https://www.shellcheck.net/)
 
-Opinionated GitHub Copilot configurations for VS Code.
-
-Agents, skills, instructions, hooks, prompts, and a pack-based CLI named
-`geremmyas`.
+Agents, skills, instructions, hooks, prompts, and a pack-based CLI for coding assistants
 
 <p align="center">
   <img src=".github/assets/geremmyas-logo.png" alt="Geremmyas Logo" width="200"/>
