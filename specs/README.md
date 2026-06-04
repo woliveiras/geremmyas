@@ -21,32 +21,32 @@ Progress lives in `tasks.md` checkboxes (`[ ]`, `[~]`, `[x]`). See
 
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| [0001](0001-dashboard-parser/spec.md) | Dashboard spec parser | Draft | — |
-| [0002](0002-dashboard-overview/spec.md) | Dashboard overview HTML generation | Draft | 0001 |
+| [0001](0001-dashboard-parser/spec.md) | Dashboard spec parser | Approved | — |
+| [0002](0002-dashboard-overview/spec.md) | Dashboard overview HTML generation | Approved | 0001 |
 
 ### Phase 1 — Board & Progress
 
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| [0003](0003-dashboard-board/spec.md) | Dashboard board view | Draft | 0002 |
+| [0003](0003-dashboard-board/spec.md) | Dashboard board view | Approved | 0002 |
 
 ### Phase 2 — Metrics
 
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| [0004](0004-dashboard-metrics/spec.md) | Dashboard git dates and metrics | Draft | 0002 |
+| [0004](0004-dashboard-metrics/spec.md) | Dashboard git dates and metrics | Approved | 0002 |
 
 ### Phase 3 — Developer Experience
 
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| [0005](0005-dashboard-serve/spec.md) | Dashboard serve and watch mode | Draft | 0002 |
+| [0005](0005-dashboard-serve/spec.md) | Dashboard serve and watch mode | Approved | 0002 |
 
 ### Phase 4 — Navigation
 
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| [0006](0006-dashboard-linking/spec.md) | Dashboard artifact linking and dependency visualization | Draft | 0002, 0004 |
+| [0006](0006-dashboard-linking/spec.md) | Dashboard artifact linking and dependency visualization | Approved | 0002, 0004 |
 
 ### Reserved blocks (future)
 

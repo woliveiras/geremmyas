@@ -3,7 +3,7 @@ spec: "0004"
 title: Dashboard git dates and metrics
 family: platform
 phase: 2
-status: Draft
+status: Approved
 owner: ""
 depends_on: [2]
 origin: "docs/prds/2026-06-04-dashboard.md"

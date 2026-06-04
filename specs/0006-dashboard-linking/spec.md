@@ -3,7 +3,7 @@ spec: "0006"
 title: Dashboard artifact linking and dependency visualization
 family: platform
 phase: 4
-status: Draft
+status: Approved
 owner: ""
 depends_on: [2, 4]
 origin: "docs/prds/2026-06-04-dashboard.md"

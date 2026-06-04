@@ -3,7 +3,7 @@ spec: "0005"
 title: Dashboard serve and watch mode
 family: platform
 phase: 3
-status: Draft
+status: Approved
 owner: ""
 depends_on: [2]
 origin: "docs/prds/2026-06-04-dashboard.md"
