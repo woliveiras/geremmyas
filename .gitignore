@@ -14,5 +14,9 @@
 # OS
 Thumbs.db
 
-# geremmyas dashboard output and cache
+# geremmyas dashboard output and cache (not internal/cli/dashboard/dashboard_assets/)
 .geremmyas/
+.geremmyas-cache/
+
+# stray copy at repo root; canonical assets live under internal/cli/dashboard/
+/dashboard_assets/
