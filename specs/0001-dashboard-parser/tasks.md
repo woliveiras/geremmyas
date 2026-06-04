@@ -2,38 +2,38 @@
 
 ## Foundation
 
-- [ ] Create `internal/cli/dashboard/` package directory
-- [ ] Define types in `types.go`: DashboardData, Family, Phase, SpecSummary,
+- [x] Create `internal/cli/dashboard/` package directory
+- [x] Define types in `types.go`: DashboardData, Family, Phase, SpecSummary,
   TaskStats, PRD, Bugfix, Warning
 
 ## Spec parser
 
-- [ ] Extend `frontmatter.go` to return body text after frontmatter delimiter
-- [ ] Implement `ScanSpecDirs()` — find all `NNNN-<slug>/` directories
-- [ ] Implement `ParseSpecFrontmatter()` — extract typed fields from frontmatter
+- [x] Extend `frontmatter.go` to return body text after frontmatter delimiter
+- [x] Implement `ScanSpecDirs()` — find all `NNNN-<slug>/` directories
+- [x] Implement `ParseSpecFrontmatter()` — extract typed fields from frontmatter
   map
-- [ ] Implement `ParseTaskStats()` — regex count of `[ ]`, `[~]`, `[x]`
+- [x] Implement `ParseTaskStats()` — regex count of `[ ]`, `[~]`, `[x]`
   checkboxes
-- [ ] Implement `ScanSpecs()` — orchestrate: scan dirs → parse each → group by
+- [x] Implement `ScanSpecs()` — orchestrate: scan dirs → parse each → group by
   family/phase → sort
-- [ ] Handle missing frontmatter: place in "Ungrouped" family, emit warning
-- [ ] Handle malformed folders: skip with warning
+- [x] Handle missing frontmatter: place in "Ungrouped" family, emit warning
+- [x] Handle malformed folders: skip with warning
 
 ## PRD and bugfix parsers
 
-- [ ] Implement `ScanPRDs()` — scan `docs/prds/*.md`, extract title + date
-- [ ] Implement `ScanBugfixes()` — scan `docs/bugfixes/*.md`, extract title +
+- [x] Implement `ScanPRDs()` — scan `docs/prds/*.md`, extract title + date
+- [x] Implement `ScanBugfixes()` — scan `docs/bugfixes/*.md`, extract title +
   date
-- [ ] Implement `ParseDateFromFilename()` — extract YYYY-MM-DD from filename
+- [x] Implement `ParseDateFromFilename()` — extract YYYY-MM-DD from filename
   pattern
 
 ## Tests
 
-- [ ] Unit test: ParseSpecFrontmatter with valid frontmatter
-- [ ] Unit test: ParseSpecFrontmatter with missing/empty frontmatter
-- [ ] Unit test: ParseTaskStats with mixed checkboxes including indented
-- [ ] Unit test: ParseDateFromFilename with valid and invalid filenames
-- [ ] Integration test: ScanSpecs with temp directory tree (multiple families,
+- [x] Unit test: ParseSpecFrontmatter with valid frontmatter
+- [x] Unit test: ParseSpecFrontmatter with missing/empty frontmatter
+- [x] Unit test: ParseTaskStats with mixed checkboxes including indented
+- [x] Unit test: ParseDateFromFilename with valid and invalid filenames
+- [x] Integration test: ScanSpecs with temp directory tree (multiple families,
   phases, edge cases)
-- [ ] Integration test: ScanPRDs with temp directory
-- [ ] Performance test: ScanSpecs with 100 generated spec folders < 1s
+- [x] Integration test: ScanPRDs with temp directory
+- [x] Performance test: ScanSpecs with 100 generated spec folders < 1s

@@ -2,34 +2,34 @@
 
 ## Templates + styles
 
-- [ ] Add board section to `family.html` with four status columns
-- [ ] Add spec card partial: number, title, phase badge, progress bar
-- [ ] Add deprecated column (hidden by default, toggle controlled)
-- [ ] Add view toggle (list/board) to family page header
-- [ ] Add phase filter dropdown to board section
-- [ ] Add board-specific CSS: column grid, card layout, badge colors, progress
+- [x] Add board section to `family.html` with four status columns
+- [x] Add spec card partial: number, title, phase badge, progress bar
+- [x] Add deprecated column (hidden by default, toggle controlled)
+- [x] Add view toggle (list/board) to family page header
+- [x] Add phase filter dropdown to board section
+- [x] Add board-specific CSS: column grid, card layout, badge colors, progress
   bar styling, view toggle transitions
 
 ## Client-side interaction
 
-- [ ] Create `board.js` with phase filter logic + view toggle
-- [ ] Add `data-phase` attribute to each card
-- [ ] Implement dropdown change handler: toggle `display:none` on non-matching
+- [x] Create `board.js` with phase filter logic + view toggle
+- [x] Add `data-phase` attribute to each card
+- [x] Implement dropdown change handler: toggle `display:none` on non-matching
   cards
-- [ ] Implement list/board toggle: swap CSS class on container
-- [ ] Show "No matches" message when filter produces empty result
-- [ ] Embed `board.js` via go:embed
+- [x] Implement list/board toggle: swap CSS class on container
+- [x] Show "No matches" message when filter produces empty result
+- [x] Embed `board.js` via go:embed
 
 ## Renderer integration
 
-- [ ] Group family specs by status for board column assignment
-- [ ] Handle unknown status values: place in Draft column with warning icon
-- [ ] Pass board-grouped data to family template
+- [x] Group family specs by status for board column assignment
+- [x] Handle unknown status values: place in Draft column with warning icon
+- [x] Pass board-grouped data to family template
 
 ## Tests
 
-- [ ] Unit test: group specs by status (3 Draft, 2 Approved → correct buckets)
-- [ ] Unit test: spec with no tasks.md → card has "No tasks" label
-- [ ] Integration test: family page contains board section in output
-- [ ] Integration test: phase data attributes present on card elements
-- [ ] Integration test: family with 50 specs → board generated without error
+- [x] Unit test: group specs by status (3 Draft, 2 Approved → correct buckets)
+- [x] Unit test: spec with no tasks.md → card has "No tasks" label
+- [x] Integration test: family page contains board section in output
+- [x] Integration test: phase data attributes present on card elements
+- [x] Integration test: family with 50 specs → board generated without error

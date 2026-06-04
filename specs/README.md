@@ -4,9 +4,9 @@
 
 ## platform (0002–0006)
 
-- 0002 Dashboard overview HTML generation — Approved
-- 0003 Dashboard board view — Approved
-- 0004 Dashboard git dates and metrics — Approved
-- 0005 Dashboard serve and watch mode — Approved
-- 0006 Dashboard artifact linking and dependency visualization — Approved
+- 0002 Dashboard overview HTML generation — Implemented
+- 0003 Dashboard board view — Implemented
+- 0004 Dashboard git dates and metrics — Implemented
+- 0005 Dashboard serve and watch mode — Implemented
+- 0006 Dashboard artifact linking and dependency visualization — Implemented
 
