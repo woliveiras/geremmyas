@@ -122,6 +122,33 @@ func TestRunInitAndAdd(t *testing.T) {
 	}
 }
 
+func TestRunProjectPersistsTargetsFlag(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"project", "--targets", "copilot,cursor", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(filepath.Join(root, configFileName))
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	text := string(data)
+	if !strings.Contains(text, "  - copilot\n") || !strings.Contains(text, "  - cursor\n") {
+		t.Fatalf("config missing persisted targets:\n%s", text)
+	}
+
+	out.Reset()
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+	mustExist(t, filepath.Join(root, ".cursor/rules/testing.mdc"))
+}
+
 func TestRunProjectAddsPackAndSyncsFiles(t *testing.T) {
 	root := withTempCwd(t)
 
