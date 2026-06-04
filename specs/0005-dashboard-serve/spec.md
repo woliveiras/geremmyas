@@ -5,7 +5,7 @@ family: platform
 phase: 3
 status: Approved
 owner: ""
-depends_on: [2]
+depends_on: [2, 4]
 origin: "docs/prds/2026-06-04-dashboard.md"
 ---
 
@@ -28,8 +28,9 @@ smooth experience: edit a spec → dashboard updates in the browser.
 - [ ] `--port` flag sets the server port (default 8080)
 - [ ] `--watch` flag watches spec files for changes and regenerates on change
   (implies `--serve`)
-- [ ] On file change: re-parse only changed files, regenerate affected HTML
-  pages, signal browser to reload
+- [ ] On file change: run the same full `geremmyas dashboard` generation pipeline
+  as a cold run (parse → render all pages including metrics when git data is
+  enabled → rewrite `specs/README.md`), then signal the browser to reload
 - [ ] Browser reload via Server-Sent Events (SSE) — lightweight, no WebSocket
   library needed
 - [ ] Server prints URL to stdout: `Dashboard: http://localhost:8080`
@@ -62,6 +63,9 @@ Default: **integration** for the serve flow, **unit** for watcher logic.
   the dashboard regenerates and browser receives reload signal within 2 seconds
 - [ ] Given `--watch` and a new spec folder is created, when detected, then the
   new spec appears in the dashboard after regeneration
+- [ ] Given metrics are enabled (no `--no-git`) and `metrics.html` exists from
+  spec 0004, when a watched spec file changes, then `metrics.html` and spec
+  detail timelines are regenerated in the same rebuild (not left stale)
 - [ ] Given the SSE endpoint `/events`, when browser connects, then it receives
   `data: reload` messages on file changes
 - [ ] Given Ctrl+C, when pressed, then the server shuts down gracefully (no
@@ -88,7 +92,8 @@ Default: **integration** for the serve flow, **unit** for watcher logic.
 | Reload mechanism | Server-Sent Events (SSE) | Simpler than WebSocket; no library needed; `EventSource` is built into browsers |
 | File watcher | `fsnotify` library | Cross-platform, low overhead, well-maintained; stdlib has no file watcher |
 | Debounce | 300ms window | Fast enough to feel instant; prevents multiple regenerations on batch saves |
-| Regeneration scope | Full regeneration on any change | Partial regeneration adds complexity; full regen of 100 specs is < 2s |
+| Regeneration scope | Full dashboard pipeline on any change | Reuses 0002 renderer + 0004 metrics/gitdates when enabled; partial page regen adds complexity; full regen of 100 specs is < 2s |
+| Watch dependency on 0004 | `depends_on` includes spec 0004 | Metrics page and git-derived fields must refresh with spec edits; 0005 orchestrates the pipeline, not renderer-only |
 | Serve source | Serve from output directory on disk | Simple; no in-memory FS needed |
 
 ## Out of Scope

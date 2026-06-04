@@ -3,9 +3,10 @@
 ## Approach
 
 Add `server.go` and `watcher.go` to the dashboard package. The serve command
-generates the dashboard first (reusing the existing pipeline), then starts an
-HTTP server. The watcher monitors `specs/` and `docs/` for changes and triggers
-full regeneration with an SSE ping.
+generates the dashboard first (full pipeline: 0001 parse, 0002 render, 0004
+metrics/git dates when not `--no-git`), then starts an HTTP server. The watcher
+monitors `specs/` and `docs/` for changes and re-invokes that same pipeline
+(including `metrics.html` and per-spec timelines) before an SSE reload ping.
 
 ## File structure
 
@@ -35,5 +36,7 @@ internal/cli/dashboard/
 
 ## Dependencies
 
-- Spec 0002 (renderer pipeline)
+- Spec 0002 (HTML renderer + README generation)
+- Spec 0004 (git dates, metrics page, spec detail timelines) — watch must
+  rebuild these outputs whenever specs or docs change, not only 0002 pages
 - New dep: `github.com/fsnotify/fsnotify` (file watcher)

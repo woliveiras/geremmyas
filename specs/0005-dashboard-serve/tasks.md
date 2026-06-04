@@ -23,8 +23,8 @@
 - [ ] Add `--serve` flag to dashboard command
 - [ ] Add `--port` flag (default 8080)
 - [ ] Add `--watch` flag (implies --serve)
-- [ ] Wire: generate → start server → (if watch) start watcher → on change:
-  regenerate + SSE ping
+- [ ] Wire: full dashboard generate (0002 + 0004 when enabled) → start server →
+  (if watch) start watcher → on change: rerun full generate + SSE ping
 
 ## Tests
 
@@ -32,6 +32,6 @@
 - [ ] Unit test: SSE message format
 - [ ] Integration test: start server, GET /, verify 200 + HTML content
 - [ ] Integration test: start server with --watch, modify spec file, verify
-  output directory updated
+  output directory updated (including metrics.html when git metrics enabled)
 - [ ] Integration test: port conflict → clear error message
 - [ ] Integration test: Ctrl+C → server stops cleanly
