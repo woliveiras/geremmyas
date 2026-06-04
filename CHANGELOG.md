@@ -7,6 +7,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.0.0](https://github.com/woliveiras/geremmyas/compare/v2.8.0...v3.0.0) (2026-06-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* update geremmyas workflow
+
+### Features
+
+* add PRD for Dashboard to improve spec management and visibility ([9103136](https://github.com/woliveiras/geremmyas/commit/9103136d5ebdeb6fc22f4bb90316aef427dac6d4))
+* add Rust skills ([ad8e8aa](https://github.com/woliveiras/geremmyas/commit/ad8e8aa3830658ecc79b104aff82eecc06ac4a86))
+* **dashboard:** add spec parser and data model (spec 0001) ([cf8063c](https://github.com/woliveiras/geremmyas/commit/cf8063c531157d148c67cf0a12654849be65ace9))
+* **dashboard:** enhance dashboard templates and styles for improved UI ([17ce4eb](https://github.com/woliveiras/geremmyas/commit/17ce4ebf929379fda5e12bb17b7dc1d0540d8245))
+* **dashboard:** enhance spec scanning and README generation ([6fba246](https://github.com/woliveiras/geremmyas/commit/6fba24649c64531ea4e2b4a70e538df181317d7f))
+* **dashboard:** enhance WatchDirs to return stop function and add tests ([a5380b7](https://github.com/woliveiras/geremmyas/commit/a5380b72b7c7bfbf1ae4adc950480c054cfccb4a))
+* **dashboard:** git dates, cache, and metrics charts (spec 0004) ([3bd6c76](https://github.com/woliveiras/geremmyas/commit/3bd6c762cb7cddf40cfe91ab3e6efe45f7b030f0))
+* **dashboard:** overview HTML and CLI command (spec 0002) ([54652b9](https://github.com/woliveiras/geremmyas/commit/54652b9373a9dff888af45362c478a2168fdcf75))
+* **dashboard:** per-family kanban board view (spec 0003) ([1068f39](https://github.com/woliveiras/geremmyas/commit/1068f39b92a2dcd02c984c946e2ed050e0706629))
+* **dashboard:** PRD/bugfix linking and dependency navigation (spec 0006) ([aa0e6a0](https://github.com/woliveiras/geremmyas/commit/aa0e6a0b8854549b6ed72da3eabb60f687333fe7))
+* **dashboard:** serve and watch mode with SSE reload (spec 0005) ([ffab6a2](https://github.com/woliveiras/geremmyas/commit/ffab6a2b2902456c5aded0879acac34b5dcdb5cb))
+* enhance Android instructions with security guidelines and add CI/CD setup skill ([4bd8996](https://github.com/woliveiras/geremmyas/commit/4bd8996d516a0bc75da3fadf1d4a73bb06e533fd))
+* enhance dashboard serve command to support full regeneration on file changes and update dependencies ([eac2f8f](https://github.com/woliveiras/geremmyas/commit/eac2f8fb12d010bc3b3c5f676fdadf5bb3e583fd))
+* enhance global install command with multi-target support and update documentation ([14a20d3](https://github.com/woliveiras/geremmyas/commit/14a20d311692b3010e8edbd2bbf97e8aae25752c))
+* enhance Python instructions with security guidelines and add CI setup skill ([aeaae7e](https://github.com/woliveiras/geremmyas/commit/aeaae7ed4b35ca5b9d16b3941e48a138fc64e557))
+* enhance TypeScript instructions with security guidelines and add CI setup skill ([bc783cb](https://github.com/woliveiras/geremmyas/commit/bc783cb2928a10dd16de0611b70d5b00c3c6adce))
+* implement dashboard parser and overview generation with dependency tracking ([88bdd91](https://github.com/woliveiras/geremmyas/commit/88bdd91285d991d6bc389c80b74be73d6dfeba5f))
+* introduce multi-IDE target support and enhance global install functionality ([93f09d4](https://github.com/woliveiras/geremmyas/commit/93f09d426e11934d09d68637890d94be8494ae0e))
+* update geremmyas workflow ([5beba39](https://github.com/woliveiras/geremmyas/commit/5beba3995c6b73a41f91242ecb6e814efab1a6c5))
+* update Go instructions and add Go CI setup skill; remove Rust review skill ([0e76cc8](https://github.com/woliveiras/geremmyas/commit/0e76cc8c6cf2ac7a96ae53a8ab09c87d9813fb26))
+
+
+### Bug Fixes
+
+* **dashboard:** update SSE reload logic to trigger on specific event ([eee809e](https://github.com/woliveiras/geremmyas/commit/eee809ed657d548f1b58859f0a30eb370fa16a24))
+
+
+### Documentation
+
+* create docs ([bc9e60d](https://github.com/woliveiras/geremmyas/commit/bc9e60d7d421d8f2cb127804299196577ed726a3))
+* document dashboard command and mark specs implemented ([bd0d9b3](https://github.com/woliveiras/geremmyas/commit/bd0d9b392be0698d4d527bc0a9e60679bec8eb02))
+* update dashboard specs status to Implemented ([3961cd2](https://github.com/woliveiras/geremmyas/commit/3961cd25f2c7fe8ff2aa230c584333cda6a6f38f))
+
+
+### Miscellaneous
+
+* add caveman ([c2e0610](https://github.com/woliveiras/geremmyas/commit/c2e0610e66dc75d78f79c6370e26b84f0a2d0cf0))
+* update .gitignore to include additional dashboard cache and asset paths ([54d9fb9](https://github.com/woliveiras/geremmyas/commit/54d9fb9647736e5ae55ff1453e944402e7f0ed56))
+* update .gitignore to include geremmyas build directory ([68156b0](https://github.com/woliveiras/geremmyas/commit/68156b08d4239512b2e23c4feaa4f71689497063))
+* update dashboard specs status from Draft to Approved for all phases ([2c9e50f](https://github.com/woliveiras/geremmyas/commit/2c9e50f6d92aede98224c809e726bfddaaef24b6))
+
+
+### Refactoring
+
+* streamline target handling by introducing applyTargetsFlag function and add unit tests for validation ([5858e04](https://github.com/woliveiras/geremmyas/commit/5858e04d4d2b7881e089bc3cbfada23954c3d9ae))
+
 ## [2.8.0](https://github.com/woliveiras/geremmyas/compare/v2.7.0...v2.8.0) (2026-05-25)
 
 
