@@ -138,7 +138,15 @@ packs:
   - sdd
   - python-api
   - data-postgres
+targets:
+  - copilot
+  - cursor
+  - claude-code
 ```
+
+Default `targets` when omitted: `copilot` only. Add `cursor`, `claude-code`, or
+`opencode` to generate IDE-specific files from the same packs (see
+[docs/architecture.md](docs/architecture.md#multi-ide-targets)).
 
 Optional writing, research, and demo packs:
 
@@ -167,11 +175,11 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 | Command | Purpose |
 | --- | --- |
 | `list` | Print all packs (`name` + description) |
-| `init [--packs a,b] [--force]` | Create `geremmyas.yml`; interactive TUI if no `--packs` and TTY |
-| `sync [--force]` | Copy configured packs into cwd; preserve customizable files unless `--force` |
+| `init [--packs a,b] [--targets copilot,cursor,...] [--force]` | Create `geremmyas.yml`; interactive TUI if no `--packs` and TTY |
+| `sync [--force] [--targets ...]` | Sync packs + run IDE generators from config |
 | `add <pack>...` | Append packs to config only (**does not** sync) |
 | `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
-| `project [--force] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
+| `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
 | `global <pack>...` | Install skills/instructions to `~/.agents/skills` and `~/.copilot/instructions` |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
@@ -182,6 +190,10 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 
 **Preserved on sync** (unless `--force`): `AGENTS.md`, `specs/README.md`,
 `mise.toml`, `.github/copilot-instructions.md`, `.github/hooks/guardrails-rules.txt`.
+
+**Generated IDE files** (marker `geremmyas:generated`): `.cursor/rules/*.mdc`,
+`.cursor/hooks.json`, `CLAUDE.md`, `.opencode/AGENTS.md`. Re-sync updates them;
+custom edits preserved unless `--force`.
 
 **Global install** copies only `.github/skills/` and `.github/instructions/`; not
 agents, hooks, `AGENTS.md`, or `mise.toml`.

@@ -39,7 +39,7 @@ packs:
 
 func TestFormatConfigSortsAndDeduplicates(t *testing.T) {
 	got := formatConfig(Config{Version: 1, Packs: []string{"sdd", "core", "sdd"}})
-	want := "version: 1\npacks:\n  - core\n  - sdd\n"
+	want := "version: 1\npacks:\n  - core\n  - sdd\ntargets:\n  - copilot\n"
 	if got != want {
 		t.Fatalf("formatConfig = %q, want %q", got, want)
 	}

@@ -5,7 +5,7 @@ rules live in [`AGENTS.md`](../AGENTS.md) (symlink to [`project/AGENTS.md`](../p
 
 | Document | Audience | Contents |
 | --- | --- | --- |
-| [architecture.md](architecture.md) | Contributors | Embed FS, packs, sync, global install, repo symlinks |
+| [architecture.md](architecture.md) | Contributors | Embed FS, packs, sync, **multi-IDE targets**, global install, repo symlinks |
 | [creating-packs.md](creating-packs.md) | Contributors | Add packs, skills, and instructions to the catalog |
 
 Consumer projects use the SDD template installed by the `sdd` pack:

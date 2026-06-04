@@ -58,11 +58,11 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  geremmyas list")
-	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--force]")
-	fmt.Fprintln(w, "  geremmyas sync [--force]")
+	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--targets copilot,cursor] [--force]")
+	fmt.Fprintln(w, "  geremmyas sync [--force] [--targets copilot,cursor,claude-code,opencode]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
-	fmt.Fprintln(w, "  geremmyas project [--force] <pack>...")
+	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global <pack>...")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
@@ -78,6 +78,7 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	packsFlag := fs.String("packs", "", "comma-separated pack names")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (copilot,cursor,claude-code,opencode)")
 	force := fs.Bool("force", false, "overwrite existing geremmyas.yml")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -99,7 +100,8 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 
 		// Install project-level packs
 		if len(projectPacks) > 0 {
-			cfg := Config{Version: 1, Packs: projectPacks}
+			cfg := defaultConfig()
+			cfg.Packs = projectPacks
 			if _, err := catalog.Resolve(cfg.Packs); err != nil {
 				return err
 			}
@@ -136,7 +138,15 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 	if len(packsList) == 0 {
 		packsList = defaultConfig().Packs
 	}
-	cfg := Config{Version: 1, Packs: packsList}
+	cfg := defaultConfig()
+	cfg.Packs = packsList
+	if flagTargets := splitCSV(*targetsFlag); len(flagTargets) > 0 {
+		cfg.Targets = flagTargets
+	}
+	if err := validateTargets(cfg.Targets); err != nil {
+		return err
+	}
+	cfg.Targets = normalizeTargets(cfg.Targets)
 	if _, err := catalog.Resolve(cfg.Packs); err != nil {
 		return err
 	}
@@ -151,13 +161,18 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 func runSync(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("sync", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
-	force := fs.Bool("force", false, "overwrite customizable files")
+	force := fs.Bool("force", false, "overwrite customizable and generated files")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (overrides geremmyas.yml)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
 
 	cfg, err := readConfigFile(configFileName)
 	if err != nil {
+		return err
+	}
+	targets := effectiveTargets(cfg, splitCSV(*targetsFlag))
+	if err := validateTargets(targets); err != nil {
 		return err
 	}
 	packs, err := catalog.Resolve(cfg.Packs)
@@ -169,13 +184,24 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 	if err != nil {
 		return err
 	}
-	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+
+	if hasTarget(targets, TargetCopilot) {
+		summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+		if err != nil {
+			return err
+		}
+		printSyncSummary(w, len(packs), summary)
+	}
+
+	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
 	if err != nil {
 		return err
 	}
+	printGeneratorSummaries(w, genSummaries)
 
-	printSyncSummary(w, len(packs), summary)
-	printMiseHint(w, root)
+	if hasTarget(targets, TargetCopilot) {
+		printMiseHint(w, root)
+	}
 	return nil
 }
 
@@ -247,7 +273,8 @@ func runRemove(args []string, w io.Writer, catalog Catalog) error {
 func runProject(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("project", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
-	force := fs.Bool("force", false, "overwrite customizable files")
+	force := fs.Bool("force", false, "overwrite customizable and generated files")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (overrides geremmyas.yml)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -286,6 +313,10 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 	cfg.Packs = uniqueStrings(append(cfg.Packs, packNames...))
+	targets := effectiveTargets(cfg, splitCSV(*targetsFlag))
+	if err := validateTargets(targets); err != nil {
+		return err
+	}
 
 	packs, err := catalog.Resolve(cfg.Packs)
 	if err != nil {
@@ -300,13 +331,24 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 	if err != nil {
 		return err
 	}
-	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+
+	if hasTarget(targets, TargetCopilot) {
+		summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+		if err != nil {
+			return err
+		}
+		printSyncSummary(w, len(packs), summary)
+	}
+
+	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
 	if err != nil {
 		return err
 	}
+	printGeneratorSummaries(w, genSummaries)
 
-	printSyncSummary(w, len(packs), summary)
-	printMiseHint(w, root)
+	if hasTarget(targets, TargetCopilot) {
+		printMiseHint(w, root)
+	}
 	return nil
 }
 
@@ -334,6 +376,7 @@ func runDoctor(w io.Writer, catalog Catalog) error {
 	fmt.Fprintln(w, "catalog: ok")
 	fmt.Fprintf(w, "%s: ok\n", configFileName)
 	fmt.Fprintf(w, "resolved packs: %d\n", len(packs))
+	fmt.Fprintf(w, "targets: %s\n", strings.Join(normalizeTargets(cfg.Targets), ", "))
 	return nil
 }
 

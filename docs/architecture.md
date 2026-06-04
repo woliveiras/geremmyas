@@ -59,11 +59,38 @@ version: 1
 packs:
   - core
   - sdd
+targets:
+  - copilot
+  - cursor
+  - claude-code
 ```
 
 - Default packs for non-interactive `init`: `core`, `sdd`.
-- `add` / `remove` only edit this file; they do **not** sync files.
-- `sync` and `project` read the config, resolve dependencies, then copy files.
+- Default targets when omitted: `copilot` only (backward compatible).
+- Valid targets: `copilot`, `cursor`, `claude-code`, `opencode`.
+- `add` / `remove` only edit packs; they do **not** sync files.
+- `sync` and `project` read the config, resolve dependencies, then run pack sync
+  and IDE generators.
+
+## Multi-IDE targets
+
+The canonical source is always `project/` (embedded at build time). Targets
+select which IDE-specific outputs `sync` / `project` generate:
+
+| Target | Output | Source |
+| --- | --- | --- |
+| `copilot` | `.github/skills/`, `.github/agents/`, `.github/instructions/`, hooks | Pack file copy (existing behavior) |
+| `cursor` | `.cursor/rules/*.mdc`, `.cursor/hooks.json` | Instructions, skills, agents, hooks |
+| `claude-code` | `CLAUDE.md` | `AGENTS.md` + skill/agent index |
+| `opencode` | `.opencode/AGENTS.md` | Same as Claude Code |
+
+`AGENTS.md` is portable — Cursor, Claude Code, and OpenCode all read it. Targets
+add IDE-native formats on top.
+
+Generated files include a `geremmyas:generated` marker. Re-sync updates them;
+custom edits are preserved unless you pass `--force`.
+
+Override targets per run: `geremmyas sync --targets copilot,cursor`.
 
 ## Pack resolution
 
