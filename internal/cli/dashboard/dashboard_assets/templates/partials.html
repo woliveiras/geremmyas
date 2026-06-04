@@ -10,7 +10,7 @@
   <script>
   if (typeof EventSource !== 'undefined') {
     const es = new EventSource('/events');
-    es.onmessage = () => location.reload();
+    es.onmessage = (e) => { if (e.data === 'reload') location.reload(); };
   }
   </script>
 </head>
