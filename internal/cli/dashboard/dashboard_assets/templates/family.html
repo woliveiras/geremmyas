@@ -1,0 +1,48 @@
+{{define "family.html"}}
+{{template "head" .}}
+<h1>{{.Family.Name}}</h1>
+<div class="view-toggle">
+  <button type="button" data-view-btn="list" class="active">List</button>
+  <button type="button" data-view-btn="board">Board</button>
+</div>
+<section id="list-view" data-view-panel="list">
+  {{range .Family.Phases}}
+  <h2>Phase {{.Number}}</h2>
+  <table class="spec-table">
+    {{range .Specs}}
+    <tr>
+      <td><a href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}}</a></td>
+      <td>{{.Title}}</td>
+      <td><span class="badge {{statusClass .Status}}">{{.Status}}</span></td>
+      <td>{{if gt .Tasks.Total 0}}<progress value="{{.Tasks.Done}}" max="{{.Tasks.Total}}"></progress>{{else}}—{{end}}</td>
+    </tr>
+    {{end}}
+  </table>
+  {{end}}
+  {{if .Blocked}}
+  <h3>Blocked</h3>
+  <ul>{{range .Blocked}}<li>{{.Reason}}</li>{{end}}</ul>
+  {{end}}
+</section>
+<section id="board-view" data-view-panel="board" hidden>
+  <label>Phase <select id="phase-filter"><option value="">All</option>
+    {{range .Family.Phases}}<option value="{{.Number}}">Phase {{.Number}}</option>{{end}}
+  </select></label>
+  <label class="deprecated-toggle"><input type="checkbox" id="show-deprecated"> Show deprecated</label>
+  <div class="board-columns">
+    {{range .BoardColumns}}
+    <div class="board-column {{if eq .Status "Deprecated"}}deprecated-col{{end}}" data-status="{{.Status}}">
+      <h3>{{.Status}}</h3>
+      {{range .Specs}}
+      <a class="board-card" href="/specs/{{formatNum .Number}}/index.html" data-phase="{{.Phase}}">
+        <strong>{{formatNum .Number}}</strong> {{.Title}}
+        <span class="badge {{statusClass .Status}}">P{{.Phase}}</span>
+        {{if gt .Tasks.Total 0}}<progress value="{{.Tasks.Done}}" max="{{.Tasks.Total}}"></progress>{{else}}<span>No tasks</span>{{end}}
+      </a>
+      {{else}}<p class="empty-col">No specs</p>{{end}}
+    </div>
+    {{end}}
+  </div>
+</section>
+{{template "foot" .}}
+{{end}}
