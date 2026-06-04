@@ -1,0 +1,11 @@
+{{define "list.html"}}
+{{template "head" .}}
+<h1>{{.Title}}</h1>
+{{if .Empty}}<p class="empty-state">{{.Empty}}</p>{{end}}
+<ul class="doc-list">
+  {{range .Items}}
+  <li><a href="{{.Href}}">{{.Title}}</a> <span class="date">{{.Date}}</span>{{if gt .Count 0}} · {{.Count}} specs{{end}}</li>
+  {{end}}
+</ul>
+{{template "foot" .}}
+{{end}}

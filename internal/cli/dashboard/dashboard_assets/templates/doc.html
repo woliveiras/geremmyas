@@ -1,0 +1,11 @@
+{{define "doc.html"}}
+{{template "head" .}}
+<h1>{{.Title}}</h1>
+<p class="date">{{.Date}}</p>
+<article class="doc-body">{{.BodyHTML}}</article>
+{{if .Related}}
+<h2>Related specs</h2>
+<ul>{{range .Related}}<li><a href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}} {{.Title}}</a></li>{{end}}</ul>
+{{end}}
+{{template "foot" .}}
+{{end}}
