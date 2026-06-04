@@ -102,6 +102,9 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 		if len(projectPacks) > 0 {
 			cfg := defaultConfig()
 			cfg.Packs = projectPacks
+			if err := applyTargetsFlag(&cfg, *targetsFlag); err != nil {
+				return err
+			}
 			if _, err := catalog.Resolve(cfg.Packs); err != nil {
 				return err
 			}
@@ -140,13 +143,9 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 	}
 	cfg := defaultConfig()
 	cfg.Packs = packsList
-	if flagTargets := splitCSV(*targetsFlag); len(flagTargets) > 0 {
-		cfg.Targets = flagTargets
-	}
-	if err := validateTargets(cfg.Targets); err != nil {
+	if err := applyTargetsFlag(&cfg, *targetsFlag); err != nil {
 		return err
 	}
-	cfg.Targets = normalizeTargets(cfg.Targets)
 	if _, err := catalog.Resolve(cfg.Packs); err != nil {
 		return err
 	}
@@ -313,10 +312,10 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 	cfg.Packs = uniqueStrings(append(cfg.Packs, packNames...))
-	targets := effectiveTargets(cfg, splitCSV(*targetsFlag))
-	if err := validateTargets(targets); err != nil {
+	if err := applyTargetsFlag(&cfg, *targetsFlag); err != nil {
 		return err
 	}
+	targets := cfg.Targets
 
 	packs, err := catalog.Resolve(cfg.Packs)
 	if err != nil {

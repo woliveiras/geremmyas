@@ -37,6 +37,30 @@ packs:
 	}
 }
 
+func TestApplyTargetsFlag(t *testing.T) {
+	cfg := defaultConfig()
+	if err := applyTargetsFlag(&cfg, "cursor,copilot"); err != nil {
+		t.Fatalf("applyTargetsFlag returned error: %v", err)
+	}
+	want := []string{"copilot", "cursor"}
+	if strings.Join(cfg.Targets, ",") != strings.Join(want, ",") {
+		t.Fatalf("Targets = %v, want %v", cfg.Targets, want)
+	}
+
+	cfg = defaultConfig()
+	if err := applyTargetsFlag(&cfg, ""); err != nil {
+		t.Fatalf("applyTargetsFlag empty flag returned error: %v", err)
+	}
+	if len(cfg.Targets) != 1 || cfg.Targets[0] != TargetCopilot {
+		t.Fatalf("empty flag Targets = %v, want [copilot]", cfg.Targets)
+	}
+
+	cfg = defaultConfig()
+	if err := applyTargetsFlag(&cfg, "vscode"); err == nil {
+		t.Fatal("applyTargetsFlag succeeded for unknown target, want error")
+	}
+}
+
 func TestFormatConfigSortsAndDeduplicates(t *testing.T) {
 	got := formatConfig(Config{Version: 1, Packs: []string{"sdd", "core", "sdd"}})
 	want := "version: 1\npacks:\n  - core\n  - sdd\ntargets:\n  - copilot\n"

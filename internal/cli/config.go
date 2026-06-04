@@ -133,3 +133,15 @@ func effectiveTargets(cfg Config, flagOverride []string) []string {
 	}
 	return normalizeTargets(cfg.Targets)
 }
+
+// applyTargetsFlag sets cfg.Targets from targetsFlag when non-empty, then validates and normalizes.
+func applyTargetsFlag(cfg *Config, targetsFlag string) error {
+	if flagTargets := splitCSV(targetsFlag); len(flagTargets) > 0 {
+		cfg.Targets = flagTargets
+	}
+	if err := validateTargets(cfg.Targets); err != nil {
+		return err
+	}
+	cfg.Targets = normalizeTargets(cfg.Targets)
+	return nil
+}
