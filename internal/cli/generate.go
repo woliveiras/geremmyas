@@ -20,25 +20,37 @@ type generatorSummary struct {
 }
 
 func runTargetGenerators(root string, targets []string, packs []Pack, opts generatorOptions) (map[string]generatorSummary, error) {
+	return runTargetGeneratorsAt(scopeProject, root, targets, packs, opts)
+}
+
+func runGlobalTargetGenerators(targets []string, packs []Pack, opts generatorOptions) (map[string]generatorSummary, error) {
+	paths, err := globalInstallPaths()
+	if err != nil {
+		return nil, err
+	}
+	return runTargetGeneratorsAt(scopeGlobal, paths.home, targets, packs, opts)
+}
+
+func runTargetGeneratorsAt(scope installScope, root string, targets []string, packs []Pack, opts generatorOptions) (map[string]generatorSummary, error) {
 	summaries := map[string]generatorSummary{}
 	artifacts := collectPackArtifacts(packs)
 
 	if hasTarget(targets, TargetCursor) {
-		summary, err := generateCursor(root, artifacts, opts)
+		summary, err := generateCursorAt(scope, root, artifacts, opts)
 		if err != nil {
 			return summaries, fmt.Errorf("cursor: %w", err)
 		}
 		summaries[TargetCursor] = summary
 	}
 	if hasTarget(targets, TargetClaudeCode) {
-		summary, err := generateClaudeCode(root, artifacts, opts)
+		summary, err := generateClaudeCodeAt(scope, root, artifacts, opts)
 		if err != nil {
 			return summaries, fmt.Errorf("claude-code: %w", err)
 		}
 		summaries[TargetClaudeCode] = summary
 	}
 	if hasTarget(targets, TargetOpenCode) {
-		summary, err := generateOpenCode(root, artifacts, opts)
+		summary, err := generateOpenCodeAt(scope, root, artifacts, opts)
 		if err != nil {
 			return summaries, fmt.Errorf("opencode: %w", err)
 		}

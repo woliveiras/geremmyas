@@ -77,6 +77,23 @@ func hasTarget(targets []string, target string) bool {
 	return false
 }
 
+func globalCopyFlags(targets []string) (skills, instructions bool) {
+	skills = hasTarget(targets, TargetCopilot) || hasTarget(targets, TargetCursor)
+	instructions = hasTarget(targets, TargetCopilot)
+	return skills, instructions
+}
+
+func generatorTargets(targets []string) []string {
+	var out []string
+	for _, target := range targets {
+		if target == TargetCopilot {
+			continue
+		}
+		out = append(out, target)
+	}
+	return out
+}
+
 type packArtifacts struct {
 	instructions []string
 	skills       []string

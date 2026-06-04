@@ -135,18 +135,35 @@ can ask once whether to force-overwrite customizable files.
 
 ## Global install (`global`)
 
-Copies only targets that map to user-level paths:
+`geremmyas global [--targets ...] [--force] <pack>...` installs packs to
+user-level paths. Default target is `copilot` (backward compatible).
 
-| Project target prefix | Installed to |
-| --- | --- |
-| `.github/skills/` | `~/.agents/skills/` |
-| `.github/instructions/` | `~/.copilot/instructions/` |
+| Target | File copy | Generated output |
+| --- | --- | --- |
+| `copilot` | skills → `~/.agents/skills/`, instructions → `~/.copilot/instructions/` | — |
+| `cursor` | skills → `~/.agents/skills/` (skill rules need them) | `~/.cursor/rules/*.mdc`, `~/.cursor/hooks.json` |
+| `claude-code` | — | `~/.claude/CLAUDE.md` |
+| `opencode` | — | `~/.config/opencode/AGENTS.md` |
 
-Not installed globally: `AGENTS.md`, `mise.toml`, agents, hooks,
+Examples:
+
+```bash
+geremmyas global core sdd                              # copilot only (default)
+geremmyas global --targets copilot,cursor core sdd     # VS Code + Cursor user rules
+geremmyas global --targets cursor sdd                  # Cursor rules + skills, no Copilot instructions
+geremmyas global --targets claude-code,opencode sdd    # IDE docs only
+```
+
+Global Cursor skill rules reference `~/.agents/skills/<name>/SKILL.md`. Global
+agent rules embed full agent content (agents are not copied to a separate global
+path).
+
+Not installed globally: `AGENTS.md`, `mise.toml`, project-level agents/hooks,
 `copilot-instructions.md`, `specs/README.md`, templates.
 
-Global install **always overwrites** (no preserve list). Use for skills and
-instructions you want in every workspace.
+Global **file copies** always overwrite. Generated files follow the same
+preserve/overwrite rules as project sync (`geremmyas:generated` marker, `--force`
+to overwrite customized files).
 
 ## `user/` directory
 
@@ -181,7 +198,7 @@ flowchart LR
     CLI[geremmyas CLI]
     yml[geremmyas.yml]
     repo[Consumer repo]
-    global["~/.agents/skills\n~/.copilot/instructions"]
+    global["~/.agents/skills\n~/.copilot/instructions\n~/.cursor/rules\n~/.claude/CLAUDE.md"]
   end
   embed --> CLI
   yml --> CLI

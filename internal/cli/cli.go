@@ -63,7 +63,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
-	fmt.Fprintln(w, "  geremmyas global <pack>...")
+	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
 
@@ -417,11 +417,20 @@ func printMiseHint(w io.Writer, root string) {
 }
 
 func runGlobal(args []string, w io.Writer, catalog Catalog) error {
-	if len(args) == 0 && isInteractive() {
+	fs := flag.NewFlagSet("global", flag.ContinueOnError)
+	fs.SetOutput(io.Discard)
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (copilot,cursor,claude-code,opencode)")
+	force := fs.Bool("force", false, "overwrite customized generated files")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	packArgs := fs.Args()
+
+	if len(packArgs) == 0 && isInteractive() {
 		selected, err := runInteractivePackSelect(
 			catalog,
 			"Select packs to install globally",
-			"Installed to VS Code user-level directory",
+			"Installed to user-level directories (~/.agents, ~/.cursor, …)",
 		)
 		if err != nil {
 			return err
@@ -430,26 +439,60 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 			fmt.Fprintln(w, "no packs selected")
 			return nil
 		}
-		args = selected
+		packArgs = selected
 	}
 
-	if len(args) == 0 {
+	if len(packArgs) == 0 {
 		return errors.New("global requires at least one pack name")
 	}
 
-	packs, err := catalog.Resolve(args)
+	targets := normalizeTargets(splitCSV(*targetsFlag))
+	if err := validateTargets(targets); err != nil {
+		return err
+	}
+
+	packs, err := catalog.Resolve(packArgs)
 	if err != nil {
 		return err
 	}
 
-	count, err := globalInstallPacks(packs)
-	if err != nil {
-		return err
+	copySkills, copyInstructions := globalCopyFlags(targets)
+	count := 0
+	if copySkills || copyInstructions {
+		count, err = globalInstallPacksFiltered(packs, copySkills, copyInstructions)
+		if err != nil {
+			return err
+		}
+	}
+
+	genTargets := generatorTargets(targets)
+	if len(genTargets) > 0 {
+		genSummaries, err := runGlobalTargetGenerators(genTargets, packs, generatorOptions{Force: *force})
+		if err != nil {
+			return err
+		}
+		printGeneratorSummaries(w, genSummaries)
 	}
 
 	home := globalInstallDir()
-	fmt.Fprintf(w, "installed %d files globally:\n", count)
-	fmt.Fprintf(w, "  skills       → %s/.agents/skills/\n", home)
-	fmt.Fprintf(w, "  instructions → %s/.copilot/instructions/\n", home)
+	if count > 0 {
+		fmt.Fprintf(w, "installed %d files globally:\n", count)
+		if copySkills {
+			fmt.Fprintf(w, "  skills       → %s/.agents/skills/\n", home)
+		}
+		if copyInstructions {
+			fmt.Fprintf(w, "  instructions → %s/.copilot/instructions/\n", home)
+		}
+	}
+	if hasTarget(targets, TargetCursor) {
+		fmt.Fprintf(w, "  cursor rules → %s/.cursor/rules/\n", home)
+		fmt.Fprintf(w, "  cursor hooks → %s/.cursor/hooks.json\n", home)
+	}
+	if hasTarget(targets, TargetClaudeCode) {
+		fmt.Fprintf(w, "  claude-code  → %s/.claude/CLAUDE.md\n", home)
+	}
+	if hasTarget(targets, TargetOpenCode) {
+		fmt.Fprintf(w, "  opencode     → %s/.config/opencode/AGENTS.md\n", home)
+	}
 	return nil
 }

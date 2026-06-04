@@ -61,9 +61,13 @@ geremmyas/
         ├── skills/                    # Workflow and utility skills with asset templates
         └── hooks/                     # Command guardrails (BLOCK/ASK rules)
 
-Global install (geremmyas global):
-  → ~/.agents/skills/           (user-level skills)
-  → ~/.copilot/instructions/    (user-level instructions)
+Global install (`geremmyas global [--targets ...] <pack>...`):
+  → ~/.agents/skills/           (copilot and/or cursor targets)
+  → ~/.copilot/instructions/    (copilot target)
+  → ~/.cursor/rules/              (cursor target)
+  → ~/.cursor/hooks.json          (cursor target, when core pack includes hooks)
+  → ~/.claude/CLAUDE.md           (claude-code target)
+  → ~/.config/opencode/AGENTS.md  (opencode target)
 ```
 
 ## Install
@@ -180,7 +184,7 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 | `add <pack>...` | Append packs to config only (**does not** sync) |
 | `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
 | `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
-| `global <pack>...` | Install skills/instructions to `~/.agents/skills` and `~/.copilot/instructions` |
+| `global [--targets ...] [--force] <pack>...` | User-level install: Copilot paths + optional Cursor/Claude/OpenCode generators |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
 **Defaults:** non-interactive `init` writes `core` and `sdd`.
@@ -222,10 +226,12 @@ geremmyas project --force core
 
 ### Global Install
 
-Install packs to your VS Code user-level directory so they apply across all projects:
+Install packs to user-level directories so they apply across all projects:
 
 ```bash
 geremmyas global sdd python-ai infra-terraform blog research
+geremmyas global --targets copilot,cursor core sdd
+geremmyas global --targets claude-code,opencode sdd
 ```
 
 Or use interactive selection:
@@ -234,11 +240,16 @@ Or use interactive selection:
 geremmyas global
 ```
 
-Global packs are installed to:
-- **Skills**: `~/.agents/skills/`
-- **Instructions**: `~/.copilot/instructions/`
+Default target is `copilot` (skills + instructions). With `--targets`:
 
-These are the standard VS Code user-level paths, shared across all workspaces.
+| Target | Output |
+| --- | --- |
+| `copilot` | `~/.agents/skills/`, `~/.copilot/instructions/` |
+| `cursor` | above skills + `~/.cursor/rules/`, `~/.cursor/hooks.json` |
+| `claude-code` | `~/.claude/CLAUDE.md` |
+| `opencode` | `~/.config/opencode/AGENTS.md` |
+
+Generated global files preserve user edits unless you pass `--force`.
 
 ### Pack catalog
 

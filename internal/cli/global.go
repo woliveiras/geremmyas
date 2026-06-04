@@ -38,11 +38,21 @@ func globalInstallDir() string {
 }
 
 func globalInstallPacks(packs []Pack) (int, error) {
+	return globalInstallPacksFiltered(packs, true, true)
+}
+
+func globalInstallPacksFiltered(packs []Pack, skills, instructions bool) (int, error) {
 	count := 0
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
 			baseDir, relPath, ok := globalDestination(entry.Target)
 			if !ok {
+				continue
+			}
+			if strings.HasPrefix(entry.Target, ".github/skills/") && !skills {
+				continue
+			}
+			if strings.HasPrefix(entry.Target, ".github/instructions/") && !instructions {
 				continue
 			}
 			copied, err := globalCopyEntry(baseDir, relPath, entry)
