@@ -1,34 +1,60 @@
 {{define "family.html"}}
 {{template "head" .}}
-<h1>{{.Family.Name}}</h1>
-<div class="view-toggle">
-  <button type="button" data-view-btn="list" class="active">List</button>
-  <button type="button" data-view-btn="board">Board</button>
+<h1 class="page-title">{{.Family.Name}}</h1>
+<div class="view-toggle" role="tablist" aria-label="View mode">
+  <button type="button" data-view-btn="list" class="active" role="tab" aria-selected="true">List</button>
+  <button type="button" data-view-btn="board" role="tab" aria-selected="false">Board</button>
 </div>
-<section id="list-view" data-view-panel="list">
-  {{range .Family.Phases}}
-  <h2>Phase {{.Number}}</h2>
-  <table class="spec-table">
-    {{range .Specs}}
-    <tr>
-      <td><a href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}}</a></td>
-      <td>{{.Title}}</td>
-      <td><span class="badge {{statusClass .Status}}">{{.Status}}</span></td>
-      <td>{{if gt .Tasks.Total 0}}<progress value="{{.Tasks.Done}}" max="{{.Tasks.Total}}"></progress>{{else}}—{{end}}</td>
-    </tr>
-    {{end}}
-  </table>
-  {{end}}
+<section id="list-view" data-view-panel="list" class="list-view">
+  <div class="table-wrap">
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th scope="col" class="col-num">#</th>
+          <th scope="col" class="col-title">Spec</th>
+          <th scope="col" class="col-phase">Phase</th>
+          <th scope="col" class="col-status">Status</th>
+          <th scope="col" class="col-tasks">Tasks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Family.Phases}}
+        {{range .Specs}}
+        <tr>
+          <td class="col-num"><a class="spec-link" href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}}</a></td>
+          <td class="col-title"><a class="spec-link" href="/specs/{{formatNum .Number}}/index.html">{{.Title}}</a></td>
+          <td class="col-phase"><span class="phase-pill">P{{.Phase}}</span></td>
+          <td class="col-status"><span class="badge {{statusClass .Status}}">{{.Status}}</span></td>
+          <td class="col-tasks">
+            {{if gt .Tasks.Total 0}}
+            <div class="task-cell">
+              <span class="task-count">{{.Tasks.Done}}/{{.Tasks.Total}}</span>
+              <div class="task-bar" role="progressbar" aria-valuenow="{{.Tasks.Done}}" aria-valuemin="0" aria-valuemax="{{.Tasks.Total}}">
+                <span style="width: {{taskPct .Tasks}}%"></span>
+              </div>
+            </div>
+            {{else}}<span class="muted">—</span>{{end}}
+          </td>
+        </tr>
+        {{end}}
+        {{end}}
+      </tbody>
+    </table>
+  </div>
   {{if .Blocked}}
-  <h3>Blocked</h3>
-  <ul>{{range .Blocked}}<li>{{.Reason}}</li>{{end}}</ul>
+  <aside class="blocked-panel">
+    <h2>Blocked</h2>
+    <ul>{{range .Blocked}}<li>{{.Reason}}</li>{{end}}</ul>
+  </aside>
   {{end}}
 </section>
-<section id="board-view" data-view-panel="board" hidden>
-  <label>Phase <select id="phase-filter"><option value="">All</option>
-    {{range .Family.Phases}}<option value="{{.Number}}">Phase {{.Number}}</option>{{end}}
-  </select></label>
-  <label class="deprecated-toggle"><input type="checkbox" id="show-deprecated"> Show deprecated</label>
+<section id="board-view" data-view-panel="board" class="board-view" hidden>
+  <div class="board-toolbar">
+    <label>Phase <select id="phase-filter"><option value="">All</option>
+      {{range .Family.Phases}}<option value="{{.Number}}">Phase {{.Number}}</option>{{end}}
+    </select></label>
+    <label class="deprecated-toggle"><input type="checkbox" id="show-deprecated"> Show deprecated</label>
+  </div>
   <div class="board-columns">
     {{range .BoardColumns}}
     <div class="board-column {{if eq .Status "Deprecated"}}deprecated-col{{end}}" data-status="{{.Status}}">
@@ -37,7 +63,11 @@
       <a class="board-card" href="/specs/{{formatNum .Number}}/index.html" data-phase="{{.Phase}}">
         <strong>{{formatNum .Number}}</strong> {{.Title}}
         <span class="badge {{statusClass .Status}}">P{{.Phase}}</span>
-        {{if gt .Tasks.Total 0}}<progress value="{{.Tasks.Done}}" max="{{.Tasks.Total}}"></progress>{{else}}<span>No tasks</span>{{end}}
+        {{if gt .Tasks.Total 0}}
+        <div class="task-bar" role="progressbar" aria-valuenow="{{.Tasks.Done}}" aria-valuemin="0" aria-valuemax="{{.Tasks.Total}}">
+          <span style="width: {{taskPct .Tasks}}%"></span>
+        </div>
+        {{else}}<span class="muted">No tasks</span>{{end}}
       </a>
       {{else}}<p class="empty-col">No specs</p>{{end}}
     </div>

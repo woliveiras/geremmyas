@@ -91,8 +91,9 @@ type metricsPage struct {
 
 type listPage struct {
 	pageBase
-	Items []listItem
-	Empty string
+	Items         []listItem
+	Empty         string
+	ShowSpecCount bool
 }
 
 type listItem struct {
@@ -289,9 +290,10 @@ func renderListPages(tmpl *template.Template, outputDir string, base pageBase, d
 		return err
 	}
 	if err := renderTemplate(tmpl, filepath.Join(outputDir, "prds", "index.html"), "list.html", listPage{
-		pageBase: baseWithNav(base, "prds", "PRDs"),
-		Items:    prdItems,
-		Empty:    emptyPRD,
+		pageBase:      baseWithNav(base, "prds", "PRDs"),
+		Items:         prdItems,
+		Empty:         emptyPRD,
+		ShowSpecCount: true,
 	}); err != nil {
 		return err
 	}

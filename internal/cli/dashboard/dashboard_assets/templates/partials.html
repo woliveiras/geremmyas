@@ -16,20 +16,22 @@
 </head>
 <body>
 <header class="site-header">
-  <a href="/index.html" class="brand">Geremmyas</a>
-  <nav>
-    <a href="/index.html" class="{{if eq .ActiveNav "overview"}}active{{end}}">Overview</a>
-    <a href="/metrics.html" class="{{if eq .ActiveNav "metrics"}}active{{end}}">Metrics</a>
-    <a href="/prds/index.html" class="{{if eq .ActiveNav "prds"}}active{{end}}">PRDs</a>
-    <a href="/bugfixes/index.html" class="{{if eq .ActiveNav "bugfixes"}}active{{end}}">Bugfixes</a>
-  </nav>
+  <div class="site-shell site-header-inner">
+    <a href="/index.html" class="brand">Geremmyas</a>
+    <nav>
+      <a href="/index.html" class="{{if eq .ActiveNav "overview"}}active{{end}}">Overview</a>
+      <a href="/metrics.html" class="{{if eq .ActiveNav "metrics"}}active{{end}}">Metrics</a>
+      <a href="/prds/index.html" class="{{if eq .ActiveNav "prds"}}active{{end}}">PRDs</a>
+      <a href="/bugfixes/index.html" class="{{if eq .ActiveNav "bugfixes"}}active{{end}}">Bugfixes</a>
+    </nav>
+  </div>
 </header>
-<main>
+<main class="site-shell">
 {{end}}
 
 {{define "foot"}}
 </main>
-<footer class="site-footer"><span>geremmyas:generated</span></footer>
+<footer class="site-footer"><div class="site-shell"><span>geremmyas:generated</span></div></footer>
 </body>
 </html>
 {{end}}

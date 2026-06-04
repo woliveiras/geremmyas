@@ -1,11 +1,33 @@
 {{define "list.html"}}
 {{template "head" .}}
-<h1>{{.Title}}</h1>
-{{if .Empty}}<p class="empty-state">{{.Empty}}</p>{{end}}
-<ul class="doc-list">
-  {{range .Items}}
-  <li><a href="{{.Href}}">{{.Title}}</a> <span class="date">{{.Date}}</span>{{if gt .Count 0}} · {{.Count}} specs{{end}}</li>
-  {{end}}
-</ul>
+<h1 class="page-title">{{.Title}}</h1>
+{{if .Empty}}
+<p class="empty-state">{{.Empty}}</p>
+{{else}}
+<div class="table-wrap">
+  <table class="spec-table doc-table">
+    <thead>
+      <tr>
+        <th scope="col" class="col-title">Title</th>
+        <th scope="col" class="col-date">Date</th>
+        {{if .ShowSpecCount}}<th scope="col" class="col-count">Specs</th>{{end}}
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Items}}
+      <tr>
+        <td class="col-title"><a class="spec-link" href="{{.Href}}">{{.Title}}</a></td>
+        <td class="col-date">{{if .Date}}{{.Date}}{{else}}<span class="muted">—</span>{{end}}</td>
+        {{if $.ShowSpecCount}}
+        <td class="col-count">
+          {{if gt .Count 0}}<span class="count-pill">{{.Count}} specs</span>{{else}}<span class="muted">—</span>{{end}}
+        </td>
+        {{end}}
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{end}}
 {{template "foot" .}}
 {{end}}
