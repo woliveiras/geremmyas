@@ -15,9 +15,38 @@ Progress lives in `tasks.md` checkboxes (`[ ]`, `[~]`, `[x]`). See
 
 ## Platform
 
+**Origin:** [docs/prds/2026-06-04-dashboard.md](../docs/prds/2026-06-04-dashboard.md)
+
+### Phase 0 — Foundation + Overview
+
 | Spec | Title | Status | Depends on |
 | --- | --- | --- | --- |
-| — | _No specs yet_ | — | — |
+| [0001](0001-dashboard-parser/spec.md) | Dashboard spec parser | Draft | — |
+| [0002](0002-dashboard-overview/spec.md) | Dashboard overview HTML generation | Draft | 0001 |
+
+### Phase 1 — Board & Progress
+
+| Spec | Title | Status | Depends on |
+| --- | --- | --- | --- |
+| [0003](0003-dashboard-board/spec.md) | Dashboard board view | Draft | 0002 |
+
+### Phase 2 — Metrics
+
+| Spec | Title | Status | Depends on |
+| --- | --- | --- | --- |
+| [0004](0004-dashboard-metrics/spec.md) | Dashboard git dates and metrics | Draft | 0002 |
+
+### Phase 3 — Developer Experience
+
+| Spec | Title | Status | Depends on |
+| --- | --- | --- | --- |
+| [0005](0005-dashboard-serve/spec.md) | Dashboard serve and watch mode | Draft | 0002 |
+
+### Phase 4 — Navigation
+
+| Spec | Title | Status | Depends on |
+| --- | --- | --- | --- |
+| [0006](0006-dashboard-linking/spec.md) | Dashboard artifact linking and dependency visualization | Draft | 0002, 0004 |
 
 ### Reserved blocks (future)
 
@@ -28,6 +57,6 @@ Progress lives in `tasks.md` checkboxes (`[ ]`, `[~]`, `[x]`). See
 
 ## Status lifecycle
 
-`Draft` → `Approved` → `Implemented`
+`Draft` → `In Review` → `Approved` → `Implemented` → `Deprecated`
 
 Update this table when creating, approving, or completing a spec.
