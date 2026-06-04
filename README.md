@@ -27,6 +27,23 @@ Every project needs the same Copilot setup: language-specific instructions, code
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
 - **Prompt templates** for code review, refactoring, test generation, and SDD workflow
 
+## Documentation
+
+| Document | Description |
+| --- | --- |
+| [docs/architecture.md](docs/architecture.md) | Embed FS, pack resolution, sync preserve/overwrite, global vs project |
+| [docs/creating-packs.md](docs/creating-packs.md) | How to add packs, skills, and instructions |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, conventions, and PR flow |
+| [AGENTS.md](AGENTS.md) | Agent operating contract for synced projects |
+
+This maintainer repo also uses [`specs/README.md`](specs/README.md) for platform
+features. Root `.github/*` and `AGENTS.md` are mostly **symlinks** into `project/`
+— edit `project/` directly; do not run `geremmyas project` here.
+
+**Exception:** root `.github/copilot-instructions.md` points at
+`copilot-instructions.geremmyas.md` (this repo only). The generic template synced
+by the `core` pack remains `project/.github/copilot-instructions.md`.
+
 ```
 geremmyas/
 ├── install.sh / uninstall.sh          # Install scripts
@@ -103,22 +120,13 @@ Or from a local checkout:
 
 ## Usage
 
-Create a config in a repository:
+### Quick start
 
 ```bash
-geremmyas init
-```
-
-Install the declared packs:
-
-```bash
-geremmyas sync
-```
-
-List available packs:
-
-```bash
-geremmyas list
+geremmyas init              # creates geremmyas.yml (default: core, sdd)
+geremmyas sync              # install packs from config into cwd
+geremmyas list              # all catalog packs
+geremmyas doctor            # validate embed + config
 ```
 
 Example `geremmyas.yml`:
@@ -154,8 +162,31 @@ demo under `me/brag-me/YYYY-MM-DD-highlight/`. The skill fills
 GCP data, Sentry issues, and manual notes, then generates an offline
 Reveal.js-style `index.html` deck that opens directly in a browser.
 
-Use `geremmyas add <pack>` and `geremmyas remove <pack>` to update the config.
-Run `geremmyas doctor` to validate the catalog and local config.
+### CLI reference
+
+| Command | Purpose |
+| --- | --- |
+| `list` | Print all packs (`name` + description) |
+| `init [--packs a,b] [--force]` | Create `geremmyas.yml`; interactive TUI if no `--packs` and TTY |
+| `sync [--force]` | Copy configured packs into cwd; preserve customizable files unless `--force` |
+| `add <pack>...` | Append packs to config only (**does not** sync) |
+| `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
+| `project [--force] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
+| `global <pack>...` | Install skills/instructions to `~/.agents/skills` and `~/.copilot/instructions` |
+| `doctor` | Validate catalog sources and local `geremmyas.yml` |
+
+**Defaults:** non-interactive `init` writes `core` and `sdd`.
+
+**Sync output:** `installed`, `updated`, `preserved`, `skipped` — see
+[docs/architecture.md](docs/architecture.md).
+
+**Preserved on sync** (unless `--force`): `AGENTS.md`, `specs/README.md`,
+`mise.toml`, `.github/copilot-instructions.md`, `.github/hooks/guardrails-rules.txt`.
+
+**Global install** copies only `.github/skills/` and `.github/instructions/`; not
+agents, hooks, `AGENTS.md`, or `mise.toml`.
+
+Use `geremmyas add <pack>` then `geremmyas sync`, or use `project` to do both.
 
 Install packs into the current project and update `geremmyas.yml` in one step:
 
@@ -196,6 +227,28 @@ Global packs are installed to:
 - **Instructions**: `~/.copilot/instructions/`
 
 These are the standard VS Code user-level paths, shared across all workspaces.
+
+### Pack catalog
+
+Run `geremmyas list` for the live list. Dependencies are resolved automatically
+(for example `supabase` pulls in `data-postgres`).
+
+| Group | Packs | Notes |
+| --- | --- | --- |
+| **Baseline** | `core`, `sdd` | Default init; `sdd` depends on `core` |
+| **Writing & research** | `blog`, `brag-me`, `research`, `premortem` | Optional content workflows |
+| **TypeScript / Node** | `typescript-base`, `typescript-ci`, `node-api`, `nestjs`, `fastify` | `nestjs` / `fastify` need `node-api` |
+| **React** | `react-web`, `react-router`, `react-state`, `react-data`, `tailwind` | Most depend on `react-web` → `typescript-base` |
+| **Python** | `python-base`, `python-api`, `python-ai`, `python-ci`, `python-sqlite` | `python-ci` needs `infra-ci` |
+| **Go** | `go-base`, `go-api`, `go-sqlite`, `go-devtools`, `go-ci` | `go-sqlite` needs `data-sqlite` |
+| **Rust** | `rust-base`, `rust-ci`, `rust-release` | |
+| **Data** | `data-postgres`, `data-sqlite`, `data-chromadb`, `supabase`, `node-sqlite` | `supabase` depends on `data-postgres` |
+| **Infra** | `infra-docker`, `infra-ci`, `infra-gcp`, `infra-terraform` | |
+| **Mobile** | `android`, `android-ci` | |
+| **Other** | `astro` | Astro/MDX instructions |
+
+Packs only install what you list in `geremmyas.yml` (plus transitive `depends`).
+There is no automatic detection of `package.json` or `go.mod` in the target repo.
 
 You can also choose project vs global during interactive init:
 
@@ -328,10 +381,10 @@ There are three review surfaces — each for a different context:
 Skills are explicit capabilities. Workflow skills guide multi-step work; utility
 skills provide focused technical recipes or generated artifacts.
 
-Workflow and artifact skills install broadly. Stack-specific recipe skills such
-as `validate-with-zod`, `model-state-with-xstate`, `manage-state-with-zustand`,
-and `migrate-react-router` install only when the matching dependency is detected;
-their core rules live in the matching instruction files.
+Workflow skills ship with the `sdd` pack. Stack-specific recipe skills (for example
+`validate-with-zod`, `model-state-with-xstate`, `migrate-react-router`) install
+when you add the matching pack (`react-data`, `react-router`, etc.); core rules
+live in the paired instruction files.
 
 Recommended organization for future skills:
 
@@ -353,6 +406,13 @@ Recommended organization for future skills:
 | `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
 | `skill-authoring` | Create or revise Copilot skills using this repo's conventions |
+| `typescript-ci-setup` | TypeScript CI pipeline (`typescript-ci` pack) |
+| `python-ci-setup` | Python CI pipeline (`python-ci` pack) |
+| `go-ci-setup` | Go CI pipeline (`go-ci` pack) |
+| `rust-ci-setup` | Rust CI pipeline (`rust-ci` pack) |
+| `rust-release` | Rust crate/binary release engineering (`rust-release` pack) |
+| `android-ci-setup` | Android CI pipeline (`android-ci` pack) |
+| `brag-me` | Demo decks from PRs, commits, metrics (`brag-me` pack) |
 | `terraform-change` | Plan and review Terraform changes with approval gates |
 | `gcloud-operation` | Prepare safe Google Cloud CLI operations with explicit project/account context |
 | `ci-workflow` | Create, review, or debug GitHub Actions CI/CD workflows |
@@ -559,7 +619,8 @@ go test ./...                # run tests
 go build ./cmd/geremmyas     # build binary
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/creating-packs.md](docs/creating-packs.md)
+for contributor guidelines.
 
 ## Changelog
 
