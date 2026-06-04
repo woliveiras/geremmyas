@@ -1,0 +1,27 @@
+{{define "index.html"}}
+{{template "head" .}}
+<h1>Overview</h1>
+<section class="summary-bar">
+  <span>{{.Summary.Total}} specs</span>
+  <span class="status-implemented">{{.Summary.Implemented}} implemented</span>
+  <span class="status-review">{{.Summary.InProgress}} in progress</span>
+  <span class="status-draft">{{.Summary.Pending}} draft</span>
+</section>
+<section class="family-grid">
+  {{range .Families}}
+  <a class="family-card" href="/families/{{.Slug}}/index.html">
+    <h2>{{.Name}}</h2>
+    <p>{{.SpecCount}} specs · phase {{.ActivePhase}}</p>
+    <div class="progress"><div style="width:{{printf "%.0f" .ProgressPct}}%"></div></div>
+    <p class="badges">
+      <span class="status-implemented">{{.Implemented}}</span>
+      <span class="status-review">{{.InProgress}}</span>
+      <span class="status-draft">{{.Pending}}</span>
+    </p>
+  </a>
+  {{else}}
+  <p>No specs found.</p>
+  {{end}}
+</section>
+{{template "foot" .}}
+{{end}}

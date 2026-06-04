@@ -1,0 +1,35 @@
+{{define "head"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Title}} · Geremmyas Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/board.js" defer></script>
+  <script>
+  if (typeof EventSource !== 'undefined') {
+    const es = new EventSource('/events');
+    es.onmessage = () => location.reload();
+  }
+  </script>
+</head>
+<body>
+<header class="site-header">
+  <a href="/index.html" class="brand">Geremmyas</a>
+  <nav>
+    <a href="/index.html" class="{{if eq .ActiveNav "overview"}}active{{end}}">Overview</a>
+    <a href="/metrics.html" class="{{if eq .ActiveNav "metrics"}}active{{end}}">Metrics</a>
+    <a href="/prds/index.html" class="{{if eq .ActiveNav "prds"}}active{{end}}">PRDs</a>
+    <a href="/bugfixes/index.html" class="{{if eq .ActiveNav "bugfixes"}}active{{end}}">Bugfixes</a>
+  </nav>
+</header>
+<main>
+{{end}}
+
+{{define "foot"}}
+</main>
+<footer class="site-footer"><span>geremmyas:generated</span></footer>
+</body>
+</html>
+{{end}}

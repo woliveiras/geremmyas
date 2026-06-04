@@ -1,0 +1,32 @@
+{{define "spec.html"}}
+{{template "head" .}}
+<div class="spec-layout">
+  <article class="spec-body">{{.BodyHTML}}</article>
+  <aside class="spec-sidebar">
+    <p><span class="badge {{statusClass .Spec.Status}}">{{.Spec.Status}}</span></p>
+    <p>Family: {{.Spec.Family}} · Phase {{.Spec.Phase}}</p>
+    {{if .Spec.Owner}}<p>Owner: {{.Spec.Owner}}</p>{{end}}
+    <h3>Dependencies</h3>
+    <ul>{{range .Deps}}<li><a href="{{.Href}}">{{formatNum .Number}} {{.Title}}</a>{{if .Missing}} (missing){{end}}</li>{{end}}</ul>
+    <h3>Blocked by</h3>
+    <ul>{{range .BlockedBy}}<li><a href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}} {{.Title}}</a></li>{{else}}<li>None</li>{{end}}</ul>
+    <h3>Blocks</h3>
+    <ul>{{range .Blocks}}<li><a href="/specs/{{formatNum .Number}}/index.html">{{formatNum .Number}} {{.Title}}</a></li>{{else}}<li>None</li>{{end}}</ul>
+    <h3>Origin</h3>
+    {{if .OriginOK}}<p><a href="{{.OriginHref}}">{{.Spec.Origin}}</a></p>{{else if .Spec.Origin}}<p>{{.Spec.Origin}} (not found)</p>{{else}}<p>—</p>{{end}}
+    <h3>Tasks</h3>
+    <p>{{.Spec.Tasks.Done}}/{{.Spec.Tasks.Total}} done</p>
+    {{if .HasGit}}
+    <h3>Timeline</h3>
+    <ul>
+      <li>Created: {{.Dates.CreatedAt}}</li>
+      <li>Approved: {{.Dates.ApprovedAt}}</li>
+      <li>Implemented: {{.Dates.ImplementedAt}}</li>
+    </ul>
+    {{end}}
+    {{if .Spec.HasPlan}}<p><a href="plan.html">plan.md</a></p>{{end}}
+    {{if gt .Spec.Tasks.Total 0}}<p><a href="tasks.html">tasks.md</a></p>{{end}}
+  </aside>
+</div>
+{{template "foot" .}}
+{{end}}

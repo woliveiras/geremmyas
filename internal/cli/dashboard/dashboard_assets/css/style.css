@@ -1,0 +1,35 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f8fafc;
+  --fg: #0f172a;
+  --card: #fff;
+  --border: #e2e8f0;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f172a; --fg: #e2e8f0; --card: #1e293b; --border: #334155; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+.site-header { display: flex; gap: 1rem; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); }
+.site-header nav { display: flex; gap: 1rem; }
+.site-header a { color: var(--fg); text-decoration: none; }
+.site-header a.active { font-weight: 700; text-decoration: underline; }
+main { padding: 1.5rem; max-width: 1200px; margin: 0 auto; }
+.summary-bar { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.family-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+.family-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; text-decoration: none; color: inherit; }
+.badge, .status-implemented { color: #166534; }
+.status-approved { color: #1d4ed8; }
+.status-review { color: #b45309; }
+.status-draft { color: #64748b; }
+.board-columns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.board-column { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem; max-height: 70vh; overflow-y: auto; }
+.board-card { display: block; border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; margin: 0.5rem 0; text-decoration: none; color: inherit; }
+.deprecated-col { display: none; }
+#show-deprecated:checked ~ .board-columns .deprecated-col,
+.board-columns.show-deprecated .deprecated-col { display: block; }
+.spec-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; }
+.metric-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.card { background: var(--card); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); }
+.progress > div { height: 6px; background: #22c55e; border-radius: 3px; }
+.site-footer { padding: 1rem; text-align: center; opacity: 0.6; font-size: 0.85rem; }
