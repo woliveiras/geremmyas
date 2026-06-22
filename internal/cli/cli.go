@@ -42,8 +42,6 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runGlobal(args[1:], stdout, catalog)
 	case "doctor":
 		runErr = runDoctor(stdout, catalog)
-	case "dashboard":
-		runErr = runDashboard(args[1:], stdout)
 	default:
 		runErr = fmt.Errorf("unknown command %q", args[0])
 	}
@@ -67,7 +65,6 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
 	fmt.Fprintln(w, "  geremmyas doctor")
-	fmt.Fprintln(w, "  geremmyas dashboard [--output DIR] [--serve] [--port PORT] [--watch] [--no-git] [--no-cache]")
 }
 
 func runList(w io.Writer, catalog Catalog) error {
