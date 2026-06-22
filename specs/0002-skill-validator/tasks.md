@@ -15,7 +15,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     passes and 1025 fails.
   - verification: `go test ./internal/cli/ -run LintDescription`
 
-- [~] **Name-match and body-length rules** (test-type: unit)
+- [x] **Name-match and body-length rules** (test-type: unit)
   - blocked-by: Description rule engine
   - summary: Add `name` == directory check and `SKILL.md` body <=500 lines check.
   - desired behavior: Name mismatch and body over 500 lines each produce the
@@ -25,7 +25,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     boundaries.
   - verification: `go test ./internal/cli/ -run 'LintName|LintBody'`
 
-- [ ] **`lint` command over the canonical skills tree** (test-type: integration)
+- [~] **`lint` command over the canonical skills tree** (test-type: integration)
   - blocked-by: Name-match and body-length rules
   - summary: Add `runLint` and `case "lint"` in `cli.go`; scan
     `project/.github/skills/`, print a per-skill report, set exit code.

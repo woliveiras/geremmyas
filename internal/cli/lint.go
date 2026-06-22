@@ -8,11 +8,14 @@ type lintViolation struct {
 }
 
 const (
-	lintViolationMissingTrigger      = "missing-use-when"
-	lintViolationMissingNegative     = "missing-negative-scope"
-	lintViolationDescriptionTooLong  = "description-too-long"
-	lintViolationDescriptionMarkup   = "description-markup"
-	maxSkillDescriptionLength        = 1024
+	lintViolationMissingTrigger     = "missing-use-when"
+	lintViolationMissingNegative    = "missing-negative-scope"
+	lintViolationDescriptionTooLong = "description-too-long"
+	lintViolationDescriptionMarkup  = "description-markup"
+	lintViolationNameMismatch       = "name-mismatch"
+	lintViolationBodyTooLong        = "body-too-long"
+	maxSkillDescriptionLength       = 1024
+	maxSkillBodyLines               = 500
 )
 
 func lintDescription(description string) []lintViolation {
@@ -42,6 +45,37 @@ func lintDescription(description string) []lintViolation {
 		})
 	}
 	return violations
+}
+
+func lintName(name, directory string) []lintViolation {
+	if name == directory {
+		return nil
+	}
+	return []lintViolation{{
+		Code:    lintViolationNameMismatch,
+		Message: "skill name must match directory name",
+	}}
+}
+
+func lintBody(body string) []lintViolation {
+	if countBodyLines(body) <= maxSkillBodyLines {
+		return nil
+	}
+	return []lintViolation{{
+		Code:    lintViolationBodyTooLong,
+		Message: "skill body must be at most 500 lines",
+	}}
+}
+
+func countBodyLines(body string) int {
+	if body == "" {
+		return 0
+	}
+	body = strings.TrimRight(body, "\n")
+	if body == "" {
+		return 0
+	}
+	return strings.Count(body, "\n") + 1
 }
 
 func hasUseWhenPhrase(description string) bool {

@@ -31,6 +31,27 @@ func TestLintDescriptionRejectsMarkup(t *testing.T) {
 	assertLintViolationCodes(t, violations, lintViolationDescriptionMarkup)
 }
 
+func TestLintNameMatchesDirectory(t *testing.T) {
+	if violations := lintName("skill-authoring", "skill-authoring"); len(violations) != 0 {
+		t.Fatalf("lintName returned violations for matching name: %+v", violations)
+	}
+
+	violations := lintName("skill-authoring", "skill-authoring-v2")
+	assertLintViolationCodes(t, violations, lintViolationNameMismatch)
+
+	violations = lintName("", "skill-authoring")
+	assertLintViolationCodes(t, violations, lintViolationNameMismatch)
+}
+
+func TestLintBodyLengthBoundary(t *testing.T) {
+	if violations := lintBody(bodyWithLines(500)); len(violations) != 0 {
+		t.Fatalf("lintBody returned violations for 500 lines: %+v", violations)
+	}
+
+	violations := lintBody(bodyWithLines(501))
+	assertLintViolationCodes(t, violations, lintViolationBodyTooLong)
+}
+
 func assertLintViolationCodes(t *testing.T, violations []lintViolation, want ...string) {
 	t.Helper()
 	if len(violations) != len(want) {
@@ -51,4 +72,15 @@ func paddedLintDescription(total int) string {
 		panic("total too short for base description")
 	}
 	return base + strings.Repeat("a", total-len(base))
+}
+
+func bodyWithLines(lines int) string {
+	if lines <= 0 {
+		return ""
+	}
+	items := make([]string, lines)
+	for i := range items {
+		items[i] = "line"
+	}
+	return strings.Join(items, "\n")
 }
