@@ -183,6 +183,8 @@ Before saying work is complete:
 - Run the nearest relevant suite when practical.
 - Report any verification that could not be run.
 - Check that temporary logs, harnesses, and instrumentation were removed.
+- Update `tasks.md`: mark every finished task `- [x]` and clear any stale `- [~]`.
+- Reconcile `plan.md`: annotate or mark done any planned item fully delivered.
 - Check `git status --short` and explain remaining changes.
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
