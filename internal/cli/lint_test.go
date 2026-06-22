@@ -103,6 +103,33 @@ description: "Use when working on documentation. Do not use for production."
 	}
 }
 
+func TestRunLintReportsMissingSkillAndEmptyDescription(t *testing.T) {
+	root := withTempCwd(t)
+	writeSkillFixture(t, root, "empty-description", `---
+name: empty-description
+description: ""
+---
+
+# Empty description
+`)
+	missingDir := filepath.Join(root, "project/.github/skills/test/missing-skill")
+	if err := os.MkdirAll(missingDir, 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+
+	var out strings.Builder
+	if code := Run([]string{"lint"}, &out, &out); code == 0 {
+		t.Fatalf("lint exit code = %d, want non-zero. output: %s", code, out.String())
+	}
+	output := out.String()
+	if !strings.Contains(output, lintViolationMissingSkillFile) {
+		t.Fatalf("lint output missing missing-file violation:\n%s", output)
+	}
+	if !strings.Contains(output, lintViolationMissingTrigger) || !strings.Contains(output, lintViolationMissingNegative) {
+		t.Fatalf("lint output missing empty-description violations:\n%s", output)
+	}
+}
+
 func assertLintViolationCodes(t *testing.T, violations []lintViolation, want ...string) {
 	t.Helper()
 	if len(violations) != len(want) {

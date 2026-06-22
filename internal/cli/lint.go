@@ -21,6 +21,7 @@ const (
 	lintViolationDescriptionMarkup  = "description-markup"
 	lintViolationNameMismatch       = "name-mismatch"
 	lintViolationBodyTooLong        = "body-too-long"
+	lintViolationMissingSkillFile    = "missing-skill-md"
 	maxSkillDescriptionLength       = 1024
 	maxSkillBodyLines               = 500
 )
@@ -136,11 +137,23 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 	}
 	entries := []lintFinding{}
 	checked := 0
+	directories := map[string]struct{}{}
 	err := filepath.WalkDir(skillsRoot, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
-		if d.IsDir() || d.Name() != "SKILL.md" {
+		if d.IsDir() {
+			rel, relErr := filepath.Rel(skillsRoot, path)
+			if relErr != nil || rel == "." {
+				return nil
+			}
+			parts := strings.Split(filepath.ToSlash(rel), "/")
+			if len(parts) == 2 {
+				directories[path] = struct{}{}
+			}
+			return nil
+		}
+		if d.Name() != "SKILL.md" {
 			return nil
 		}
 		checked++
@@ -155,6 +168,18 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 	})
 	if err != nil {
 		return nil, 0, err
+	}
+	for dir := range directories {
+		skillPath := filepath.Join(dir, "SKILL.md")
+		if _, err := os.Stat(skillPath); os.IsNotExist(err) {
+			entries = append(entries, lintFinding{
+				Path: relativeLintPath(root, skillPath),
+				Violations: []lintViolation{{
+					Code:    lintViolationMissingSkillFile,
+					Message: "skill directory must contain SKILL.md",
+				}},
+			})
+		}
 	}
 	sort.Slice(entries, func(i, j int) bool {
 		return entries[i].Path < entries[j].Path

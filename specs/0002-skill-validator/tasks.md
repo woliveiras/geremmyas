@@ -36,7 +36,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     all-valid tree → zero + summary.
   - verification: `go test ./internal/cli/ -run RunLint`
 
-- [~] **Missing `SKILL.md` and empty description handling** (test-type: both)
+- [x] **Missing `SKILL.md` and empty description handling** (test-type: both)
   - blocked-by: `lint` command over the canonical skills tree
   - summary: Treat a skill directory without `SKILL.md` and an empty/missing
     description as violations without crashing.
@@ -46,7 +46,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     cleanly (non-zero) without panic.
   - verification: `go test ./internal/cli/ -run 'Lint|RunLint'`
 
-- [ ] **Wire `geremmyas lint` into CI** (test-type: integration)
+- [~] **Wire `geremmyas lint` into CI** (test-type: integration)
   - blocked-by: `lint` command over the canonical skills tree
   - summary: Add a lint step to the CI workflow so violations fail the build.
   - desired behavior: CI runs `geremmyas lint` and fails on any violation.
