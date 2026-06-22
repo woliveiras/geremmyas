@@ -1,6 +1,13 @@
 package cli
 
-import "strings"
+import (
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+)
 
 type lintViolation struct {
 	Code    string
@@ -17,6 +24,11 @@ const (
 	maxSkillDescriptionLength       = 1024
 	maxSkillBodyLines               = 500
 )
+
+type lintFinding struct {
+	Path       string
+	Violations []lintViolation
+}
 
 func lintDescription(description string) []lintViolation {
 	violations := []lintViolation{}
@@ -91,4 +103,94 @@ func hasNegativeScopePhrase(description string) bool {
 		}
 	}
 	return false
+}
+
+func runLint(w io.Writer) error {
+	root, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	findings, checked, err := collectLintFindings(filepath.Join(root, "project/.github/skills"), root)
+	if err != nil {
+		return err
+	}
+	if len(findings) == 0 {
+		fmt.Fprintf(w, "lint: ok (%d skills checked)\n", checked)
+		return nil
+	}
+	total := countLintViolations(findings)
+	fmt.Fprintf(w, "lint: %d violation(s) in %d skill(s) checked\n", total, checked)
+	for _, finding := range findings {
+		codes := make([]string, 0, len(finding.Violations))
+		for _, violation := range finding.Violations {
+			codes = append(codes, violation.Code)
+		}
+		fmt.Fprintf(w, "  %s: %s\n", finding.Path, strings.Join(codes, ", "))
+	}
+	return fmt.Errorf("lint found %d violation(s)", total)
+}
+
+func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
+	if _, err := os.Stat(skillsRoot); err != nil {
+		return nil, 0, err
+	}
+	entries := []lintFinding{}
+	checked := 0
+	err := filepath.WalkDir(skillsRoot, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() || d.Name() != "SKILL.md" {
+			return nil
+		}
+		checked++
+		finding, err := lintSkillFile(path, root)
+		if err != nil {
+			return err
+		}
+		if len(finding.Violations) > 0 {
+			entries = append(entries, finding)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].Path < entries[j].Path
+	})
+	return entries, checked, nil
+}
+
+func lintSkillFile(path, root string) (lintFinding, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return lintFinding{}, err
+	}
+	fm, body, err := parseMarkdownFrontmatter(string(data))
+	if err != nil {
+		return lintFinding{}, err
+	}
+	directory := filepath.Base(filepath.Dir(path))
+	finding := lintFinding{Path: relativeLintPath(root, path)}
+	finding.Violations = append(finding.Violations, lintDescription(fm.get("description"))...)
+	finding.Violations = append(finding.Violations, lintName(fm.get("name"), directory)...)
+	finding.Violations = append(finding.Violations, lintBody(body)...)
+	return finding, nil
+}
+
+func relativeLintPath(root, path string) string {
+	rel, err := filepath.Rel(root, path)
+	if err != nil {
+		return filepath.ToSlash(path)
+	}
+	return filepath.ToSlash(rel)
+}
+
+func countLintViolations(findings []lintFinding) int {
+	total := 0
+	for _, finding := range findings {
+		total += len(finding.Violations)
+	}
+	return total
 }

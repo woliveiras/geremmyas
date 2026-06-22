@@ -25,7 +25,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     boundaries.
   - verification: `go test ./internal/cli/ -run 'LintName|LintBody'`
 
-- [~] **`lint` command over the canonical skills tree** (test-type: integration)
+- [x] **`lint` command over the canonical skills tree** (test-type: integration)
   - blocked-by: Name-match and body-length rules
   - summary: Add `runLint` and `case "lint"` in `cli.go`; scan
     `project/.github/skills/`, print a per-skill report, set exit code.
@@ -36,7 +36,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     all-valid tree → zero + summary.
   - verification: `go test ./internal/cli/ -run RunLint`
 
-- [ ] **Missing `SKILL.md` and empty description handling** (test-type: both)
+- [~] **Missing `SKILL.md` and empty description handling** (test-type: both)
   - blocked-by: `lint` command over the canonical skills tree
   - summary: Treat a skill directory without `SKILL.md` and an empty/missing
     description as violations without crashing.

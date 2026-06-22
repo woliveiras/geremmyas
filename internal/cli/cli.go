@@ -40,6 +40,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runProject(args[1:], stdout, catalog)
 	case "global":
 		runErr = runGlobal(args[1:], stdout, catalog)
+	case "lint":
+		runErr = runLint(stdout)
 	case "doctor":
 		runErr = runDoctor(stdout, catalog)
 	default:
@@ -64,6 +66,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
+	fmt.Fprintln(w, "  geremmyas lint")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
 
