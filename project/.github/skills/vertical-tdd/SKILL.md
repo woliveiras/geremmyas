@@ -25,6 +25,10 @@ the spec.
 9. Refactor only when tests are green; rerun tests after each refactor.
 10. When all acceptance criteria are done and code is merged, set `status:
     Implemented` in `spec.md` frontmatter and update the row in `specs/README.md`.
+11. Before stopping work (task done, session ending, or handing off), reconcile
+    status: mark every finished task `- [x]` in `tasks.md`, clear any stale
+    `- [~]`, and annotate or mark done any `plan.md` item fully delivered. Do
+    not declare work complete with stale checkboxes.
 
 ## Rules
 
