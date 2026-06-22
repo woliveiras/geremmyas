@@ -46,7 +46,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     cleanly (non-zero) without panic.
   - verification: `go test ./internal/cli/ -run 'Lint|RunLint'`
 
-- [~] **Wire `geremmyas lint` into CI** (test-type: integration)
+- [x] **Wire `geremmyas lint` into CI** (test-type: integration)
   - blocked-by: `lint` command over the canonical skills tree
   - summary: Add a lint step to the CI workflow so violations fail the build.
   - desired behavior: CI runs `geremmyas lint` and fails on any violation.

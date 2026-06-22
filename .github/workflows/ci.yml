@@ -47,6 +47,19 @@ jobs:
           test -d project/.github/skills
           test -d project/.github/hooks
 
+  skills-lint:
+    name: Skills Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Lint skills
+        run: go run ./cmd/geremmyas lint
+
   install-test:
     name: Binary Installer Test
     runs-on: ${{ matrix.os }}
