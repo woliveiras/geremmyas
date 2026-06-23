@@ -54,6 +54,22 @@ func TestRunGlobalGeneratesClaudeAndOpenCode(t *testing.T) {
 	mustExist(t, filepath.Join(home, ".config", "opencode", "AGENTS.md"))
 }
 
+func TestRunGlobalGeneratedAgentTargetsCopySkills(t *testing.T) {
+	for _, target := range []string{TargetClaudeCode, TargetCodex, TargetOpenCode} {
+		t.Run(target, func(t *testing.T) {
+			home := t.TempDir()
+			t.Setenv("HOME", home)
+
+			var out strings.Builder
+			if code := Run([]string{"global", "--targets", target, "core", "sdd"}, &out, &out); code != 0 {
+				t.Fatalf("global exit code = %d, output: %s", code, out.String())
+			}
+
+			mustExist(t, filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md"))
+		})
+	}
+}
+
 func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -91,5 +107,30 @@ func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
 	}
 	if !strings.Contains(content, "~/.agents/skills/") {
 		t.Fatalf("global Codex AGENTS.md should reference ~/.agents/skills/")
+	}
+}
+
+func TestRunGlobalSDDInstallsGuardrailSkills(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	for _, skill := range []string{
+		"approval-gates-before-implementation",
+		"verification-checklists",
+		"decision-framework",
+		"subagent-selection",
+		"agent-rationalization-blocking",
+		"abort-criteria",
+		"regression-testing",
+		"code-review-requesting",
+	} {
+		t.Run(skill, func(t *testing.T) {
+			mustExist(t, filepath.Join(home, ".agents", "skills", skill, "SKILL.md"))
+		})
 	}
 }

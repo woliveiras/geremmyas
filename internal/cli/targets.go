@@ -80,7 +80,11 @@ func hasTarget(targets []string, target string) bool {
 }
 
 func globalCopyFlags(targets []string) (skills, instructions bool) {
-	skills = hasTarget(targets, TargetCopilot) || hasTarget(targets, TargetCursor)
+	skills = hasTarget(targets, TargetCopilot) ||
+		hasTarget(targets, TargetCursor) ||
+		hasTarget(targets, TargetClaudeCode) ||
+		hasTarget(targets, TargetCodex) ||
+		hasTarget(targets, TargetOpenCode)
 	instructions = hasTarget(targets, TargetCopilot)
 	return skills, instructions
 }
