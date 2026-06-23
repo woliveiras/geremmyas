@@ -1,7 +1,8 @@
 ---
 name: agent-rationalization-blocking
-description: "ANTI-PATTERN catalog for agent self-deception. Identifies common rationalizations agents use to skip gates, bypass verification, or claim work is done. Use as pre-implementation and pre-completion checkpoint."
+description: "Anti-pattern catalog identifying common self-deception in agent workflows. Use when: pre-completion checkpoint, before claiming work is done, validating agent reasoning. Do not use: for external code review or design phases before implementation."
 ---
+
 
 # Agent Rationalization Blocking
 

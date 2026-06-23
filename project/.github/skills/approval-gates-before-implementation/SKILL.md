@@ -1,7 +1,8 @@
 ---
 name: approval-gates-before-implementation
-description: "HARD GATE: Prevents implementation without explicit spec approval and user confirmation. Implements approval gates after design, before code. Use when starting a feature to block agent rationalization (skipping design, self-approval, obvious/simple excuses)."
+description: "HARD GATE: Prevents implementation without explicit spec approval and user confirmation. Use when: starting a feature, before any code. Do not use: during implementation, for tiny refactors, or when approval already granted."
 ---
+
 
 # Approval Gates Before Implementation
 

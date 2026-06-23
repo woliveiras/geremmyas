@@ -1,7 +1,8 @@
 ---
 name: code-review-requesting
-description: "Structured workflow for requesting code review. Ensures clarity, context, and expectations before submission. Use after implementation to prepare for spec-driven review."
+description: "Structured code review workflow ensuring context and clarity. Use when: implementation complete, tests verified, before merge request. Do not use: during active implementation, before verification checklist, or for design reviews."
 ---
+
 
 # Code Review Requesting
 

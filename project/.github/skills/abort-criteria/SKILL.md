@@ -1,7 +1,8 @@
 ---
 name: abort-criteria
-description: "Decision gates for when to STOP a task. Prevents sunk-cost pushing and endless exploration. Use when a task becomes unclear, blocked, or complexity exceeds estimate."
+description: "Decision gates for when to STOP a task and escalate. Use when: time budget exceeded, circular debugging detected, scope creeping, or architectural mismatch found. Do not use: for normal task breaks, PR reviews, or acceptance testing."
 ---
+
 
 # Abort Criteria
 

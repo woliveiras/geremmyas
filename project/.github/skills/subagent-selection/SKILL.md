@@ -1,7 +1,8 @@
 ---
 name: subagent-selection
-description: "Decision framework for when to delegate vs inline work. Use before spawning agents to optimize for context cost, focus, and verification. Covers Explore vs specialist agents, parallel vs serial execution."
+description: "Decision framework for delegate-vs-inline work optimization. Use when: deciding whether to use inline work or spawn specialist agents, cost-benefit analysis needed. Do not use: for simple read-only operations, single-file edits, or direct implementation."
 ---
+
 
 # Subagent Selection
 

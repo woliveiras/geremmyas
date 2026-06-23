@@ -1,7 +1,8 @@
 ---
 name: regression-testing
-description: "Mandatory regression test creation for every bug fix. Ensures fixed bugs don't reappear. Use after bug identification, before applying the fix."
+description: "Mandatory regression test creation for every bug fix across Go, Python, and JavaScript. Use when: fixing bugs, after root cause identified, before applying fix. Do not use: for feature implementation, unit test planning, or non-code changes."
 ---
+
 
 # Regression Testing
 

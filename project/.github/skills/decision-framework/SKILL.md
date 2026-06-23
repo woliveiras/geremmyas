@@ -1,7 +1,8 @@
 ---
 name: decision-framework
-description: "Structured decision-making to prevent emotional/hasty choices. Use before committing to architectural, process, or tool decisions. Enforces trade-off documentation and reversibility assessment."
+description: "Structured decision-making preventing emotional and hasty choices. Use when: making architectural decisions, tool selections, or strategic choices. Do not use: for obvious technical decisions, simple syntax fixes, or time-critical emergencies."
 ---
+
 
 # Decision Framework
 

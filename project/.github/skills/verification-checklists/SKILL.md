@@ -1,7 +1,8 @@
 ---
 name: verification-checklists
-description: "HARD GATE: Mandates fresh verification evidence before claiming completion. Use after implementation to block 'phantom completion' (claims without proof). Forces red-green-refactor: [Run] [Output] [Verified]."
+description: "HARD GATE: Mandates fresh verification evidence before task completion. Use when: post-implementation, before marking work done. Do not use: before code is written, for planning, or for code review requests."
 ---
+
 
 # Verification Checklists
 
