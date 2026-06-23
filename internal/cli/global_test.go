@@ -69,3 +69,27 @@ func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	}
 	mustExist(t, filepath.Join(home, ".cursor", "rules"))
 }
+
+func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "core", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	codexPath := filepath.Join(home, ".config", "codex", "AGENTS.md")
+	mustExist(t, codexPath)
+	data, err := os.ReadFile(codexPath)
+	if err != nil {
+		t.Fatalf("ReadFile .config/codex/AGENTS.md: %v", err)
+	}
+	content := string(data)
+	if !strings.Contains(content, generatedMarker) {
+		t.Fatalf("Codex AGENTS.md missing generated marker")
+	}
+	if !strings.Contains(content, "~/.agents/skills/") {
+		t.Fatalf("global Codex AGENTS.md should reference ~/.agents/skills/")
+	}
+}

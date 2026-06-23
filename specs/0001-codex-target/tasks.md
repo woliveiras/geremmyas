@@ -24,7 +24,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     AGENTS body and a "Skills (on demand)" section; re-running sync is idempotent.
   - verification: `go test ./internal/cli/ -run 'Sync.*Codex|Codex'`
 
-- [ ] **Generate Codex document at global scope** (test-type: integration)
+- [x] **Generate Codex document at global scope** (test-type: integration)
   - blocked-by: Generate Codex document at project scope
   - summary: Add the global Codex destination in `global_paths.go` and dispatch
     for global scope; global path `~/.codex/AGENTS.md`.
