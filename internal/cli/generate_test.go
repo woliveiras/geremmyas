@@ -181,3 +181,20 @@ func TestRunSyncGeneratesCodexProjectScope(t *testing.T) {
 		t.Fatalf(".codex/AGENTS.md missing title: %s", content)
 	}
 }
+
+func TestRunSyncWithCodexAndOtherTargets(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	// Init with both codex and claude-code (non-copilot targets)
+	if code := Run([]string{"init", "--packs", "core", "--targets", "codex,claude-code"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	// Verify both codex and claude-code are generated
+	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
+	mustExist(t, filepath.Join(root, "CLAUDE.md"))
+}

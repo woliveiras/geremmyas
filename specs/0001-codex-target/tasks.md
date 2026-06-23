@@ -34,7 +34,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     contains AGENTS body and skill index.
   - verification: `go test ./internal/cli/ -run 'Global.*Codex|Codex'`
 
-- [ ] **Surface `codex` in CLI help, usage, and destination summary** (test-type: integration)
+- [x] **Surface `codex` in CLI help, usage, and destination summary** (test-type: integration)
   - blocked-by: Generate Codex document at project scope
   - summary: Add `codex` to the `--targets` flag help, the usage line, and the
     summary/destination listing.

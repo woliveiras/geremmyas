@@ -60,8 +60,8 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  geremmyas list")
-	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--targets copilot,cursor] [--force]")
-	fmt.Fprintln(w, "  geremmyas sync [--force] [--targets copilot,cursor,claude-code,opencode]")
+	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--targets copilot,cursor,...] [--force]")
+	fmt.Fprintln(w, "  geremmyas sync [--force] [--targets copilot,cursor,claude-code,codex,opencode]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
@@ -81,7 +81,7 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("init", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	packsFlag := fs.String("packs", "", "comma-separated pack names")
-	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (copilot,cursor,claude-code,opencode)")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (codex,claude-code,copilot,cursor,opencode)")
 	force := fs.Bool("force", false, "overwrite existing geremmyas.yml")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -164,7 +164,7 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("sync", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	force := fs.Bool("force", false, "overwrite customizable and generated files")
-	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (overrides geremmyas.yml)")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (codex,claude-code,copilot,cursor,opencode)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -276,7 +276,7 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("project", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	force := fs.Bool("force", false, "overwrite customizable and generated files")
-	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (overrides geremmyas.yml)")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (codex,claude-code,copilot,cursor,opencode)")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -421,7 +421,7 @@ func printMiseHint(w io.Writer, root string) {
 func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	fs := flag.NewFlagSet("global", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
-	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (copilot,cursor,claude-code,opencode)")
+	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (codex,claude-code,copilot,cursor,opencode)")
 	force := fs.Bool("force", false, "overwrite customized generated files")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -492,6 +492,9 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	}
 	if hasTarget(targets, TargetClaudeCode) {
 		fmt.Fprintf(w, "  claude-code  → %s/.claude/CLAUDE.md\n", home)
+	}
+	if hasTarget(targets, TargetCodex) {
+		fmt.Fprintf(w, "  codex        → %s/.config/codex/AGENTS.md\n", home)
 	}
 	if hasTarget(targets, TargetOpenCode) {
 		fmt.Fprintf(w, "  opencode     → %s/.config/opencode/AGENTS.md\n", home)
