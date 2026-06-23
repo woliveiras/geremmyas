@@ -1,7 +1,8 @@
 ---
 name: go-ci-setup
-description: "Set up a Go CI/CD pipeline with formatting, vetting, static analysis, tests, vulnerability scanning, and container build."
+description: "Set up a Go CI/CD pipeline with formatting, vetting, static analysis, tests, vulnerability scanning, and container build. Use when: creating CI for Go, adding checks to workflow. Do not use: for local development setup, non-CI automation."
 ---
+
 
 # Go CI Setup
 

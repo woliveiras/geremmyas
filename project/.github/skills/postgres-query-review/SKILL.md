@@ -1,7 +1,8 @@
 ---
 name: postgres-query-review
-description: "Review a PostgreSQL query, migration, index, or query plan. Use when: optimizing SQL, checking migrations, reading EXPLAIN output, adding indexes, reviewing constraints, or investigating slow database behavior."
+description: "Review a PostgreSQL query, migration, index, or query plan. Use when: optimizing SQL, checking migrations, reading EXPLAIN output. Do not use: for general database design, non-Postgres systems."
 ---
+
 
 # Postgres Query Review
 

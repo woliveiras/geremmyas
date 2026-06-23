@@ -1,7 +1,8 @@
 ---
 name: manage-state-with-zustand
-description: "Zustand v5 recipes for middleware setup, immer mutations, persistence, and XState sync. Use when: zustand middleware, zustand persist, zustand immer, zustand xstate, store patterns."
+description: "Zustand v5 recipes for middleware setup, immer mutations, persistence, and XState sync. Use when: zustand middleware, zustand persist, store patterns. Do not use: for state design patterns, non-Zustand stores."
 ---
+
 
 # Manage State with Zustand
 

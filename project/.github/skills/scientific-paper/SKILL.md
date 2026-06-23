@@ -1,16 +1,8 @@
 ---
 name: scientific-paper
-description: >
-  End-to-end workflow for creating, reviewing, and critiquing scientific papers with rigorous
-  methodology. Use for: writing papers, revisar paper, artigo científico, revisão sistemática,
-  systematic review, SLR, literature review, threats to validity, ameaças à validade,
-  methodological errors, erros metodológicos, peer review simulation, parecerista, referee report,
-  benchmarking study design, experiment design, case study methodology, research questions,
-  data presentation, LaTeX scientific paper, double-blind submission, arXiv preprint,
-  EMSE ICSE FSE MSR submission checklist, validate bibliography, cite missing references,
-  /scientific-paper.
-argument-hint: 'Mode: create | review | slr | critique | peer-review | methodology-check | data-presentation | bib-validate'
+description: "End-to-end workflow for creating, reviewing, and critiquing scientific papers with rigorous methodology. Use when: writing papers, reviewing papers, literature reviews. Do not use: for blog posts, technical documentation."
 ---
+
 
 # Scientific Paper Skill
 

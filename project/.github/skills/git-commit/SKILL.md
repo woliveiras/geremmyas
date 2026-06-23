@@ -1,7 +1,8 @@
 ---
 name: git-commit
-description: "Create a safe Git commit with Conventional Commits format. Use when: committing changes, reviewing staged changes, git commit, commit message, or conventional commit."
+description: "Create a safe Git commit with Conventional Commits format. Use when: committing changes, reviewing staged changes. Do not use: for commit history rewriting, interactive rebasing."
 ---
+
 
 # Git Commit
 

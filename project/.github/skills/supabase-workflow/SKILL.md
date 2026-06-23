@@ -1,7 +1,8 @@
 ---
 name: supabase-workflow
-description: "Plan or review a Supabase database/platform change. Use when: changing schema, migrations, RLS policies, Auth, Storage, Edge Functions, generated types, or Supabase client access."
+description: "Plan or review a Supabase database/platform change. Use when: changing schema, migrations, RLS policies, Auth, Storage, Edge Functions. Do not use: for general database design, non-Supabase platforms."
 ---
+
 
 # Supabase Workflow
 

@@ -1,7 +1,8 @@
 ---
 name: generate-tests-from-spec
-description: "Generate tests from a spec's acceptance criteria. Use when: you have an approved spec and need tests, generate tests from spec, TDD from spec, spec to tests."
+description: "Generate tests from a spec's acceptance criteria. Use when: you have an approved spec and need tests, TDD from spec. Do not use: before spec approval, for test planning without specs."
 ---
+
 
 # Generate Tests from Spec
 

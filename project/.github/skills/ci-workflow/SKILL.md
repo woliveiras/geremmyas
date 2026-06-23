@@ -1,7 +1,8 @@
 ---
 name: ci-workflow
-description: "Create, review, or debug a CI/CD workflow. Use when: editing GitHub Actions, fixing CI failures, adding release/deploy automation, configuring caches, matrices, OIDC, artifacts, or workflow permissions."
+description: "Create, review, or debug a CI/CD workflow. Use when: editing GitHub Actions, fixing CI failures, adding release/deploy automation. Do not use: for general DevOps, infrastructure as code."
 ---
+
 
 # CI Workflow
 

@@ -1,7 +1,8 @@
 ---
 name: rust-ci-setup
-description: "Set up a CI/CD pipeline for Rust projects. Use when: creating CI for Rust, adding Clippy/fmt/test/audit to CI, configuring GitHub Actions for Rust, or adding Miri/fuzzing jobs."
+description: "Set up a CI/CD pipeline for Rust projects. Use when: creating CI for Rust, adding Clippy/fmt/test/audit to CI. Do not use: for local development setup, non-CI automation."
 ---
+
 
 # Rust CI Setup
 

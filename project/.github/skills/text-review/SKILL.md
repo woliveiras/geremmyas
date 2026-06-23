@@ -1,11 +1,8 @@
 ---
 name: text-review
-description: >
-  Rewrites blog post drafts to eliminate AI-generated writing patterns while
-  preserving the author's voice, technical accuracy, and all factual content.
-  Use when a post draft feels generic, padded, or clearly machine-generated.
-  Trigger: /text-review, "rewrite this post", "remove AI patterns", "humanize this text".
+description: "Rewrites blog post drafts to eliminate AI-generated writing patterns while preserving the author's voice. Use when: removing AI patterns, humanizing text, editing technical posts. Do not use: for academic papers (use paper-review), content generation."
 ---
+
 
 Rewrite blog drafts so they sound like a real technical author with lived context, not like a polished generic assistant.
 

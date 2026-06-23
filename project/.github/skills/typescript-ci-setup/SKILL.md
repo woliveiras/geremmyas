@@ -1,7 +1,8 @@
 ---
 name: typescript-ci-setup
-description: "Set up a TypeScript CI/CD pipeline with type checking, linting, formatting, tests, security scanning, and build verification."
+description: "Set up a TypeScript CI/CD pipeline with type checking, linting, formatting, tests, security scanning, and build verification. Use when: creating CI for TypeScript, adding checks to workflow. Do not use: for local development setup, non-CI automation."
 ---
+
 
 # TypeScript CI Setup
 

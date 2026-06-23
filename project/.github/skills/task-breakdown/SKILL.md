@@ -1,7 +1,8 @@
 ---
 name: task-breakdown
-description: "Break a PRD, spec, or plan into vertical tasks in tasks.md. Use when: creating tasks, breaking down work, converting a plan to tasks, or tracking implementation progress with checkboxes."
+description: "Break a PRD, spec, or plan into vertical tasks in tasks.md. Use when: creating tasks, breaking down work, converting a plan to tasks. Do not use: for individual task execution, sprint planning."
 ---
+
 
 # Task Breakdown
 

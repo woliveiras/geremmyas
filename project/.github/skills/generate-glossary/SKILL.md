@@ -1,7 +1,8 @@
 ---
 name: generate-glossary
-description: "Extract and formalize domain terminology into a glossary. Use when: defining domain terms, building a glossary, hardening terminology, domain model, DDD, ubiquitous language, glossary."
+description: "Extract and formalize domain terminology into a glossary. Use when: defining domain terms, building glossaries, hardening terminology. Do not use: for general documentation, simple dictionaries."
 ---
+
 
 # Generate Glossary
 

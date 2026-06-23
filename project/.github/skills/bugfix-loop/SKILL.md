@@ -1,7 +1,8 @@
 ---
 name: bugfix-loop
-description: "Run a disciplined bugfix loop with reproduction, hypotheses, regression test, fix, and cleanup. Use when: fixing bugs, debugging regressions, investigating failures, or deciding whether an outage needs a postmortem."
+description: "Run a disciplined bugfix loop with reproduction, hypotheses, regression test, fix, and cleanup. Use when: fixing bugs, debugging regressions, investigating failures. Do not use: for feature implementation, refactoring."
 ---
+
 
 # Bugfix Loop
 

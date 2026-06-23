@@ -1,7 +1,8 @@
 ---
 name: langgraph-agent-design
-description: "Design or review a LangGraph agent workflow. Use when: creating a graph, choosing state schema, nodes, tools, checkpoints, interrupts, human-in-the-loop behavior, or resume/failure handling."
+description: "Design or review a LangGraph agent workflow. Use when: creating a graph, choosing state schema, nodes, tools, checkpoints, interrupts. Do not use: for simple chains, non-agent patterns."
 ---
+
 
 # LangGraph Agent Design
 

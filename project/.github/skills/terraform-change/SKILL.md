@@ -1,7 +1,8 @@
 ---
 name: terraform-change
-description: "Plan and review a Terraform infrastructure change safely. Use when: editing Terraform, importing resources, moving resource addresses, reviewing a plan, or deciding whether apply/destroy/state commands are safe."
+description: "Plan and review a Terraform infrastructure change safely. Use when: editing Terraform, importing resources, moving resource addresses. Do not use: for infrastructure design, non-Terraform IaC."
 ---
+
 
 # Terraform Change
 

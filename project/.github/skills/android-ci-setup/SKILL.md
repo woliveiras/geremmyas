@@ -1,7 +1,8 @@
 ---
 name: android-ci-setup
-description: "Set up an Android CI/CD pipeline with lint, static analysis, unit tests, dependency review, build verification, and Play Store deployment."
+description: "Set up an Android CI/CD pipeline with lint, static analysis, unit tests, dependency review, and build verification. Use when: creating CI for Android, adding Gradle checks. Do not use: for local development setup, non-CI automation."
 ---
+
 
 # Android CI Setup
 

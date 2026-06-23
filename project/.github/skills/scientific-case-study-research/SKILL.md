@@ -1,14 +1,8 @@
 ---
 name: scientific-case-study-research
-description: >
-  Design, validate, and report empirical software engineering case studies.
-  Use for case study protocols, research questions, units of analysis,
-  triangulation, chain of evidence, interview guides, archival data extraction,
-  AI-agent workflow studies, and threats to validity. Do not use for controlled
-  experiments, surveys, benchmark-only evaluations, SLRs, or implementation tasks
-  unless the user explicitly asks to reframe them as a case study.
-argument-hint: 'Mode: design | protocol | interview-guide | archival-plan | chain-of-evidence | validity-check | paper-methodology'
+description: "Design, validate, and report empirical software engineering case studies. Use when: case study protocols, research questions, units of analysis, triangulation. Do not use: for controlled experiments, surveys, benchmarks."
 ---
+
 
 # Scientific Case Study Research
 

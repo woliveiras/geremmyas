@@ -1,7 +1,8 @@
 ---
 name: python-ci-setup
-description: "Set up a Python CI/CD pipeline with linting, formatting, type checking, tests, security scanning, and publishing."
+description: "Set up a Python CI/CD pipeline with linting, formatting, type checking, tests, security scanning, and publishing. Use when: creating CI for Python, adding checks to workflow. Do not use: for local development setup, non-CI automation."
 ---
+
 
 # Python CI Setup
 

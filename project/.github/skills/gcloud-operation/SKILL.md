@@ -1,7 +1,8 @@
 ---
 name: gcloud-operation
-description: "Run or prepare a safe Google Cloud CLI operation. Use when: using gcloud, changing GCP resources, deploying to GCP, inspecting projects, configuring IAM, or working with service account impersonation."
+description: "Run or prepare a safe Google Cloud CLI operation. Use when: using gcloud, changing GCP resources, deploying to GCP. Do not use: for local CLI exploration, non-GCP operations."
 ---
+
 
 # GCloud Operation
 

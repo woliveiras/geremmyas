@@ -1,7 +1,8 @@
 ---
 name: premortem
-description: "Run a premortem on a plan, decision, or launch. Assumes it already failed and works backward to find why. Use when: premortem this, what could kill this, stress test this plan, find the blind spots, what am I missing in this plan, future-proof this decision."
+description: "Run a premortem on a plan, decision, or launch. Assumes it already failed and works backward to find why. Use when: premortem this, stress test this plan, find blind spots. Do not use: for post-launch postmortems, blame analysis."
 ---
+
 
 # Premortem
 

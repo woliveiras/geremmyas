@@ -1,7 +1,8 @@
 ---
 name: skill-authoring
-description: "Create or revise Copilot skills that match this repository's structure and naming conventions. Use when: writing a new skill, renaming a skill, reviewing skill quality, or deciding what belongs in SKILL.md versus assets or references."
+description: "Create or revise Copilot skills that match this repository's structure and naming conventions. Use when: writing a new skill, renaming a skill, reviewing skill quality. Do not use: for general writing, non-skill documentation."
 ---
+
 
 # Skill Authoring
 

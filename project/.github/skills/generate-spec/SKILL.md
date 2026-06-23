@@ -1,7 +1,8 @@
 ---
 name: generate-spec
-description: "Generate a structured spec from direct input. Use when: you already know what you want and just need the formatted template. For exploration and interviews, use the spec-writer agent instead."
+description: "Generate a structured spec from direct input. Use when: you already know what you want and just need the formatted template. Do not use: for exploration and interviews (use spec-writer agent)."
 ---
+
 
 # Generate Spec
 

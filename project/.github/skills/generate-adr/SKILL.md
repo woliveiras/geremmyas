@@ -1,7 +1,8 @@
 ---
 name: generate-adr
-description: "Generate an Architectural Decision Record in MADR 4.0 format. Use when: recording a decision, ADR, architecture decision record, MADR, documenting why we chose X. For full architecture analysis, use the architect agent instead."
+description: "Generate an Architectural Decision Record in MADR 4.0 format. Use when: recording a decision, architecture decision record, documenting why we chose X. Do not use: for full architecture analysis, routine choices."
 ---
+
 
 # Generate ADR — MADR 4.0
 

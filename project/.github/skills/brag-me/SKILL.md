@@ -1,8 +1,8 @@
 ---
 name: brag-me
-description: "Create and refresh local brag repository demo decks from merged PRs, git commits, GCP metrics, closed Sentry issues, and manual notes. Use when preparing team demos before planning, showing impact metrics, or building Reveal.js presentations under me/brag-me. Trigger: brag repository, brag-me, demo before planning, demo da planning, pull requests mergeados, Sentry issues fechadas, GCP impact, cost/performance/observability/accessibility improvements, /brag-me."
-argument-hint: "Mode: create | refresh | collect | deck-review"
+description: "Create and refresh local brag repository demo decks from merged PRs, git commits, GCP metrics, closed Sentry issues, and manual notes. Use when: preparing team demos, showing impact metrics. Do not use: for documentation generation, standard reports."
 ---
+
 
 # Brag-Me
 

@@ -1,7 +1,8 @@
 ---
 name: validate-with-zod
-description: "Generate Zod validation patterns for common use cases. Use when: validating API responses, form validation, localStorage parsing, building schema wrappers, Zod recipes, validation patterns."
+description: "Generate Zod validation patterns for common use cases. Use when: validating API responses, form validation, localStorage parsing. Do not use: for type design, non-validation concerns."
 ---
+
 
 # Validate with Zod
 

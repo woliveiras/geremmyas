@@ -1,7 +1,8 @@
 ---
 name: vertical-tdd
-description: "Implement one behavior at a time with a red-green-refactor loop. Use when: executing tasks.md, doing TDD, implementing a feature from specs, or avoiding bulk test generation."
+description: "Implement one behavior at a time with a red-green-refactor loop. Use when: executing tasks.md, doing TDD, implementing a feature from specs. Do not use: for test planning, bulk implementation."
 ---
+
 
 # Vertical TDD
 

@@ -1,7 +1,8 @@
 ---
 name: update-docs
-description: "Update project documentation after implementing a feature. Use when: updating docs, documentation, update docs after implementation, sync docs with code."
+description: "Update project documentation after implementing a feature. Use when: updating docs, documentation, update docs after implementation. Do not use: for doc-first design, specification writing."
 ---
+
 
 # Update Docs
 

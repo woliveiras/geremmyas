@@ -1,7 +1,8 @@
 ---
 name: llm-integration-review
-description: "Design or review an LLM integration in a service. Use when: adding model calls, tools, structured outputs, retries, rate limits, prompt safety, observability, or contract tests for LLM-backed features."
+description: "Design or review an LLM integration in a service. Use when: adding model calls, tools, structured outputs, retries, rate limits. Do not use: for prompt engineering alone, non-service LLM work."
 ---
+
 
 # LLM Integration Review
 

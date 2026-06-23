@@ -1,7 +1,8 @@
 ---
 name: chromadb-rag-workflow
-description: "Design or review a ChromaDB-backed RAG workflow. Use when: creating collections, choosing embedding functions, chunking documents, writing retrievers, metadata filters, persistence, backups, or retrieval evaluation."
+description: "Design or review a ChromaDB-backed RAG workflow. Use when: creating collections, choosing embedding functions, chunking documents, writing retrievers. Do not use: for general LLM integration, non-RAG patterns."
 ---
+
 
 # ChromaDB RAG Workflow
 

@@ -1,7 +1,8 @@
 ---
 name: model-state-with-xstate
-description: "XState v5 recipes for React integration, testing with createActor, and actor patterns. Use when: xstate react, testing state machine, xstate actors, machine provide, useSelector, useActorRef."
+description: "XState v5 recipes for React integration, testing with createActor, and actor patterns. Use when: xstate react, testing state machine, actor patterns. Do not use: for simple component state, non-XState management."
 ---
+
 
 # Model State with XState
 

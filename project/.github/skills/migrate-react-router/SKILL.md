@@ -1,7 +1,8 @@
 ---
 name: migrate-react-router
-description: "Guide migration from React Router v6 to v7 framework mode. Use when: migrating routes, upgrading react-router, v6 to v7, converting to framework mode."
+description: "Guide migration from React Router v6 to v7 framework mode. Use when: migrating routes, upgrading react-router, v6 to v7. Do not use: for initial React Router setup, general routing patterns."
 ---
+
 
 # Migrate React Router v6 to v7
 

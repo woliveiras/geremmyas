@@ -1,7 +1,8 @@
 ---
 name: rust-release
-description: "Plan and execute Rust release engineering. Use when: publishing a crate, setting up release automation, cross-compiling binaries, configuring cargo-dist, or managing changelogs and SemVer."
+description: "Plan and execute Rust release engineering. Use when: publishing a crate, setting up release automation, cross-compiling binaries. Do not use: for version bumping alone, local build setup."
 ---
+
 
 # Rust Release Engineering
 

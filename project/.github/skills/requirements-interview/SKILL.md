@@ -1,7 +1,8 @@
 ---
 name: requirements-interview
-description: "Interview before PRD or spec work by exploring code first, resolving product and technical ambiguity, and deciding the right artifact. Use when: starting a feature, expanding an existing feature, clarifying requirements, or deciding whether a PRD must change."
+description: "Interview before PRD or spec work by exploring code first, resolving product and technical ambiguity, and deciding the right artifact. Use when: starting a feature, expanding features, clarifying requirements. Do not use: for spec-only work, requirements already clear."
 ---
+
 
 # Requirements Interview
 
