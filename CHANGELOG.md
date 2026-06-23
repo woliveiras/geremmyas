@@ -7,6 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.1.0](https://github.com/woliveiras/geremmyas/compare/v3.0.0...v3.1.0) (2026-06-23)
+
+
+### Features
+
+* add instructions to update tasks and reconcile plans before completion ([ccdb657](https://github.com/woliveiras/geremmyas/commit/ccdb657637de314bfc38676e2928a7b85341666a))
+* add lint command over skill tree ([1c4b27f](https://github.com/woliveiras/geremmyas/commit/1c4b27f119940cf8037335ac8668bc9034fe36d3))
+* add skill description lint engine ([9f96fc4](https://github.com/woliveiras/geremmyas/commit/9f96fc461f5d4c5d87e56bfb4cfab81d3e1a2fe5))
+* add skill name and body lint rules ([c9cf5c9](https://github.com/woliveiras/geremmyas/commit/c9cf5c941d56127725caeffb594023ce2d6180d2))
+* **agents:** add guardrails framework for error prevention and decision-making ([24c83de](https://github.com/woliveiras/geremmyas/commit/24c83dedd8a59397c42bb543280f4d7df84aaeff))
+* **cli:** surface codex in help, usage, and destination summary ([deee9f6](https://github.com/woliveiras/geremmyas/commit/deee9f689a2b75b473dc4a391adacfedd3a2e601))
+* **codex:** generate codex document at global scope ([e1a1ebe](https://github.com/woliveiras/geremmyas/commit/e1a1ebec864029bb86cbf41c1323fbe0922e2778))
+* **codex:** generate codex document at project scope ([7dfa173](https://github.com/woliveiras/geremmyas/commit/7dfa1733a9d6a7efd20cf9db464ef8e95dd387fc))
+* enhance reconciliation process for task completion in vertical TDD ([dc0249e](https://github.com/woliveiras/geremmyas/commit/dc0249e8e047cebbe91e002a7af45447e35bffd3))
+* **guardrails:** implement comprehensive guardrails framework for AI coding agents ([09170e4](https://github.com/woliveiras/geremmyas/commit/09170e4858072d214b43a269f84475bd98849a18))
+* **readme:** update documentation to include guardrails framework and its error-prevention features ([0501174](https://github.com/woliveiras/geremmyas/commit/05011744a522723c63a337783fc7d83a13afbe27))
+* remove obsolete specs and tasks for dashboard features ([f384c2a](https://github.com/woliveiras/geremmyas/commit/f384c2ab21f62e34475fa81f92b58c5bb22eaff3))
+* report missing skill files in lint ([ab51eb9](https://github.com/woliveiras/geremmyas/commit/ab51eb9c0e3801794187d5a01a0eb8ba14ca9b8d))
+* **skills:** add abort criteria guidelines for task management ([c8c9a87](https://github.com/woliveiras/geremmyas/commit/c8c9a87de00a1d34e723570718b90d62e3cfd5c5))
+* **skills:** add agent rationalization blocking guidelines ([a194a4c](https://github.com/woliveiras/geremmyas/commit/a194a4c1860d3750300dee81dc6861232f81d20b))
+* **skills:** add approval gates before implementation guidelines ([fe81e79](https://github.com/woliveiras/geremmyas/commit/fe81e79b8b680889fb077036abc4c6b56978290f))
+* **skills:** add comprehensive regression testing guidelines ([741b0f1](https://github.com/woliveiras/geremmyas/commit/741b0f147595674dc84babd3ca21b7c2ed6fbf25))
+* **skills:** add decision framework for structured decision-making ([8694d58](https://github.com/woliveiras/geremmyas/commit/8694d58220c0b5dc1267119c585320e377be1a66))
+* **skills:** add structured workflow for code review requesting ([133856a](https://github.com/woliveiras/geremmyas/commit/133856a405f83e90fb8a28f6b3520c147a0c4d62))
+* **skills:** add subagent selection decision framework and guidelines ([0641b4a](https://github.com/woliveiras/geremmyas/commit/0641b4a8bde95e592fab33ca0a6717d26262649b))
+* **skills:** add verification checklists to enforce evidence before task completion ([e4762a1](https://github.com/woliveiras/geremmyas/commit/e4762a15ed7821e43fec233334a66b8f6b74f017))
+* **skills:** refine descriptions for various skills to enhance clarity and usage guidelines ([f669575](https://github.com/woliveiras/geremmyas/commit/f669575c9b6fda7985377755ef99ee28248d91c1))
+* **targets:** add codex as valid target ([ffb2a4c](https://github.com/woliveiras/geremmyas/commit/ffb2a4c0178156b8dd672955f03a668c1f8ee8ca))
+* **targets:** test mixed-target and force-overwrite behavior ([d204fa3](https://github.com/woliveiras/geremmyas/commit/d204fa3f9421bfae94e8757a314046faa9f729ef))
+
+
+### Bug Fixes
+
+* correct formatting of missing skill file violation constant ([4ebe744](https://github.com/woliveiras/geremmyas/commit/4ebe744db6df2b640696b468139501b4d2236ac7))
+
+
+### Documentation
+
+* **specs:** mark spec 0001 as Completed ([33a7868](https://github.com/woliveiras/geremmyas/commit/33a786886988d96a33cadbad73c018ac81adf4ae))
+
+
+### Miscellaneous
+
+* **docs:** update readme.md ([5aaf6f0](https://github.com/woliveiras/geremmyas/commit/5aaf6f09157edce539adeaf3071dfab1cb0c2c58))
+* **skills:** refine skill descriptions across multiple files to clarify usage contexts and avoid misuse ([26ac4f9](https://github.com/woliveiras/geremmyas/commit/26ac4f9a6aef8d0f5e5e214995403707a43c9f3e))
+
 ## [3.0.0](https://github.com/woliveiras/geremmyas/compare/v2.8.0...v3.0.0) (2026-06-04)
 
 
