@@ -187,13 +187,11 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	if hasTarget(targets, TargetCopilot) {
-		summary, err := syncPacks(root, packs, syncOptions{Force: *force})
-		if err != nil {
-			return err
-		}
-		printSyncSummary(w, len(packs), summary)
+	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+	if err != nil {
+		return err
 	}
+	printSyncSummary(w, len(packs), summary)
 
 	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
 	if err != nil {
@@ -334,13 +332,11 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	if hasTarget(targets, TargetCopilot) {
-		summary, err := syncPacks(root, packs, syncOptions{Force: *force})
-		if err != nil {
-			return err
-		}
-		printSyncSummary(w, len(packs), summary)
+	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+	if err != nil {
+		return err
 	}
+	printSyncSummary(w, len(packs), summary)
 
 	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
 	if err != nil {

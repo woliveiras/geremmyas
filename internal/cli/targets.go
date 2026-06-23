@@ -132,9 +132,15 @@ func collectPackArtifacts(packs []Pack) packArtifacts {
 			case strings.HasPrefix(target, ".github/skills/"):
 				if strings.HasSuffix(source, "/SKILL.md") || strings.HasSuffix(source, "SKILL.md") {
 					addUnique(&artifacts.skills, filepath.Dir(source), skillSeen)
+				} else if _, err := fs.Stat(geremmyas.EmbeddedFiles, filepathToSlash(filepath.Join(source, "SKILL.md"))); err == nil {
+					addUnique(&artifacts.skills, source, skillSeen)
 				} else {
 					_ = walkEmbeddedMatches(source, func(path string) error {
-						if strings.HasSuffix(path, "/SKILL.md") || strings.HasSuffix(path, "SKILL.md") {
+						rel, err := filepath.Rel(source, path)
+						if err != nil {
+							return err
+						}
+						if strings.Count(filepathToSlash(rel), "/") == 1 && strings.HasSuffix(path, "/SKILL.md") {
 							addUnique(&artifacts.skills, filepath.Dir(path), skillSeen)
 						}
 						return nil

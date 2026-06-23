@@ -45,6 +45,39 @@ func TestCatalogSourcesExist(t *testing.T) {
 	}
 }
 
+func TestDoctorRejectsMissingCatalogSource(t *testing.T) {
+	badCatalog := Catalog{
+		Packs: []Pack{{
+			Name: "broken",
+			Files: []FileEntry{{
+				Source: "project/.github/skills/missing",
+				Target: ".github/skills/missing",
+			}},
+		}},
+	}
+
+	var out strings.Builder
+	if err := runDoctor(&out, badCatalog); err == nil {
+		t.Fatal("runDoctor succeeded, want missing source error")
+	}
+}
+
+func TestDoctorWithoutConfigReportsInitHint(t *testing.T) {
+	withTempCwd(t)
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	var out strings.Builder
+	if err := runDoctor(&out, catalog); err != nil {
+		t.Fatalf("runDoctor returned error: %v", err)
+	}
+	if !strings.Contains(out.String(), "geremmyas.yml: missing; run geremmyas init") {
+		t.Fatalf("doctor output missing init hint:\n%s", out.String())
+	}
+}
+
 func TestCatalogCoversEveryTopLevelSkill(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {
@@ -66,6 +99,121 @@ func TestCatalogCoversEveryTopLevelSkill(t *testing.T) {
 	sort.Strings(missing)
 	if len(missing) > 0 {
 		t.Fatalf("top-level skills missing from catalog packs: %s", strings.Join(missing, ", "))
+	}
+}
+
+func TestCatalogCoversEveryInstruction(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	sourceInstructions, err := embeddedBasenames("project/.github/instructions", ".instructions.md")
+	if err != nil {
+		t.Fatalf("embeddedBasenames returned error: %v", err)
+	}
+	catalogInstructions := catalogSourceBasenames(catalog, "project/.github/instructions/", ".instructions.md")
+
+	var missing []string
+	for instruction := range sourceInstructions {
+		if !catalogInstructions[instruction] {
+			missing = append(missing, instruction)
+		}
+	}
+	sort.Strings(missing)
+	if len(missing) > 0 {
+		t.Fatalf("instructions missing from catalog packs: %s", strings.Join(missing, ", "))
+	}
+}
+
+func TestCatalogSDDCoversEveryAgent(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	sourceAgents, err := embeddedBasenames("project/.github/agents", ".agent.md")
+	if err != nil {
+		t.Fatalf("embeddedBasenames returned error: %v", err)
+	}
+	sdd, ok := catalog.Pack("sdd")
+	if !ok {
+		t.Fatal("catalog missing sdd pack")
+	}
+	catalogAgents := packSourceBasenames(sdd, "project/.github/agents/", ".agent.md")
+
+	var missing []string
+	for agent := range sourceAgents {
+		if !catalogAgents[agent] {
+			missing = append(missing, agent)
+		}
+	}
+	sort.Strings(missing)
+	if len(missing) > 0 {
+		t.Fatalf("agents missing from sdd pack: %s", strings.Join(missing, ", "))
+	}
+}
+
+func TestCatalogDoesNotReferenceNestedSkillMarkdownAsTopLevelSkill(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	var nested []string
+	for _, pack := range catalog.Packs {
+		for _, entry := range pack.Files {
+			if strings.HasPrefix(entry.Source, "project/.github/skills/") &&
+				strings.HasSuffix(entry.Source, "/SKILL.md") &&
+				strings.Count(strings.TrimPrefix(entry.Source, "project/.github/skills/"), "/") > 1 {
+				nested = append(nested, pack.Name+":"+entry.Source)
+			}
+		}
+	}
+	sort.Strings(nested)
+	if len(nested) > 0 {
+		t.Fatalf("catalog references nested SKILL.md files directly: %s", strings.Join(nested, ", "))
+	}
+}
+
+func TestCatalogDependenciesResolveForEveryPack(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	for _, pack := range catalog.Packs {
+		t.Run(pack.Name, func(t *testing.T) {
+			if _, err := catalog.Resolve([]string{pack.Name}); err != nil {
+				t.Fatalf("Resolve(%q) returned error: %v", pack.Name, err)
+			}
+		})
+	}
+}
+
+func TestCatalogCompositePackDependencyClosure(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	tests := map[string][]string{
+		"go-ci":         {"go-base", "infra-ci", "go-ci"},
+		"python-ci":     {"python-base", "infra-ci", "python-ci"},
+		"react-data":    {"typescript-base", "react-web", "react-data"},
+		"typescript-ci": {"typescript-base", "typescript-ci"},
+	}
+	for packName, want := range tests {
+		t.Run(packName, func(t *testing.T) {
+			packs, err := catalog.Resolve([]string{packName})
+			if err != nil {
+				t.Fatalf("Resolve(%q) returned error: %v", packName, err)
+			}
+			got := packNames(packs)
+			if strings.Join(got, ",") != strings.Join(want, ",") {
+				t.Fatalf("Resolve(%q) = %v, want %v", packName, got, want)
+			}
+		})
 	}
 }
 
@@ -137,4 +285,61 @@ func catalogSkillNames(catalog Catalog) map[string]bool {
 		}
 	}
 	return skills
+}
+
+func embeddedBasenames(root, suffix string) (map[string]bool, error) {
+	items := map[string]bool{}
+	err := fs.WalkDir(geremmyas.EmbeddedFiles, root, func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		if strings.HasSuffix(path, suffix) {
+			items[strings.TrimSuffix(path[strings.LastIndex(path, "/")+1:], suffix)] = true
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+func catalogSourceBasenames(catalog Catalog, prefix, suffix string) map[string]bool {
+	items := map[string]bool{}
+	for _, pack := range catalog.Packs {
+		for name := range packSourceBasenames(pack, prefix, suffix) {
+			items[name] = true
+		}
+	}
+	return items
+}
+
+func packSourceBasenames(pack Pack, prefix, suffix string) map[string]bool {
+	items := map[string]bool{}
+	for _, entry := range pack.Files {
+		if entry.Source == strings.TrimSuffix(prefix, "/") || strings.HasPrefix(entry.Source, prefix) {
+			if strings.HasSuffix(entry.Source, suffix) {
+				items[strings.TrimSuffix(entry.Source[strings.LastIndex(entry.Source, "/")+1:], suffix)] = true
+				continue
+			}
+			_ = fs.WalkDir(geremmyas.EmbeddedFiles, entry.Source, func(path string, d fs.DirEntry, err error) error {
+				if err != nil || d.IsDir() {
+					return err
+				}
+				if strings.HasSuffix(path, suffix) {
+					items[strings.TrimSuffix(path[strings.LastIndex(path, "/")+1:], suffix)] = true
+				}
+				return nil
+			})
+		}
+	}
+	return items
+}
+
+func packNames(packs []Pack) []string {
+	names := make([]string, 0, len(packs))
+	for _, pack := range packs {
+		names = append(names, pack.Name)
+	}
+	return names
 }

@@ -89,6 +89,26 @@ func TestSyncBragMePackCopiesSkillAssets(t *testing.T) {
 	mustExist(t, filepath.Join(root, ".github/skills/brag-me/assets/reveal-template.html"))
 }
 
+func TestSyncEveryPackIndividually(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	for _, pack := range catalog.Packs {
+		t.Run(pack.Name, func(t *testing.T) {
+			packs, err := catalog.Resolve([]string{pack.Name})
+			if err != nil {
+				t.Fatalf("Resolve(%q) returned error: %v", pack.Name, err)
+			}
+			root := t.TempDir()
+			if _, err := syncPacks(root, packs, syncOptions{}); err != nil {
+				t.Fatalf("syncPacks(%q) returned error: %v", pack.Name, err)
+			}
+		})
+	}
+}
+
 func TestRunInitAndAdd(t *testing.T) {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -149,6 +169,21 @@ func TestRunProjectPersistsTargetsFlag(t *testing.T) {
 	mustExist(t, filepath.Join(root, ".cursor/rules/testing.mdc"))
 }
 
+func TestRunProjectCodexTargetCopiesReferencedSkills(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core", "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"project", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
+	mustExist(t, filepath.Join(root, ".github", "skills", "bugfix-loop", "SKILL.md"))
+}
+
 func TestRunProjectAddsPackAndSyncsFiles(t *testing.T) {
 	root := withTempCwd(t)
 
@@ -169,6 +204,26 @@ func TestRunProjectAddsPackAndSyncsFiles(t *testing.T) {
 		t.Fatalf("config content missing packs:\n%s", text)
 	}
 	mustExist(t, filepath.Join(root, ".github/instructions/python.instructions.md"))
+}
+
+func TestRunProjectUnknownPackDoesNotRewriteConfigOrSyncFiles(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	before := string(testMustRead(t, filepath.Join(root, configFileName)))
+
+	if code := Run([]string{"project", "missing-pack"}, &out, &out); code == 0 {
+		t.Fatalf("project missing-pack exit code = 0, output: %s", out.String())
+	}
+
+	after := string(testMustRead(t, filepath.Join(root, configFileName)))
+	if after != before {
+		t.Fatalf("config changed after unknown pack:\nbefore:\n%s\nafter:\n%s", before, after)
+	}
+	mustNotExist(t, filepath.Join(root, ".github", "instructions"))
 }
 
 func TestRunProjectPreservesCustomizableFilesByDefault(t *testing.T) {
@@ -246,6 +301,78 @@ func TestRunProjectForceOverwritesCustomizableFiles(t *testing.T) {
 	}
 	if string(data) == "custom\n" {
 		t.Fatal("AGENTS.md was preserved, want overwritten content")
+	}
+}
+
+func TestWriteGeneratedFilePreservesCustomFileByDefault(t *testing.T) {
+	root := t.TempDir()
+	path := filepath.Join(root, ".codex", "AGENTS.md")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+	if err := os.WriteFile(path, []byte("custom\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	summary := generatorSummary{}
+	if err := writeGeneratedFile(root, ".codex/AGENTS.md", []byte("generated\n"), generatorOptions{}, &summary); err != nil {
+		t.Fatalf("writeGeneratedFile returned error: %v", err)
+	}
+
+	data := testMustRead(t, path)
+	if string(data) != "custom\n" {
+		t.Fatalf("generated file overwrite without marker = %q, want custom", data)
+	}
+	if summary.Preserved != 1 {
+		t.Fatalf("Preserved = %d, want 1", summary.Preserved)
+	}
+}
+
+func TestWriteGeneratedFileUpdatesMarkedFile(t *testing.T) {
+	root := t.TempDir()
+	path := filepath.Join(root, ".codex", "AGENTS.md")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+	if err := os.WriteFile(path, []byte("<!-- "+generatedMarker+":codex -->\nold\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	summary := generatorSummary{}
+	if err := writeGeneratedFile(root, ".codex/AGENTS.md", []byte("<!-- "+generatedMarker+":codex -->\nnew\n"), generatorOptions{}, &summary); err != nil {
+		t.Fatalf("writeGeneratedFile returned error: %v", err)
+	}
+
+	data := testMustRead(t, path)
+	if !strings.Contains(string(data), "new") {
+		t.Fatalf("generated file was not updated:\n%s", data)
+	}
+	if summary.Updated != 1 {
+		t.Fatalf("Updated = %d, want 1", summary.Updated)
+	}
+}
+
+func TestWriteGeneratedFileForceOverwritesCustomFile(t *testing.T) {
+	root := t.TempDir()
+	path := filepath.Join(root, ".codex", "AGENTS.md")
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+	if err := os.WriteFile(path, []byte("custom\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	summary := generatorSummary{}
+	if err := writeGeneratedFile(root, ".codex/AGENTS.md", []byte("generated\n"), generatorOptions{Force: true}, &summary); err != nil {
+		t.Fatalf("writeGeneratedFile returned error: %v", err)
+	}
+
+	data := testMustRead(t, path)
+	if string(data) != "generated\n" {
+		t.Fatalf("generated file after force = %q, want generated", data)
+	}
+	if summary.Updated != 1 {
+		t.Fatalf("Updated = %d, want 1", summary.Updated)
 	}
 }
 

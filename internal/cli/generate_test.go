@@ -93,6 +93,17 @@ func TestValidateTargetsErrorMessageListsCodex(t *testing.T) {
 	}
 }
 
+func TestRunInitRejectsUnknownTargetWithoutWritingConfig(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core", "--targets", "vscode"}, &out, &out); code == 0 {
+		t.Fatalf("init unknown target exit code = 0, output: %s", out.String())
+	}
+
+	mustNotExist(t, filepath.Join(root, configFileName))
+}
+
 func TestFormatConfigIncludesTargets(t *testing.T) {
 	got := formatConfig(Config{
 		Version: 1,
@@ -182,6 +193,51 @@ func TestRunSyncGeneratesCodexProjectScope(t *testing.T) {
 	}
 }
 
+func TestRunProjectWithCodexTargetPersistsConfigAndGeneratesDoc(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"project", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("project exit code = %d, output: %s", code, out.String())
+	}
+
+	config := string(testMustRead(t, filepath.Join(root, configFileName)))
+	if !strings.Contains(config, "  - codex\n") {
+		t.Fatalf("config missing codex target:\n%s", config)
+	}
+	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
+}
+
+func TestRunSyncGeneratedProjectDocsOnlyReferenceExistingSkills(t *testing.T) {
+	targetDocs := map[string]string{
+		TargetClaudeCode: "CLAUDE.md",
+		TargetCodex:      ".codex/AGENTS.md",
+		TargetOpenCode:   ".opencode/AGENTS.md",
+	}
+
+	for target, relPath := range targetDocs {
+		t.Run(target, func(t *testing.T) {
+			root := withTempCwd(t)
+
+			var out strings.Builder
+			if code := Run([]string{"init", "--packs", "core,sdd", "--targets", target}, &out, &out); code != 0 {
+				t.Fatalf("init exit code = %d, output: %s", code, out.String())
+			}
+			if code := Run([]string{"sync"}, &out, &out); code != 0 {
+				t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+			}
+
+			doc := string(testMustRead(t, filepath.Join(root, relPath)))
+			for _, skill := range referencedProjectSkills(doc) {
+				mustExist(t, filepath.Join(root, ".github", "skills", skill, "SKILL.md"))
+			}
+		})
+	}
+}
+
 func TestRunSyncWithCodexAndOtherTargets(t *testing.T) {
 	root := withTempCwd(t)
 
@@ -242,4 +298,8 @@ func testMustRead(t *testing.T, path string) []byte {
 		t.Fatalf("ReadFile %s: %v", path, err)
 	}
 	return data
+}
+
+func referencedProjectSkills(doc string) []string {
+	return regexpMatches(`\.github/skills/([^/]+)/SKILL\.md`, doc)
 }

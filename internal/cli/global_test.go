@@ -3,6 +3,7 @@ package cli
 import (
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -70,6 +71,82 @@ func TestRunGlobalGeneratedAgentTargetsCopySkills(t *testing.T) {
 	}
 }
 
+func TestRunGlobalGeneratedDocsOnlyReferenceInstalledSkills(t *testing.T) {
+	targetPaths := map[string]string{
+		TargetClaudeCode: filepath.Join(".claude", "CLAUDE.md"),
+		TargetCodex:      filepath.Join(".config", "codex", "AGENTS.md"),
+		TargetOpenCode:   filepath.Join(".config", "opencode", "AGENTS.md"),
+	}
+
+	for target, relPath := range targetPaths {
+		t.Run(target, func(t *testing.T) {
+			home := t.TempDir()
+			t.Setenv("HOME", home)
+
+			var out strings.Builder
+			if code := Run([]string{"global", "--targets", target, "core", "sdd"}, &out, &out); code != 0 {
+				t.Fatalf("global exit code = %d, output: %s", code, out.String())
+			}
+
+			doc := string(testMustRead(t, filepath.Join(home, relPath)))
+			for _, skill := range referencedGlobalSkills(doc) {
+				mustExist(t, filepath.Join(home, ".agents", "skills", skill, "SKILL.md"))
+			}
+		})
+	}
+}
+
+func TestRunGlobalOutputMentionsSkillsForSkillConsumingTargets(t *testing.T) {
+	for _, target := range []string{TargetCursor, TargetClaudeCode, TargetCodex, TargetOpenCode} {
+		t.Run(target, func(t *testing.T) {
+			home := t.TempDir()
+			t.Setenv("HOME", home)
+
+			var out strings.Builder
+			if code := Run([]string{"global", "--targets", target, "sdd"}, &out, &out); code != 0 {
+				t.Fatalf("global exit code = %d, output: %s", code, out.String())
+			}
+
+			if !strings.Contains(out.String(), ".agents/skills/") {
+				t.Fatalf("global output should mention installed skills path for %s:\n%s", target, out.String())
+			}
+		})
+	}
+}
+
+func TestRunGlobalEveryPackIndividually(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	for _, pack := range catalog.Packs {
+		t.Run(pack.Name, func(t *testing.T) {
+			home := t.TempDir()
+			t.Setenv("HOME", home)
+
+			var out strings.Builder
+			if code := Run([]string{"global", "--targets", "codex", pack.Name}, &out, &out); code != 0 {
+				t.Fatalf("global %q exit code = %d, output: %s", pack.Name, code, out.String())
+			}
+			mustExist(t, filepath.Join(home, ".config", "codex", "AGENTS.md"))
+		})
+	}
+}
+
+func TestRunGlobalUnknownPackWritesNothing(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "missing-pack"}, &out, &out); code == 0 {
+		t.Fatalf("global missing-pack exit code = 0, output: %s", out.String())
+	}
+
+	mustNotExist(t, filepath.Join(home, ".config", "codex", "AGENTS.md"))
+	mustNotExist(t, filepath.Join(home, ".agents", "skills"))
+}
+
 func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
@@ -108,6 +185,53 @@ func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
 	if !strings.Contains(content, "~/.agents/skills/") {
 		t.Fatalf("global Codex AGENTS.md should reference ~/.agents/skills/")
 	}
+}
+
+func TestGlobalCopyFlagsTargetMatrix(t *testing.T) {
+	tests := []struct {
+		name             string
+		targets          []string
+		wantSkills       bool
+		wantInstructions bool
+	}{
+		{name: "copilot", targets: []string{TargetCopilot}, wantSkills: true, wantInstructions: true},
+		{name: "cursor", targets: []string{TargetCursor}, wantSkills: true, wantInstructions: false},
+		{name: "claude-code", targets: []string{TargetClaudeCode}, wantSkills: true, wantInstructions: false},
+		{name: "codex", targets: []string{TargetCodex}, wantSkills: true, wantInstructions: false},
+		{name: "opencode", targets: []string{TargetOpenCode}, wantSkills: true, wantInstructions: false},
+		{name: "copilot and codex", targets: []string{TargetCopilot, TargetCodex}, wantSkills: true, wantInstructions: true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotSkills, gotInstructions := globalCopyFlags(tt.targets)
+			if gotSkills != tt.wantSkills || gotInstructions != tt.wantInstructions {
+				t.Fatalf("globalCopyFlags(%v) = (%v, %v), want (%v, %v)",
+					tt.targets, gotSkills, gotInstructions, tt.wantSkills, tt.wantInstructions)
+			}
+		})
+	}
+}
+
+func referencedGlobalSkills(doc string) []string {
+	return regexpMatches(`~/\.agents/skills/([^/]+)/SKILL\.md`, doc)
+}
+
+func regexpMatches(pattern, text string) []string {
+	re := regexp.MustCompile(pattern)
+	seen := map[string]bool{}
+	var matches []string
+	for _, match := range re.FindAllStringSubmatch(text, -1) {
+		if len(match) < 2 || seen[match[1]] {
+			continue
+		}
+		if strings.ContainsAny(match[1], "<>*") {
+			continue
+		}
+		seen[match[1]] = true
+		matches = append(matches, match[1])
+	}
+	return matches
 }
 
 func TestRunGlobalSDDInstallsGuardrailSkills(t *testing.T) {
