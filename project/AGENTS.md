@@ -168,6 +168,28 @@ technology, and any workflow skills installed from geremmyas packs (for example
 Terraform, GCP, CI, LLM, Supabase, Postgres, ChromaDB) when the task crosses
 files, needs sequencing, or has approval or verification gates.
 
+## Guardrails Framework
+
+These 8 skills form a **error-prevention framework** that blocks common agent mistakes:
+
+**Hard Gates** (block work until conditions are met):
+- `approval-gates-before-implementation`: No code without explicit spec approval
+- `verification-checklists`: No task completion without fresh evidence
+
+**Decision Frameworks** (prevent hasty choices):
+- `decision-framework`: Structure complex decisions with trade-off documentation
+- `subagent-selection`: Choose delegate vs inline work strategically
+
+**Detection & Blocking** (identify anti-patterns):
+- `agent-rationalization-blocking`: Catch self-deception ("it's obvious", "probably fine")
+- `abort-criteria`: Recognize when to STOP (time budget exceeded, circular debugging)
+
+**Quality Workflows** (mandatory for code & bugs):
+- `regression-testing`: Test creation for every bug fix (multi-language)
+- `code-review-requesting`: Structured review request with pre-checks
+
+Load these skills **early in the task** to establish gates before implementation begins. See `docs/guardrails-framework.md` for complete patterns and integration examples.
+
 ## Agent Routing
 
 - Use `spec-writer` when requirements are unclear and a spec is needed.
@@ -186,6 +208,8 @@ Before saying work is complete:
 - Update `tasks.md`: mark every finished task `- [x]` and clear any stale `- [~]`.
 - Reconcile `plan.md`: annotate or mark done any planned item fully delivered.
 - Check `git status --short` and explain remaining changes.
+
+See [Guardrails Framework](docs/guardrails-framework.md) for hard gates and error-prevention workflows.
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
 
