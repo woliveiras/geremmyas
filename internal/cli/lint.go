@@ -21,7 +21,7 @@ const (
 	lintViolationDescriptionMarkup  = "description-markup"
 	lintViolationNameMismatch       = "name-mismatch"
 	lintViolationBodyTooLong        = "body-too-long"
-	lintViolationMissingSkillFile    = "missing-skill-md"
+	lintViolationMissingSkillFile   = "missing-skill-md"
 	maxSkillDescriptionLength       = 1024
 	maxSkillBodyLines               = 500
 )
