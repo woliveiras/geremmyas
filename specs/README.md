@@ -20,6 +20,6 @@ PRD: [docs/prds/2026-06-22-multi-assistant-framework.md](../docs/prds/2026-06-22
 
 | Spec | Title | Phase | Status | Depends on / Origin |
 | --- | --- | --- | --- | --- |
-| [0001](0001-codex-target/spec.md) | Codex generation target | 1 | Approved | PRD multi-assistant |
+| [0001](0001-codex-target/spec.md) | Codex generation target | 1 | Completed | PRD multi-assistant |
 | [0002](0002-skill-validator/spec.md) | Skill description validator (`geremmyas lint`) | 1 | Approved | PRD multi-assistant |
 

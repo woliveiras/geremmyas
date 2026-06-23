@@ -3,7 +3,7 @@ spec: "0001"
 title: Codex generation target
 family: multi-assistant
 phase: 1
-status: Approved
+status: Completed
 owner: ""
 depends_on: []
 origin: docs/prds/2026-06-22-multi-assistant-framework.md
