@@ -56,6 +56,13 @@ func runTargetGeneratorsAt(scope installScope, root string, targets []string, pa
 		}
 		summaries[TargetOpenCode] = summary
 	}
+	if hasTarget(targets, TargetCodex) {
+		summary, err := generateCodexAt(scope, root, artifacts, opts)
+		if err != nil {
+			return summaries, fmt.Errorf("codex: %w", err)
+		}
+		summaries[TargetCodex] = summary
+	}
 
 	return summaries, nil
 }

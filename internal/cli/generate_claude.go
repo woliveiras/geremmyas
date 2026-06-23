@@ -46,6 +46,26 @@ func generateOpenCodeAt(scope installScope, root string, artifacts packArtifacts
 	return summary, nil
 }
 
+func generateCodex(root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
+	return generateCodexAt(scopeProject, root, artifacts, opts)
+}
+
+func generateCodexAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
+	content, err := buildIDEAgentsDoc(scope, root, artifacts, "codex", "Codex AGENTS.md")
+	if err != nil {
+		return generatorSummary{}, err
+	}
+	summary := generatorSummary{}
+	relPath := ".codex/AGENTS.md"
+	if scope == scopeGlobal {
+		relPath = ".config/codex/AGENTS.md"
+	}
+	if err := writeGeneratedFile(root, relPath, []byte(content), opts, &summary); err != nil {
+		return summary, err
+	}
+	return summary, nil
+}
+
 func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts, target, title string) (string, error) {
 	agentsBody, err := readProjectFile(root, "AGENTS.md", "project/AGENTS.md")
 	if err != nil {

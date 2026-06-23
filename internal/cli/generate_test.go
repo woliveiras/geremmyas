@@ -155,3 +155,29 @@ func TestRunSyncGeneratesClaudeAndOpenCode(t *testing.T) {
 	}
 	mustExist(t, filepath.Join(root, ".opencode/AGENTS.md"))
 }
+
+func TestRunSyncGeneratesCodexProjectScope(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core", "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	codexPath := filepath.Join(root, ".codex/AGENTS.md")
+	mustExist(t, codexPath)
+	data, err := os.ReadFile(codexPath)
+	if err != nil {
+		t.Fatalf("ReadFile returned error: %v", err)
+	}
+	content := string(data)
+	if !strings.Contains(content, generatedMarker) {
+		t.Fatalf(".codex/AGENTS.md missing generated marker")
+	}
+	if !strings.Contains(content, "Codex AGENTS.md") {
+		t.Fatalf(".codex/AGENTS.md missing title: %s", content)
+	}
+}

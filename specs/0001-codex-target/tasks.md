@@ -14,7 +14,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     `normalizeTargets`.
   - verification: `go test ./internal/cli/ -run Target`
 
-- [ ] **Generate Codex document at project scope** (test-type: integration)
+- [x] **Generate Codex document at project scope** (test-type: integration)
   - blocked-by: Recognize `codex` as a valid target
   - summary: Add `generateCodex`/`generateCodexAt` using `buildIDEAgentsDoc` and
     dispatch in `generate.go`; project path `.codex/AGENTS.md`.
