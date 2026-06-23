@@ -4,7 +4,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
 
 ## Tasks
 
-- [ ] **Recognize `codex` as a valid target** (test-type: unit)
+- [x] **Recognize `codex` as a valid target** (test-type: unit)
   - blocked-by: none
   - summary: Add `TargetCodex` constant, register in `validTargets`, include in
     the validation error message.

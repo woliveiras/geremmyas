@@ -69,6 +69,30 @@ func TestValidateTargetsRejectsUnknown(t *testing.T) {
 	}
 }
 
+func TestValidateTargetsAcceptsCodex(t *testing.T) {
+	if err := validateTargets([]string{TargetCodex}); err != nil {
+		t.Fatalf("validateTargets failed: %v", err)
+	}
+}
+
+func TestNormalizeTargetsIncludesCodex(t *testing.T) {
+	got := normalizeTargets([]string{TargetCodex})
+	if len(got) != 1 || got[0] != TargetCodex {
+		t.Fatalf("normalizeTargets = %v, want [codex]", got)
+	}
+}
+
+func TestValidateTargetsErrorMessageListsCodex(t *testing.T) {
+	err := validateTargets([]string{"invalid"})
+	if err == nil {
+		t.Fatal("validateTargets succeeded, want error")
+	}
+	errMsg := err.Error()
+	if !strings.Contains(errMsg, "codex") {
+		t.Fatalf("error message missing 'codex': %s", errMsg)
+	}
+}
+
 func TestFormatConfigIncludesTargets(t *testing.T) {
 	got := formatConfig(Config{
 		Version: 1,

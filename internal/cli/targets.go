@@ -15,6 +15,7 @@ const (
 	TargetCursor     = "cursor"
 	TargetClaudeCode = "claude-code"
 	TargetOpenCode   = "opencode"
+	TargetCodex      = "codex"
 )
 
 var validTargets = map[string]struct{}{
@@ -22,6 +23,7 @@ var validTargets = map[string]struct{}{
 	TargetCursor:     {},
 	TargetClaudeCode: {},
 	TargetOpenCode:   {},
+	TargetCodex:      {},
 }
 
 func defaultTargets() []string {
@@ -62,7 +64,7 @@ func validateTargets(values []string) error {
 			continue
 		}
 		if _, ok := validTargets[value]; !ok {
-			return fmt.Errorf("unsupported target %q (valid: copilot, cursor, claude-code, opencode)", value)
+			return fmt.Errorf("unsupported target %q (valid: codex, claude-code, copilot, cursor, opencode)", value)
 		}
 	}
 	return nil
