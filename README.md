@@ -19,6 +19,7 @@ Every project needs the same Copilot setup: language-specific instructions, code
 - **Pack-based project installs** with `geremmyas.yml`, so each repository gets only the instructions and skills it needs
 - **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
 - **AGENTS.md** project contract for agent workflows, artifact locations, and operating rules
+- **Guardrails Framework** — 8-skill error-prevention system (hard gates, decision frameworks, anti-pattern detection, quality workflows)
 - **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
 - **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
@@ -30,6 +31,7 @@ Every project needs the same Copilot setup: language-specific instructions, code
 | --- | --- |
 | [docs/architecture.md](docs/architecture.md) | Embed FS, pack resolution, sync preserve/overwrite, global vs project |
 | [docs/creating-packs.md](docs/creating-packs.md) | How to add packs, skills, and instructions |
+| [docs/guardrails-framework.md](docs/guardrails-framework.md) | Error-prevention system: gates, decisions, anti-patterns, quality workflows |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, conventions, and PR flow |
 | [AGENTS.md](AGENTS.md) | Agent operating contract for synced projects |
 
