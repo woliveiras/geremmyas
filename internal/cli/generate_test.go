@@ -198,3 +198,48 @@ func TestRunSyncWithCodexAndOtherTargets(t *testing.T) {
 	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
 	mustExist(t, filepath.Join(root, "CLAUDE.md"))
 }
+
+func TestRunSyncCodexMultipleTargetsCoexist(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	// Init with codex, claude-code, and opencode (mixed non-copilot targets)
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,claude-code,opencode"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	// Verify all three targets are generated and coexist
+	codexPath := filepath.Join(root, ".codex/AGENTS.md")
+	claudePath := filepath.Join(root, "CLAUDE.md")
+	opencodePath := filepath.Join(root, ".opencode/AGENTS.md")
+
+	mustExist(t, codexPath)
+	mustExist(t, claudePath)
+	mustExist(t, opencodePath)
+
+	// Verify each file has correct title
+	codexData := testMustRead(t, codexPath)
+	claudeData := testMustRead(t, claudePath)
+	opencodeData := testMustRead(t, opencodePath)
+
+	if !strings.Contains(string(codexData), "Codex AGENTS.md") {
+		t.Fatalf("codex file missing title")
+	}
+	if !strings.Contains(string(claudeData), "CLAUDE.md") {
+		t.Fatalf("claude file missing title")
+	}
+	if !strings.Contains(string(opencodeData), "OpenCode AGENTS.md") {
+		t.Fatalf("opencode file missing title")
+	}
+}
+
+func testMustRead(t *testing.T, path string) []byte {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatalf("ReadFile %s: %v", path, err)
+	}
+	return data
+}

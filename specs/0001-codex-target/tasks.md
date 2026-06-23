@@ -44,7 +44,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     Codex destination when the target is selected.
   - verification: `go test ./internal/cli/ -run 'Help|Summary|Doctor'`
 
-- [ ] **Verify mixed-target and `--force` behavior** (test-type: integration)
+- [x] **Verify mixed-target and `--force` behavior** (test-type: integration)
   - blocked-by: Generate Codex document at project scope
   - summary: Confirm `--targets codex,copilot` produces both outputs and that
     `--force` overwrite semantics match other targets.
