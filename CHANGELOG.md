@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.2.0](https://github.com/woliveiras/geremmyas/compare/v3.1.0...v3.2.0) (2026-06-23)
+
+
+### Features
+
+* **cli:** add new skills and enhance global copy functionality ([2313796](https://github.com/woliveiras/geremmyas/commit/23137968be9481a7325676ca649b7d77f0ce08e9))
+* **tests:** add comprehensive tests for catalog functionality and error handling ([f582153](https://github.com/woliveiras/geremmyas/commit/f582153067365d93dcd0ae6d769da15de7537863))
+
 ## [3.1.0](https://github.com/woliveiras/geremmyas/compare/v3.0.0...v3.1.0) (2026-06-23)
 
 
