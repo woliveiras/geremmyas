@@ -10,9 +10,16 @@ import (
 	"strings"
 )
 
+var Version = "dev"
+
 func Run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 {
 		printHelp(stdout)
+		return 0
+	}
+
+	if args[0] == "version" || args[0] == "--version" {
+		printVersion(stdout)
 		return 0
 	}
 
@@ -26,6 +33,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 	switch args[0] {
 	case "help", "--help", "-h":
 		printHelp(stdout)
+	case "version":
+		printVersion(stdout)
 	case "list":
 		runErr = runList(stdout, catalog)
 	case "init":
@@ -59,6 +68,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "geremmyas manages repository-local Copilot agent packs.")
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintln(w, "  geremmyas version")
 	fmt.Fprintln(w, "  geremmyas list")
 	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--targets copilot,cursor,...] [--force]")
 	fmt.Fprintln(w, "  geremmyas sync [--force] [--targets copilot,cursor,claude-code,codex,opencode]")
@@ -68,6 +78,10 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
 	fmt.Fprintln(w, "  geremmyas lint")
 	fmt.Fprintln(w, "  geremmyas doctor")
+}
+
+func printVersion(w io.Writer) {
+	fmt.Fprintf(w, "geremmyas %s\n", Version)
 }
 
 func runList(w io.Writer, catalog Catalog) error {

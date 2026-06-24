@@ -61,7 +61,7 @@ jobs:
           CGO_ENABLED: "0"
         run: |
           mkdir -p dist
-          go build -trimpath -ldflags="-s -w" \
+          go build -trimpath -ldflags="-s -w -X github.com/woliveiras/geremmyas/internal/cli.Version=${{ needs.release-please.outputs.tag_name }}" \
             -o "dist/geremmyas-${GOOS}-${GOARCH}${{ matrix.ext }}" \
             ./cmd/geremmyas
 

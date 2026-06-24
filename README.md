@@ -129,6 +129,7 @@ Or from a local checkout:
 geremmyas init              # creates geremmyas.yml (default: core, sdd)
 geremmyas sync              # install packs from config into cwd
 geremmyas list              # all catalog packs
+geremmyas version           # installed binary version
 geremmyas doctor            # validate embed + config
 ```
 
@@ -177,6 +178,7 @@ Reveal.js-style `index.html` deck that opens directly in a browser.
 
 | Command | Purpose |
 | --- | --- |
+| `version` | Print the installed Geremmyas binary version |
 | `list` | Print all packs (`name` + description) |
 | `init [--packs a,b] [--targets copilot,cursor,...] [--force]` | Create `geremmyas.yml`; interactive TUI if no `--packs` and TTY |
 | `sync [--force] [--targets ...]` | Sync packs + run IDE generators from config |
