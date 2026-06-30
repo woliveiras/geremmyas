@@ -2,13 +2,12 @@ package cli
 
 import (
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/charmbracelet/huh"
 )
 
-func runInteractiveInit(w io.Writer, catalog Catalog) (projectPacks []string, globalPacks []string, err error) {
+func runInteractiveInit(catalog Catalog) (projectPacks []string, globalPacks []string, err error) {
 	if !isInteractive() {
 		return nil, nil, fmt.Errorf("interactive mode requires a terminal; use --packs flag instead")
 	}

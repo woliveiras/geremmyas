@@ -110,7 +110,7 @@ func runInit(args []string, w io.Writer, catalog Catalog) error {
 
 	// Interactive mode when no --packs flag and terminal is available
 	if *packsFlag == "" && isInteractive() {
-		projectPacks, globalPacks, err := runInteractiveInit(w, catalog)
+		projectPacks, globalPacks, err := runInteractiveInit(catalog)
 		if err != nil {
 			return err
 		}

@@ -58,10 +58,6 @@ echo '{"permission":"allow"}'
 exit 0
 `
 
-func generateCursor(root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
-	return generateCursorAt(scopeProject, root, artifacts, opts)
-}
-
 func generateCursorAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
 	summary := generatorSummary{}
 	hookCommand := ".cursor/hooks/guardrails.sh"

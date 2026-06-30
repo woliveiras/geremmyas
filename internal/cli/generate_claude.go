@@ -6,10 +6,6 @@ import (
 	"strings"
 )
 
-func generateClaudeCode(root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
-	return generateClaudeCodeAt(scopeProject, root, artifacts, opts)
-}
-
 func generateClaudeCodeAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
 	content, err := buildIDEAgentsDoc(scope, root, artifacts, "claude-code", "CLAUDE.md")
 	if err != nil {
@@ -26,10 +22,6 @@ func generateClaudeCodeAt(scope installScope, root string, artifacts packArtifac
 	return summary, nil
 }
 
-func generateOpenCode(root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
-	return generateOpenCodeAt(scopeProject, root, artifacts, opts)
-}
-
 func generateOpenCodeAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
 	content, err := buildIDEAgentsDoc(scope, root, artifacts, "opencode", "OpenCode AGENTS.md")
 	if err != nil {
@@ -44,10 +36,6 @@ func generateOpenCodeAt(scope installScope, root string, artifacts packArtifacts
 		return summary, err
 	}
 	return summary, nil
-}
-
-func generateCodex(root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
-	return generateCodexAt(scopeProject, root, artifacts, opts)
 }
 
 func generateCodexAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
