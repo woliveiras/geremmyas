@@ -157,22 +157,15 @@ Optional writing, research, and demo packs:
 | Pack | Use when |
 |------|----------|
 | `blog` | Reviewing and rewriting technical blog posts while preserving the author's voice |
-| `brag-me` | Preparing local demo brag decks from merged PRs, commits, cloud metrics, issue trackers, and manual notes |
 | `premortem` | Stress-testing plans, decisions, and launches by assuming failure and working backward |
 | `research` | Writing, reviewing, and planning scientific papers, SLRs, peer reviews, and empirical case studies |
 
 Add them to a repository:
 
 ```bash
-geremmyas add blog research brag-me
+geremmyas add blog research
 geremmyas sync
 ```
-
-Use `brag-me` from Copilot or another compatible agent to create or refresh a
-demo under `me/brag-me/YYYY-MM-DD-highlight/`. The skill fills
-`YYYY-MM-DD-brag.md` from available evidence such as merged PRs, git commits,
-GCP data, Sentry issues, and manual notes, then generates an offline
-Reveal.js-style `index.html` deck that opens directly in a browser.
 
 ### CLI reference
 
@@ -260,7 +253,7 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 | Group | Packs | Notes |
 | --- | --- | --- |
 | **Baseline** | `core`, `sdd` | Default init; `sdd` depends on `core` |
-| **Writing & research** | `blog`, `brag-me`, `research`, `premortem` | Optional content workflows |
+| **Writing & research** | `blog`, `research`, `premortem` | Optional content workflows |
 | **TypeScript / Node** | `typescript-base`, `typescript-ci`, `node-api`, `nestjs`, `fastify` | `nestjs` / `fastify` need `node-api` |
 | **React** | `react-web`, `react-router`, `react-state`, `react-data`, `tailwind` | Most depend on `react-web` → `typescript-base` |
 | **Python** | `python-base`, `python-api`, `python-ai`, `python-ci`, `python-sqlite` | `python-ci` needs `infra-ci` |
@@ -436,7 +429,6 @@ Recommended organization for future skills:
 | `rust-ci-setup` | Rust CI pipeline (`rust-ci` pack) |
 | `rust-release` | Rust crate/binary release engineering (`rust-release` pack) |
 | `android-ci-setup` | Android CI pipeline (`android-ci` pack) |
-| `brag-me` | Demo decks from PRs, commits, metrics (`brag-me` pack) |
 | `terraform-change` | Plan and review Terraform changes with approval gates |
 | `gcloud-operation` | Prepare safe Google Cloud CLI operations with explicit project/account context |
 | `ci-workflow` | Create, review, or debug GitHub Actions CI/CD workflows |

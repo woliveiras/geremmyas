@@ -217,25 +217,6 @@ func TestCatalogCompositePackDependencyClosure(t *testing.T) {
 	}
 }
 
-func TestResolveBragMePack(t *testing.T) {
-	catalog, err := loadCatalog()
-	if err != nil {
-		t.Fatalf("loadCatalog returned error: %v", err)
-	}
-
-	packs, err := catalog.Resolve([]string{"brag-me"})
-	if err != nil {
-		t.Fatalf("Resolve returned error: %v", err)
-	}
-
-	if len(packs) != 1 {
-		t.Fatalf("resolved packs = %d, want 1", len(packs))
-	}
-	if packs[0].Name != "brag-me" {
-		t.Fatalf("resolved pack = %q, want brag-me", packs[0].Name)
-	}
-}
-
 func TestResolveRejectsUnknownPack(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {

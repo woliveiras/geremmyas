@@ -148,7 +148,7 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 				return nil
 			}
 			parts := strings.Split(filepath.ToSlash(rel), "/")
-			if len(parts) == 2 {
+			if len(parts) == 1 {
 				directories[path] = struct{}{}
 			}
 			return nil

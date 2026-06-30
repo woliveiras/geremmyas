@@ -76,7 +76,7 @@ description: "Missing trigger and negative scope"
 		t.Fatalf("lint exit code = %d, want non-zero. output: %s", code, out.String())
 	}
 	output := out.String()
-	if !strings.Contains(output, "lint: ") || !strings.Contains(output, "project/.github/skills/test/bad-skill/SKILL.md") {
+	if !strings.Contains(output, "lint: ") || !strings.Contains(output, "project/.github/skills/bad-skill/SKILL.md") {
 		t.Fatalf("lint output missing report:\n%s", output)
 	}
 	if !strings.Contains(output, lintViolationMissingTrigger) || !strings.Contains(output, lintViolationMissingNegative) {
@@ -112,7 +112,7 @@ description: ""
 
 # Empty description
 `)
-	missingDir := filepath.Join(root, "project/.github/skills/test/missing-skill")
+	missingDir := filepath.Join(root, "project/.github/skills/missing-skill")
 	if err := os.MkdirAll(missingDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}
@@ -165,7 +165,7 @@ func bodyWithLines(lines int) string {
 
 func writeSkillFixture(t *testing.T, root, skillName, content string) string {
 	t.Helper()
-	path := filepath.Join(root, "project/.github/skills/test", skillName, "SKILL.md")
+	path := filepath.Join(root, "project/.github/skills", skillName, "SKILL.md")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}
