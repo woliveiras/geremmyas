@@ -1,4 +1,5 @@
 ---
+description: "Use when writing or reviewing Astro components and MDX content. Covers content frontmatter, markdown structure, and code fence conventions."
 applyTo: "**/*.mdx,**/*.astro"
 ---
 

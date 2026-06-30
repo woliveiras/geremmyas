@@ -1,4 +1,5 @@
 ---
+description: "Use when writing or reviewing React components. Covers functional components, hooks, state management boundaries, and composition."
 applyTo: "**/*.tsx,**/*.jsx"
 ---
 
