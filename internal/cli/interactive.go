@@ -83,7 +83,11 @@ func runInteractiveProjectForce() (bool, error) {
 func packOptions(catalog Catalog) []huh.Option[string] {
 	options := make([]huh.Option[string], len(catalog.Packs))
 	for i, p := range catalog.Packs {
-		options[i] = huh.NewOption(fmt.Sprintf("%-20s %s", p.Name, p.Description), p.Name)
+		tier := p.Tier
+		if tier == "" {
+			tier = "-"
+		}
+		options[i] = huh.NewOption(fmt.Sprintf("[%-5s] %-20s %s", tier, p.Name, p.Description), p.Name)
 	}
 	return options
 }

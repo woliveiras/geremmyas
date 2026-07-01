@@ -48,7 +48,7 @@ Examples of when to delegate vs inline work, and which agent to use:
 - Direct: Subagent startup + output injection
 - Indirect: Less context pollution
 - Parallelization: Can run multiple agents in parallel
-- Benefit: Compressed output (caveman mode)
+- Benefit: Compressed output (subagent summarizes findings)
 
 **Delegate if**:
 - Total tokens (delegation + compressed output) < (inline exploration tokens)

@@ -17,6 +17,7 @@ type Catalog struct {
 type Pack struct {
 	Name        string      `json:"name"`
 	Description string      `json:"description"`
+	Tier        string      `json:"tier"`
 	Depends     []string    `json:"depends"`
 	Files       []FileEntry `json:"files"`
 }
@@ -25,6 +26,12 @@ type FileEntry struct {
 	Source string `json:"source"`
 	Target string `json:"target"`
 }
+
+// Valid pack tiers.
+const (
+	TierCore  = "core"
+	TierStack = "stack"
+)
 
 func loadCatalog() (Catalog, error) {
 	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, "catalog/packs.json")
@@ -109,6 +116,21 @@ func (c Catalog) ValidateSources() error {
 			if _, err := fs.Stat(geremmyas.EmbeddedFiles, entry.Source); err != nil {
 				return fmt.Errorf("pack %q references missing source %q: %w", pack.Name, entry.Source, err)
 			}
+		}
+	}
+	return nil
+}
+
+// ValidateTiers checks that every pack declares a valid tier.
+func (c Catalog) ValidateTiers() error {
+	for _, pack := range c.Packs {
+		switch pack.Tier {
+		case TierCore, TierStack:
+			// valid
+		case "":
+			return fmt.Errorf("pack %q is missing a tier (want %q or %q)", pack.Name, TierCore, TierStack)
+		default:
+			return fmt.Errorf("pack %q has invalid tier %q (want %q or %q)", pack.Name, pack.Tier, TierCore, TierStack)
 		}
 	}
 	return nil

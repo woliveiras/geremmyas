@@ -32,6 +32,30 @@ func TestSyncPacksCopiesOnlySelectedPacks(t *testing.T) {
 	mustNotExist(t, filepath.Join(root, ".github/instructions/go.instructions.md"))
 }
 
+func TestSyncCoreOnlyExcludesStackSkills(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	packs, err := catalog.Resolve([]string{"core"})
+	if err != nil {
+		t.Fatalf("Resolve returned error: %v", err)
+	}
+	for _, pack := range packs {
+		if pack.Tier != TierCore {
+			t.Fatalf("core-only resolve pulled non-core pack %q (tier %q)", pack.Name, pack.Tier)
+		}
+	}
+
+	root := t.TempDir()
+	if _, err := syncPacks(root, packs, syncOptions{}); err != nil {
+		t.Fatalf("syncPacks returned error: %v", err)
+	}
+
+	mustNotExist(t, filepath.Join(root, ".github/skills/premortem"))
+	mustNotExist(t, filepath.Join(root, ".github/skills/paper-review"))
+}
+
 func TestSyncPacksPreservesCustomizableFiles(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {

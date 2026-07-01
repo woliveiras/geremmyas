@@ -50,7 +50,9 @@ func Run(args []string, stdout, stderr io.Writer) int {
 	case "global":
 		runErr = runGlobal(args[1:], stdout, catalog)
 	case "lint":
-		runErr = runLint(stdout)
+		if runErr = catalog.ValidateTiers(); runErr == nil {
+			runErr = runLint(stdout)
+		}
 	case "doctor":
 		runErr = runDoctor(stdout, catalog)
 	default:
@@ -366,6 +368,9 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 
 func runDoctor(w io.Writer, catalog Catalog) error {
 	if err := catalog.ValidateSources(); err != nil {
+		return err
+	}
+	if err := catalog.ValidateTiers(); err != nil {
 		return err
 	}
 

@@ -2,6 +2,7 @@
   "packs": [
     {
       "name": "core",
+      "tier": "core",
       "description": "Project-level agent contract, Copilot instructions, hooks, and baseline tooling.",
       "files": [
         { "source": "project/AGENTS.md", "target": "AGENTS.md" },
@@ -12,6 +13,7 @@
     },
     {
       "name": "sdd",
+      "tier": "core",
       "description": "Spec-driven development workflow: specs, plans, tasks, tests, review, docs, and bugfix loops.",
       "depends": ["core"],
       "files": [
@@ -43,6 +45,7 @@
     },
     {
       "name": "blog",
+      "tier": "stack",
       "description": "Opinionated blog post review and rewriting workflow for technical authors.",
       "files": [
         { "source": "project/.github/skills/text-review", "target": ".github/skills/text-review" }
@@ -50,14 +53,17 @@
     },
     {
       "name": "research",
-      "description": "Scientific paper, literature review, peer review, and empirical case study workflows.",
+      "tier": "stack",
+      "description": "Scientific paper, literature review, peer review, empirical case study, and academic paper-review workflows.",
       "files": [
         { "source": "project/.github/skills/scientific-paper", "target": ".github/skills/scientific-paper" },
-        { "source": "project/.github/skills/scientific-case-study-research", "target": ".github/skills/scientific-case-study-research" }
+        { "source": "project/.github/skills/scientific-case-study-research", "target": ".github/skills/scientific-case-study-research" },
+        { "source": "project/.github/skills/paper-review", "target": ".github/skills/paper-review" }
       ]
     },
     {
       "name": "typescript-base",
+      "tier": "stack",
       "description": "TypeScript baseline instructions with strict compiler, type modeling, and security at boundaries.",
       "files": [
         { "source": "project/.github/instructions/typescript.instructions.md", "target": ".github/instructions/typescript.instructions.md" },
@@ -66,6 +72,7 @@
     },
     {
       "name": "typescript-ci",
+      "tier": "stack",
       "description": "TypeScript CI/CD pipeline setup skill (tsc, ESLint, Prettier, tests, audit).",
       "depends": ["typescript-base"],
       "files": [
@@ -74,6 +81,7 @@
     },
     {
       "name": "node-api",
+      "tier": "stack",
       "description": "Node.js API baseline with TypeScript and API security rules.",
       "depends": ["typescript-base"],
       "files": [
@@ -82,6 +90,7 @@
     },
     {
       "name": "nestjs",
+      "tier": "stack",
       "description": "NestJS API instructions.",
       "depends": ["node-api"],
       "files": [
@@ -90,6 +99,7 @@
     },
     {
       "name": "fastify",
+      "tier": "stack",
       "description": "Fastify API instructions.",
       "depends": ["node-api"],
       "files": [
@@ -98,6 +108,7 @@
     },
     {
       "name": "react-web",
+      "tier": "stack",
       "description": "React web instructions with browser security rules.",
       "depends": ["typescript-base"],
       "files": [
@@ -107,6 +118,7 @@
     },
     {
       "name": "react-router",
+      "tier": "stack",
       "description": "React Router instructions and migration skill.",
       "depends": ["react-web"],
       "files": [
@@ -116,6 +128,7 @@
     },
     {
       "name": "react-state",
+      "tier": "stack",
       "description": "Zustand and XState instructions and recipe skills.",
       "depends": ["react-web"],
       "files": [
@@ -127,6 +140,7 @@
     },
     {
       "name": "react-data",
+      "tier": "stack",
       "description": "TanStack Query and Zod instructions and recipe skills.",
       "depends": ["react-web"],
       "files": [
@@ -137,6 +151,7 @@
     },
     {
       "name": "tailwind",
+      "tier": "stack",
       "description": "Tailwind CSS instructions.",
       "depends": ["react-web"],
       "files": [
@@ -145,6 +160,7 @@
     },
     {
       "name": "astro",
+      "tier": "stack",
       "description": "Astro and MDX instructions.",
       "files": [
         { "source": "project/.github/instructions/astro-mdx.instructions.md", "target": ".github/instructions/astro-mdx.instructions.md" }
@@ -152,6 +168,7 @@
     },
     {
       "name": "python-base",
+      "tier": "stack",
       "description": "Python baseline instructions with code quality, async, and security rules.",
       "files": [
         { "source": "project/.github/instructions/python.instructions.md", "target": ".github/instructions/python.instructions.md" },
@@ -160,6 +177,7 @@
     },
     {
       "name": "python-ci",
+      "tier": "stack",
       "description": "Python CI pipeline setup skill with linting, type checking, testing, security scanning, and Trusted Publishing.",
       "depends": ["python-base", "infra-ci"],
       "files": [
@@ -168,6 +186,7 @@
     },
     {
       "name": "python-api",
+      "tier": "stack",
       "description": "FastAPI, Pydantic, and API security instructions.",
       "depends": ["python-base"],
       "files": [
@@ -178,6 +197,7 @@
     },
     {
       "name": "python-ai",
+      "tier": "stack",
       "description": "LangChain, LangGraph, and production LLM service instructions and workflow skills.",
       "depends": ["python-base"],
       "files": [
@@ -191,6 +211,7 @@
     },
     {
       "name": "rust-base",
+      "tier": "stack",
       "description": "Rust baseline instructions for idiomatic code, async/Tokio, and unsafe/FFI boundaries.",
       "files": [
         { "source": "project/.github/instructions/rust.instructions.md", "target": ".github/instructions/rust.instructions.md" },
@@ -200,6 +221,7 @@
     },
     {
       "name": "rust-ci",
+      "tier": "stack",
       "description": "Rust CI/CD pipeline setup skill with fmt, clippy, test, audit, Miri, and fuzzing.",
       "depends": ["rust-base"],
       "files": [
@@ -208,6 +230,7 @@
     },
     {
       "name": "rust-release",
+      "tier": "stack",
       "description": "Rust release engineering skill for crate publishing, binary distribution, and cross-compilation.",
       "depends": ["rust-base"],
       "files": [
@@ -216,6 +239,7 @@
     },
     {
       "name": "go-base",
+      "tier": "stack",
       "description": "Go baseline instructions with code quality, concurrency, and security rules.",
       "files": [
         { "source": "project/.github/instructions/go.instructions.md", "target": ".github/instructions/go.instructions.md" },
@@ -224,6 +248,7 @@
     },
     {
       "name": "go-api",
+      "tier": "stack",
       "description": "Go API instructions with Echo and API security rules.",
       "depends": ["go-base"],
       "files": [
@@ -233,6 +258,7 @@
     },
     {
       "name": "go-sqlite",
+      "tier": "stack",
       "description": "Go SQLite instructions for database/sql and modernc.org/sqlite.",
       "depends": ["go-base", "data-sqlite"],
       "files": [
@@ -241,6 +267,7 @@
     },
     {
       "name": "go-devtools",
+      "tier": "stack",
       "description": "Go embed.FS and Air hot reload instructions.",
       "depends": ["go-base"],
       "files": [
@@ -250,6 +277,7 @@
     },
     {
       "name": "go-ci",
+      "tier": "stack",
       "description": "Go CI pipeline setup skill with formatting, vetting, testing, vulnerability scanning, and container builds.",
       "depends": ["go-base", "infra-ci"],
       "files": [
@@ -258,6 +286,7 @@
     },
     {
       "name": "infra-docker",
+      "tier": "stack",
       "description": "Docker and Docker Compose instructions.",
       "files": [
         { "source": "project/.github/instructions/docker.instructions.md", "target": ".github/instructions/docker.instructions.md" },
@@ -266,6 +295,7 @@
     },
     {
       "name": "infra-ci",
+      "tier": "stack",
       "description": "GitHub Actions instructions and CI workflow skill.",
       "files": [
         { "source": "project/.github/instructions/github-actions.instructions.md", "target": ".github/instructions/github-actions.instructions.md" },
@@ -274,6 +304,7 @@
     },
     {
       "name": "infra-gcp",
+      "tier": "stack",
       "description": "Google Cloud CLI instructions and operation skill.",
       "files": [
         { "source": "project/.github/instructions/gcp.instructions.md", "target": ".github/instructions/gcp.instructions.md" },
@@ -282,6 +313,7 @@
     },
     {
       "name": "infra-terraform",
+      "tier": "stack",
       "description": "Terraform instructions and change workflow skill.",
       "files": [
         { "source": "project/.github/instructions/terraform.instructions.md", "target": ".github/instructions/terraform.instructions.md" },
@@ -290,6 +322,7 @@
     },
     {
       "name": "data-postgres",
+      "tier": "stack",
       "description": "PostgreSQL instructions and query review skill.",
       "files": [
         { "source": "project/.github/instructions/postgres.instructions.md", "target": ".github/instructions/postgres.instructions.md" },
@@ -298,6 +331,7 @@
     },
     {
       "name": "data-sqlite",
+      "tier": "stack",
       "description": "Generic SQLite schema, transaction, migration, and query instructions.",
       "files": [
         { "source": "project/.github/instructions/sqlite.instructions.md", "target": ".github/instructions/sqlite.instructions.md" }
@@ -305,6 +339,7 @@
     },
     {
       "name": "node-sqlite",
+      "tier": "stack",
       "description": "Node.js SQLite instructions.",
       "depends": ["node-api", "data-sqlite"],
       "files": [
@@ -313,6 +348,7 @@
     },
     {
       "name": "python-sqlite",
+      "tier": "stack",
       "description": "Python SQLite instructions.",
       "depends": ["python-base", "data-sqlite"],
       "files": [
@@ -321,6 +357,7 @@
     },
     {
       "name": "data-chromadb",
+      "tier": "stack",
       "description": "ChromaDB and RAG workflow instructions and skill.",
       "files": [
         { "source": "project/.github/instructions/chromadb.instructions.md", "target": ".github/instructions/chromadb.instructions.md" },
@@ -329,6 +366,7 @@
     },
     {
       "name": "supabase",
+      "tier": "stack",
       "description": "Supabase instructions and workflow skill, including PostgreSQL dependency.",
       "depends": ["data-postgres"],
       "files": [
@@ -338,6 +376,7 @@
     },
     {
       "name": "android",
+      "tier": "stack",
       "description": "Android Kotlin with architecture, security, Room, and static analysis instructions.",
       "files": [
         { "source": "project/.github/instructions/kotlin.instructions.md", "target": ".github/instructions/kotlin.instructions.md" },
@@ -347,6 +386,7 @@
     },
     {
       "name": "android-ci",
+      "tier": "stack",
       "description": "Android CI/CD pipeline setup skill (lint, detekt, ktlint, tests, R8, Fastlane).",
       "depends": ["android"],
       "files": [
@@ -355,6 +395,7 @@
     },
     {
       "name": "premortem",
+      "tier": "stack",
       "description": "Premortem skill for stress-testing plans, decisions, and launches before committing.",
       "files": [
         { "source": "project/.github/skills/premortem", "target": ".github/skills/premortem" }

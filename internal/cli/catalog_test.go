@@ -62,6 +62,83 @@ func TestDoctorRejectsMissingCatalogSource(t *testing.T) {
 	}
 }
 
+func TestCatalogTiersValid(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	if err := catalog.ValidateTiers(); err != nil {
+		t.Fatalf("ValidateTiers returned error: %v", err)
+	}
+
+	tiers := map[string]string{}
+	for _, pack := range catalog.Packs {
+		tiers[pack.Name] = pack.Tier
+	}
+	for _, name := range []string{"core", "sdd"} {
+		if tiers[name] != TierCore {
+			t.Fatalf("pack %q tier = %q, want %q", name, tiers[name], TierCore)
+		}
+	}
+	for name, tier := range tiers {
+		if name == "core" || name == "sdd" {
+			continue
+		}
+		if tier != TierStack {
+			t.Fatalf("pack %q tier = %q, want %q", name, tier, TierStack)
+		}
+	}
+}
+
+func TestValidateTiersRejectsMissingTier(t *testing.T) {
+	badCatalog := Catalog{Packs: []Pack{{Name: "broken"}}}
+	err := badCatalog.ValidateTiers()
+	if err == nil {
+		t.Fatal("ValidateTiers succeeded, want missing tier error")
+	}
+	if !strings.Contains(err.Error(), "broken") {
+		t.Fatalf("error %q does not name the offending pack", err)
+	}
+}
+
+func TestValidateTiersRejectsInvalidTier(t *testing.T) {
+	badCatalog := Catalog{Packs: []Pack{{Name: "broken", Tier: "personal"}}}
+	err := badCatalog.ValidateTiers()
+	if err == nil {
+		t.Fatal("ValidateTiers succeeded, want invalid tier error")
+	}
+	if !strings.Contains(err.Error(), "personal") {
+		t.Fatalf("error %q does not name the invalid tier", err)
+	}
+}
+
+func TestResearchPackIncludesPaperReview(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	var research *Pack
+	for i := range catalog.Packs {
+		if catalog.Packs[i].Name == "research" {
+			research = &catalog.Packs[i]
+			break
+		}
+	}
+	if research == nil {
+		t.Fatal("research pack not found in catalog")
+	}
+	found := false
+	for _, file := range research.Files {
+		if file.Source == "project/.github/skills/paper-review" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Fatal("research pack does not include paper-review skill")
+	}
+}
+
 func TestDoctorWithoutConfigReportsInitHint(t *testing.T) {
 	withTempCwd(t)
 	catalog, err := loadCatalog()

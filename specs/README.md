@@ -23,3 +23,10 @@ PRD: [docs/prds/2026-06-22-multi-assistant-framework.md](../docs/prds/2026-06-22
 | [0001](0001-codex-target/spec.md) | Codex generation target | 1 | Completed | PRD multi-assistant |
 | [0002](0002-skill-validator/spec.md) | Skill description validator (`geremmyas lint`) | 1 | Approved | PRD multi-assistant |
 | [0003](0003-version-command/spec.md) | Geremmyas version command | 1 | Implemented | Direct user request |
+| [0004](0004-skill-catalog-tiering/spec.md) | Skill catalog tiering | 2 | Implemented | Direct user request (catalog review) |
+
+## Decisions
+
+| ADR | Title | Status |
+| --- | --- | --- |
+| [0001](../docs/decisions/0001-tier-skill-catalog.md) | Tier the skill catalog into core, stack, and personal scopes | Implemented |

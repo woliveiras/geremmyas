@@ -41,6 +41,7 @@ Follow naming:
 ```json
 {
   "name": "my-pack",
+  "tier": "stack",
   "description": "One line shown in geremmyas list.",
   "depends": ["typescript-base"],
   "files": [
@@ -54,6 +55,10 @@ Follow naming:
 
 Rules:
 
+- `tier` is required and must be `core` or `stack`. `core` is reserved for the
+  always-on SDD pipeline and guardrails (the `core` and `sdd` packs). Every other
+  pack is `stack` (opt-in per project). `geremmyas lint` and `geremmyas doctor`
+  fail when a pack is missing a tier or uses an invalid value.
 - `source` paths are relative to the repo root and must match embed paths.
 - `target` paths are relative to the consumer repo root.
 - Use `depends` when the pack needs another pack’s files (instructions, base rules).

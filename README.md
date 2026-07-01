@@ -167,6 +167,16 @@ geremmyas add blog research
 geremmyas sync
 ```
 
+### Caveman (recommended)
+
+I strongly recommend installing *JuliusBrussee/caveman*.
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
+```
+
+See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for details.
+
 ### CLI reference
 
 | Command | Purpose |
