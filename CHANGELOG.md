@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.4.0](https://github.com/woliveiras/geremmyas/compare/v3.3.0...v3.4.0) (2026-07-01)
+
+
+### Features
+
+* implement tiering for skill catalog ([f6e7679](https://github.com/woliveiras/geremmyas/commit/f6e7679e4d17fc85fcdb56abe16ba3575beeb0b4))
+* **instructions:** add descriptions for Astro and React conventions ([b55beec](https://github.com/woliveiras/geremmyas/commit/b55beec5d104b3ca01cf483269ce6135dd2b18a8))
+
+
+### Refactoring
+
+* **cli:** simplify function signatures and remove unused functions ([0fb8433](https://github.com/woliveiras/geremmyas/commit/0fb84332627fbbff78b8582faf6682bbf459a4b1))
+* remove 'brag-me' pack and associated assets from the project ([1fddd2b](https://github.com/woliveiras/geremmyas/commit/1fddd2bb4f6ee090d8d769a8f6eabd62a5604d6e))
+
 ## [3.3.0](https://github.com/woliveiras/geremmyas/compare/v3.2.0...v3.3.0) (2026-06-24)
 
 
