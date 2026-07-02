@@ -24,6 +24,7 @@ PRD: [docs/prds/2026-06-22-multi-assistant-framework.md](../docs/prds/2026-06-22
 | [0002](0002-skill-validator/spec.md) | Skill description validator (`geremmyas lint`) | 1 | Approved | PRD multi-assistant |
 | [0003](0003-version-command/spec.md) | Geremmyas version command | 1 | Implemented | Direct user request |
 | [0004](0004-skill-catalog-tiering/spec.md) | Skill catalog tiering | 2 | Implemented | Direct user request (catalog review) |
+| [0005](0005-codex-instructions/spec.md) | Codex global instruction distribution | 3 | Approved | Direct user request (Codex not loading instructions) |
 
 ## Decisions
 
