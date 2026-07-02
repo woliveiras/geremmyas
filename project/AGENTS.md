@@ -6,10 +6,11 @@ Follow it before using generic global defaults.
 ## Instruction Order
 
 1. Treat the nearest project-local `AGENTS.md` as the active operating contract.
-2. Use `.github/copilot-instructions.md` as supporting context when you need
-   project overview, commands, or repository conventions.
-3. Load `.github/instructions/*.instructions.md` only when their `applyTo`
-   patterns match the files being edited.
+2. Use the project overview instructions document provided by the active
+  assistant target when you need project overview, commands, or repository
+  conventions.
+3. Load the technology instruction that matches the files being edited, using
+  the instruction index provided by your assistant target.
 4. Use `.github/skills/*/SKILL.md` for explicit workflows.
 5. Use `.github/agents/*.agent.md` only when a named role is useful.
 
@@ -163,10 +164,10 @@ Use these skills instead of reimplementing their procedures inline:
 Do not create GitHub Issues, labels, or issue state workflows unless the user
 explicitly asks.
 
-Use matching `.github/instructions/*.instructions.md` for edits in a single
-technology, and any workflow skills installed from geremmyas packs (for example
-Terraform, GCP, CI, LLM, Supabase, Postgres, ChromaDB) when the task crosses
-files, needs sequencing, or has approval or verification gates.
+Use the matching technology instruction for edits in a single technology, and
+any workflow skills installed from geremmyas packs (for example Terraform, GCP,
+CI, LLM, Supabase, Postgres, ChromaDB) when the task crosses files, needs
+sequencing, or has approval or verification gates.
 
 ## Guardrails Framework
 

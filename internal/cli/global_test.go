@@ -280,6 +280,12 @@ func TestRunGlobalCodexIndexesInstructions(t *testing.T) {
 	if strings.Contains(content, "~/.copilot/instructions") {
 		t.Fatalf("Codex AGENTS.md must not reference ~/.copilot/instructions:\n%s", content)
 	}
+	if strings.Contains(content, ".github/copilot-instructions.md") {
+		t.Fatalf("Codex AGENTS.md must not instruct using Copilot project instruction files:\n%s", content)
+	}
+	if strings.Contains(content, ".github/instructions/*.instructions.md") {
+		t.Fatalf("Codex AGENTS.md must not require applyTo instruction globs directly:\n%s", content)
+	}
 }
 
 func TestRunGlobalCodexMirrorsInstructionFiles(t *testing.T) {
