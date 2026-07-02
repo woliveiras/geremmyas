@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.5.0](https://github.com/woliveiras/geremmyas/compare/v3.4.0...v3.5.0) (2026-07-02)
+
+
+### Features
+
+* add spec, plan, and tasks for Codex global instruction distribution ([aa26837](https://github.com/woliveiras/geremmyas/commit/aa26837e6e60e695b9a429010342b080a7c1d521))
+* implement Codex global instruction distribution and update paths ([6e910d4](https://github.com/woliveiras/geremmyas/commit/6e910d45136d38971791be58d77e51994004378f))
+
+
+### Bug Fixes
+
+* correct Codex documentation to avoid referencing Copilot instruction files ([564b350](https://github.com/woliveiras/geremmyas/commit/564b35074e923400dd216e571155acd28cd490fe))
+
 ## [3.4.0](https://github.com/woliveiras/geremmyas/compare/v3.3.0...v3.4.0) (2026-07-01)
 
 
