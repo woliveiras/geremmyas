@@ -67,7 +67,7 @@ targets:
 
 - Default packs for non-interactive `init`: `core`, `sdd`.
 - Default targets when omitted: `copilot` only (backward compatible).
-- Valid targets: `copilot`, `cursor`, `claude-code`, `opencode`.
+- Valid targets: `copilot`, `cursor`, `claude-code`, `opencode`, `codex`.
 - `add` / `remove` only edit packs; they do **not** sync files.
 - `sync` and `project` read the config, resolve dependencies, then run pack sync
   and IDE generators.
@@ -83,9 +83,30 @@ select which IDE-specific outputs `sync` / `project` generate:
 | `cursor` | `.cursor/rules/*.mdc`, `.cursor/hooks.json` | Instructions, skills, agents, hooks |
 | `claude-code` | `CLAUDE.md` | `AGENTS.md` + skill/agent index |
 | `opencode` | `.opencode/AGENTS.md` | Same as Claude Code |
+| `codex` | `.codex/AGENTS.md` | `AGENTS.md` + skill/agent index + instruction index |
 
 `AGENTS.md` is portable — Cursor, Claude Code, and OpenCode all read it. Targets
 add IDE-native formats on top.
+
+### Global install paths and Codex instructions
+
+`geremmyas global` installs into user-level directories. Codex reads its global
+contract from `$CODEX_HOME/AGENTS.md` (default `~/.codex/AGENTS.md`), not the XDG
+`~/.config/codex/` path.
+
+| Content | Destination |
+| --- | --- |
+| Skills | `~/.agents/skills/` |
+| Instructions (Copilot) | `~/.copilot/instructions/` (always copied) |
+| Codex `AGENTS.md` | `~/.codex/AGENTS.md` |
+| Codex instructions | `~/.codex/instructions/` (when `codex` target selected) |
+
+Codex has no `applyTo` auto-loading, so the generated `~/.codex/AGENTS.md`
+indexes each instruction by its `applyTo` glob and points to the Codex-owned
+`~/.codex/instructions/<file>` copy for on-demand reads. The Copilot-only
+`~/.copilot/instructions/` path is never referenced from Codex documents.
+Earlier versions wrote `~/.config/codex/AGENTS.md`; remove that stale file once
+after upgrading.
 
 Generated files include a `geremmyas:generated` marker. Re-sync updates them;
 custom edits are preserved unless you pass `--force`.

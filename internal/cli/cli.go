@@ -509,7 +509,8 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 		fmt.Fprintf(w, "  claude-code  → %s/.claude/CLAUDE.md\n", home)
 	}
 	if hasTarget(targets, TargetCodex) {
-		fmt.Fprintf(w, "  codex        → %s/.config/codex/AGENTS.md\n", home)
+		fmt.Fprintf(w, "  codex        → %s/.codex/AGENTS.md\n", home)
+		fmt.Fprintf(w, "  codex instr. → %s/.codex/instructions/\n", home)
 	}
 	if hasTarget(targets, TargetOpenCode) {
 		fmt.Fprintf(w, "  opencode     → %s/.config/opencode/AGENTS.md\n", home)

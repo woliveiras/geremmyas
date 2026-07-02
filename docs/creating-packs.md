@@ -122,7 +122,11 @@ Skills that are optional or personal should get their own pack (like `blog` or
 4. Keep instructions short; move long examples to skill `assets/` or `references/`.
 
 Instructions under `.github/instructions/` can also be installed globally via
-`geremmyas global <pack>`.
+`geremmyas global <pack>`. They are always copied to `~/.copilot/instructions/`.
+With the `codex` target they are also mirrored to `~/.codex/instructions/` and
+indexed in `~/.codex/AGENTS.md` by their `applyTo` glob, since Codex has no
+`applyTo` auto-loading. Always set a meaningful `applyTo` so the Codex index can
+tell the model when to read the file.
 
 ## Orphan skills
 

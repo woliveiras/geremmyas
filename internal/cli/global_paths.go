@@ -34,7 +34,7 @@ func globalInstallPaths() (globalPaths, error) {
 		cursorHooksJSON: filepath.Join(home, ".cursor", "hooks.json"),
 		claudeMD:        filepath.Join(home, ".claude", "CLAUDE.md"),
 		opencodeAgents:  filepath.Join(home, ".config", "opencode", "AGENTS.md"),
-		codexAgents:     filepath.Join(home, ".config", "codex", "AGENTS.md"),
+		codexAgents:     filepath.Join(home, ".codex", "AGENTS.md"),
 	}, nil
 }
 

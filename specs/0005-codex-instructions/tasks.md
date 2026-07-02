@@ -4,7 +4,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
 
 ## Tasks
 
-- [ ] **Fix Codex global AGENTS.md path** (test-type: unit)
+- [x] **Fix Codex global AGENTS.md path** (test-type: unit)
   - blocked-by: none
   - summary: Write the global Codex `AGENTS.md` to `$HOME/.codex/AGENTS.md`
     instead of `$HOME/.config/codex/AGENTS.md`.
@@ -14,7 +14,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     `.codex/AGENTS.md`; `global_paths.codexAgents` uses `.codex`.
   - verification: `go test ./internal/cli`
 
-- [ ] **Instructions index in Codex doc** (test-type: unit)
+- [x] **Instructions index in Codex doc** (test-type: unit)
   - blocked-by: Fix Codex global AGENTS.md path
   - summary: Render an Instructions section in the generated Codex `AGENTS.md`
     listing each pack instruction with its `applyTo` glob and a scope-correct
@@ -26,7 +26,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     and contains no `~/.copilot` string.
   - verification: `go test ./internal/cli`
 
-- [ ] **Mirror instructions into Codex home** (test-type: integration)
+- [x] **Mirror instructions into Codex home** (test-type: integration)
   - blocked-by: Instructions index in Codex doc
   - summary: For the global `codex` target, copy every pack instruction file to
     `$HOME/.codex/instructions/`.
@@ -36,7 +36,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     instruction exists under `.codex/instructions/`.
   - verification: `go test ./internal/cli`
 
-- [ ] **Copy instructions unconditionally** (test-type: unit)
+- [x] **Copy instructions unconditionally** (test-type: unit)
   - blocked-by: Fix Codex global AGENTS.md path
   - summary: `globalCopyFlags` sets `instructions = true` regardless of target
     so `~/.copilot/instructions/` is always populated.
@@ -47,7 +47,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     populated.
   - verification: `go test ./internal/cli`
 
-- [ ] **Edge cases** (test-type: unit)
+- [x] **Edge cases** (test-type: unit)
   - blocked-by: Instructions index in Codex doc
   - summary: Handle an instruction without `applyTo` (unscoped label) and a pack
     with no instructions (omit the section).
@@ -57,7 +57,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     no-instructions cases.
   - verification: `go test ./internal/cli`
 
-- [ ] **Documentation** (test-type: unit)
+- [x] **Documentation** (test-type: unit)
   - blocked-by: Mirror instructions into Codex home
   - summary: Document Codex instruction delivery and the corrected path in
     `docs/architecture.md`, `docs/creating-packs.md`, and `README.md`; note the

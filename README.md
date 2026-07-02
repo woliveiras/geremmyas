@@ -200,11 +200,14 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 `mise.toml`, `.github/copilot-instructions.md`, `.github/hooks/guardrails-rules.txt`.
 
 **Generated IDE files** (marker `geremmyas:generated`): `.cursor/rules/*.mdc`,
-`.cursor/hooks.json`, `CLAUDE.md`, `.opencode/AGENTS.md`. Re-sync updates them;
-custom edits preserved unless `--force`.
+`.cursor/hooks.json`, `CLAUDE.md`, `.opencode/AGENTS.md`, `.codex/AGENTS.md`. Re-sync
+updates them; custom edits preserved unless `--force`.
 
-**Global install** copies only `.github/skills/` and `.github/instructions/`; not
-agents, hooks, `AGENTS.md`, or `mise.toml`.
+**Global install** copies `.github/skills/` to `~/.agents/skills/` and
+`.github/instructions/` to `~/.copilot/instructions/` (always). With the `codex`
+target it also writes `~/.codex/AGENTS.md` and mirrors instructions to
+`~/.codex/instructions/`. It does not copy agents, hooks, `AGENTS.md`, or
+`mise.toml`.
 
 Use `geremmyas add <pack>` then `geremmyas sync`, or use `project` to do both.
 
@@ -236,6 +239,7 @@ Install packs to user-level directories so they apply across all projects:
 geremmyas global sdd python-ai infra-terraform blog research
 geremmyas global --targets copilot,cursor core sdd
 geremmyas global --targets claude-code,opencode sdd
+geremmyas global --targets codex sdd python-ai
 ```
 
 Or use interactive selection:
@@ -252,6 +256,13 @@ Default target is `copilot` (skills + instructions). With `--targets`:
 | `cursor` | above skills + `~/.cursor/rules/`, `~/.cursor/hooks.json` |
 | `claude-code` | `~/.claude/CLAUDE.md` |
 | `opencode` | `~/.config/opencode/AGENTS.md` |
+| `codex` | `~/.codex/AGENTS.md` + `~/.codex/instructions/` (instruction index) |
+
+Instructions are copied to `~/.copilot/instructions/` on every global run,
+regardless of target. Codex reads `~/.codex/AGENTS.md` (its `CODEX_HOME`), which
+indexes each instruction by `applyTo` and points to `~/.codex/instructions/`.
+Earlier versions wrote `~/.config/codex/AGENTS.md`; delete that stale file once
+after upgrading.
 
 Generated global files preserve user edits unless you pass `--force`.
 

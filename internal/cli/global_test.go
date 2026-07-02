@@ -74,7 +74,7 @@ func TestRunGlobalGeneratedAgentTargetsCopySkills(t *testing.T) {
 func TestRunGlobalGeneratedDocsOnlyReferenceInstalledSkills(t *testing.T) {
 	targetPaths := map[string]string{
 		TargetClaudeCode: filepath.Join(".claude", "CLAUDE.md"),
-		TargetCodex:      filepath.Join(".config", "codex", "AGENTS.md"),
+		TargetCodex:      filepath.Join(".codex", "AGENTS.md"),
 		TargetOpenCode:   filepath.Join(".config", "opencode", "AGENTS.md"),
 	}
 
@@ -129,7 +129,7 @@ func TestRunGlobalEveryPackIndividually(t *testing.T) {
 			if code := Run([]string{"global", "--targets", "codex", pack.Name}, &out, &out); code != 0 {
 				t.Fatalf("global %q exit code = %d, output: %s", pack.Name, code, out.String())
 			}
-			mustExist(t, filepath.Join(home, ".config", "codex", "AGENTS.md"))
+			mustExist(t, filepath.Join(home, ".codex", "AGENTS.md"))
 		})
 	}
 }
@@ -143,7 +143,7 @@ func TestRunGlobalUnknownPackWritesNothing(t *testing.T) {
 		t.Fatalf("global missing-pack exit code = 0, output: %s", out.String())
 	}
 
-	mustNotExist(t, filepath.Join(home, ".config", "codex", "AGENTS.md"))
+	mustNotExist(t, filepath.Join(home, ".codex", "AGENTS.md"))
 	mustNotExist(t, filepath.Join(home, ".agents", "skills"))
 }
 
@@ -157,9 +157,7 @@ func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	}
 
 	mustExist(t, filepath.Join(home, ".agents", "skills"))
-	if _, err := os.Stat(filepath.Join(home, ".copilot", "instructions")); err == nil {
-		t.Fatal("cursor-only global should not install ~/.copilot/instructions")
-	}
+	mustExist(t, filepath.Join(home, ".copilot", "instructions"))
 	mustExist(t, filepath.Join(home, ".cursor", "rules"))
 }
 
@@ -172,11 +170,11 @@ func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
-	codexPath := filepath.Join(home, ".config", "codex", "AGENTS.md")
+	codexPath := filepath.Join(home, ".codex", "AGENTS.md")
 	mustExist(t, codexPath)
 	data, err := os.ReadFile(codexPath)
 	if err != nil {
-		t.Fatalf("ReadFile .config/codex/AGENTS.md: %v", err)
+		t.Fatalf("ReadFile .codex/AGENTS.md: %v", err)
 	}
 	content := string(data)
 	if !strings.Contains(content, generatedMarker) {
@@ -195,10 +193,10 @@ func TestGlobalCopyFlagsTargetMatrix(t *testing.T) {
 		wantInstructions bool
 	}{
 		{name: "copilot", targets: []string{TargetCopilot}, wantSkills: true, wantInstructions: true},
-		{name: "cursor", targets: []string{TargetCursor}, wantSkills: true, wantInstructions: false},
-		{name: "claude-code", targets: []string{TargetClaudeCode}, wantSkills: true, wantInstructions: false},
-		{name: "codex", targets: []string{TargetCodex}, wantSkills: true, wantInstructions: false},
-		{name: "opencode", targets: []string{TargetOpenCode}, wantSkills: true, wantInstructions: false},
+		{name: "cursor", targets: []string{TargetCursor}, wantSkills: true, wantInstructions: true},
+		{name: "claude-code", targets: []string{TargetClaudeCode}, wantSkills: true, wantInstructions: true},
+		{name: "codex", targets: []string{TargetCodex}, wantSkills: true, wantInstructions: true},
+		{name: "opencode", targets: []string{TargetOpenCode}, wantSkills: true, wantInstructions: true},
 		{name: "copilot and codex", targets: []string{TargetCopilot, TargetCodex}, wantSkills: true, wantInstructions: true},
 	}
 
@@ -256,5 +254,81 @@ func TestRunGlobalSDDInstallsGuardrailSkills(t *testing.T) {
 		t.Run(skill, func(t *testing.T) {
 			mustExist(t, filepath.Join(home, ".agents", "skills", skill, "SKILL.md"))
 		})
+	}
+}
+
+func TestRunGlobalCodexIndexesInstructions(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "python-api"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(filepath.Join(home, ".codex", "AGENTS.md"))
+	if err != nil {
+		t.Fatalf("ReadFile .codex/AGENTS.md: %v", err)
+	}
+	content := string(data)
+	if !strings.Contains(content, "## Instructions (on demand)") {
+		t.Fatalf("Codex AGENTS.md missing Instructions section:\n%s", content)
+	}
+	if !strings.Contains(content, "~/.codex/instructions/fastapi.instructions.md") {
+		t.Fatalf("Codex AGENTS.md should point to ~/.codex/instructions/fastapi.instructions.md:\n%s", content)
+	}
+	if strings.Contains(content, "~/.copilot/instructions") {
+		t.Fatalf("Codex AGENTS.md must not reference ~/.copilot/instructions:\n%s", content)
+	}
+}
+
+func TestRunGlobalCodexMirrorsInstructionFiles(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "python-api"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	for _, file := range []string{
+		"fastapi.instructions.md",
+		"pydantic.instructions.md",
+		"python.instructions.md",
+	} {
+		mustExist(t, filepath.Join(home, ".codex", "instructions", file))
+	}
+	// Instructions are also copied to the Copilot location unconditionally.
+	mustExist(t, filepath.Join(home, ".copilot", "instructions", "fastapi.instructions.md"))
+}
+
+func TestRunGlobalCodexOmitsInstructionsWhenNone(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "premortem"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	data, err := os.ReadFile(filepath.Join(home, ".codex", "AGENTS.md"))
+	if err != nil {
+		t.Fatalf("ReadFile .codex/AGENTS.md: %v", err)
+	}
+	if strings.Contains(string(data), "## Instructions (on demand)") {
+		t.Fatalf("Codex AGENTS.md should omit Instructions section for a pack with no instructions")
+	}
+	mustNotExist(t, filepath.Join(home, ".codex", "instructions"))
+}
+
+func TestInstructionApplyToLabel(t *testing.T) {
+	if got := instructionApplyToLabel(""); got != "all files" {
+		t.Fatalf("instructionApplyToLabel(\"\") = %q, want %q", got, "all files")
+	}
+	if got := instructionApplyToLabel("  "); got != "all files" {
+		t.Fatalf("instructionApplyToLabel(whitespace) = %q, want %q", got, "all files")
+	}
+	if got := instructionApplyToLabel("**/*.py"); got != "**/*.py" {
+		t.Fatalf("instructionApplyToLabel(glob) = %q, want %q", got, "**/*.py")
 	}
 }

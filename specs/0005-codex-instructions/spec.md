@@ -3,7 +3,7 @@ spec: "0005"
 title: Codex global instruction distribution
 family: multi-assistant
 phase: 3
-status: Approved
+status: Implemented
 owner: ""
 depends_on: ["0001"]
 origin: Direct user request (Codex not loading instructions)

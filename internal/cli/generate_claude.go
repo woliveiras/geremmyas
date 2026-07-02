@@ -45,13 +45,40 @@ func generateCodexAt(scope installScope, root string, artifacts packArtifacts, o
 	}
 	summary := generatorSummary{}
 	relPath := ".codex/AGENTS.md"
-	if scope == scopeGlobal {
-		relPath = ".config/codex/AGENTS.md"
-	}
 	if err := writeGeneratedFile(root, relPath, []byte(content), opts, &summary); err != nil {
 		return summary, err
 	}
+	if scope == scopeGlobal {
+		if err := mirrorCodexInstructions(root, artifacts); err != nil {
+			return summary, err
+		}
+	}
 	return summary, nil
+}
+
+// mirrorCodexInstructions copies each pack instruction file into the Codex-owned
+// ~/.codex/instructions/ directory so Codex can read them on demand. Codex has
+// no applyTo instruction folder of its own, so the generated AGENTS.md indexes
+// these files by their applyTo glob.
+func mirrorCodexInstructions(root string, artifacts packArtifacts) error {
+	if len(artifacts.instructions) == 0 {
+		return nil
+	}
+	dir := filepath.Join(root, ".codex", "instructions")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
+	}
+	for _, source := range artifacts.instructions {
+		content, err := readEmbeddedSource(source)
+		if err != nil {
+			return err
+		}
+		dest := filepath.Join(dir, filepath.Base(source))
+		if err := os.WriteFile(dest, []byte(content), 0o644); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts, target, title string) (string, error) {
@@ -80,6 +107,27 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 	b.WriteString("---\n\n")
 	b.WriteString(strings.TrimSpace(agentsBody))
 	b.WriteString("\n\n")
+
+	if base, ok := instructionPointerBase(scope, target); ok && len(artifacts.instructions) > 0 {
+		b.WriteString("## Instructions (on demand)\n\n")
+		b.WriteString("This assistant has no `applyTo` auto-loading. Read the matching file when you edit paths that match its glob:\n\n")
+		for _, source := range artifacts.instructions {
+			content, err := readEmbeddedSource(source)
+			if err != nil {
+				continue
+			}
+			fm, _, _ := parseMarkdownFrontmatter(content)
+			file := filepath.Base(source)
+			b.WriteString("- `")
+			b.WriteString(instructionApplyToLabel(fm.get("applyTo")))
+			b.WriteString("` → `")
+			b.WriteString(base)
+			b.WriteString("/")
+			b.WriteString(file)
+			b.WriteString("`\n")
+		}
+		b.WriteByte('\n')
+	}
 
 	if len(artifacts.skills) > 0 {
 		b.WriteString("## Skills (on demand)\n\n")
@@ -170,4 +218,30 @@ func readProjectFile(root, relTarget, embedFallback string) (string, error) {
 		return string(data), nil
 	}
 	return readEmbeddedSource(embedFallback)
+}
+
+// instructionPointerBase returns the base path the generated AGENTS.md should
+// point to for on-demand instruction reads, and whether an Instructions section
+// should be rendered at all. Project scope always points to the synced
+// .github/instructions/ directory. Global scope only renders for Codex, which
+// mirrors instructions into ~/.codex/instructions/; other global IDE targets
+// have no mirror and are skipped.
+func instructionPointerBase(scope installScope, target string) (string, bool) {
+	if scope == scopeProject {
+		return ".github/instructions", true
+	}
+	if target == "codex" {
+		return "~/.codex/instructions", true
+	}
+	return "", false
+}
+
+// instructionApplyToLabel returns a human label for an instruction's applyTo
+// glob, falling back to "all files" when the frontmatter omits it.
+func instructionApplyToLabel(applyTo string) string {
+	applyTo = strings.TrimSpace(applyTo)
+	if applyTo == "" {
+		return "all files"
+	}
+	return applyTo
 }
