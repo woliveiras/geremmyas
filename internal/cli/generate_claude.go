@@ -39,7 +39,7 @@ func generateOpenCodeAt(scope installScope, root string, artifacts packArtifacts
 }
 
 func generateCodexAt(scope installScope, root string, artifacts packArtifacts, opts generatorOptions) (generatorSummary, error) {
-	content, err := buildIDEAgentsDoc(scope, root, artifacts, "codex", "Codex AGENTS.md")
+	content, err := buildCodexAgentsDoc(scope, artifacts)
 	if err != nil {
 		return generatorSummary{}, err
 	}
@@ -54,6 +54,45 @@ func generateCodexAt(scope installScope, root string, artifacts packArtifacts, o
 		}
 	}
 	return summary, nil
+}
+
+func buildCodexAgentsDoc(scope installScope, artifacts packArtifacts) (string, error) {
+	var b strings.Builder
+	b.WriteString("<!-- ")
+	b.WriteString(generatedMarker)
+	b.WriteString(":codex -->\n\n# Codex AGENTS.md\n\n")
+	if scope == scopeGlobal {
+		b.WriteString("Follow the nearest project-local `AGENTS.md`; it overrides this global bootstrap.\n")
+		b.WriteString("Codex discovers installed skills natively, so they are not duplicated here.\n\n")
+	} else {
+		b.WriteString("Follow `AGENTS.md` at the workspace root. This file only indexes Codex-specific on-demand resources.\n\n")
+	}
+
+	base, ok := instructionPointerBase(scope, TargetCodex)
+	if !ok || len(artifacts.instructions) == 0 {
+		return b.String(), nil
+	}
+	b.WriteString("## Instructions (on demand)\n\n")
+	b.WriteString("Read the matching file only when edited paths match its glob:\n\n")
+	for _, source := range artifacts.instructions {
+		content, err := readEmbeddedSource(source)
+		if err != nil {
+			return "", err
+		}
+		fm, _, err := parseMarkdownFrontmatter(content)
+		if err != nil {
+			return "", err
+		}
+		b.WriteString("- `")
+		b.WriteString(instructionApplyToLabel(fm.get("applyTo")))
+		b.WriteString("` -> `")
+		b.WriteString(base)
+		b.WriteString("/")
+		b.WriteString(filepath.Base(source))
+		b.WriteString("`\n")
+	}
+	b.WriteByte('\n')
+	return b.String(), nil
 }
 
 // mirrorCodexInstructions copies each pack instruction file into the Codex-owned

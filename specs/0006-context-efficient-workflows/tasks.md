@@ -28,7 +28,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: README global usage and architecture state/reconciliation sections.
   - commit: `feat: reconcile managed global installs`
 
-- [ ] **Generate compact Codex context** (test-type: both)
+- [x] **Generate compact Codex context** (test-type: both)
   - blocked-by: Reconcile managed global state
   - summary: Use a Codex-specific document builder that omits the embedded
     project contract, native skills index, and unusable agent-role advertising.

@@ -83,7 +83,7 @@ select which IDE-specific outputs `sync` / `project` generate:
 | `cursor` | `.cursor/rules/*.mdc`, `.cursor/hooks.json` | Instructions, skills, agents, hooks |
 | `claude-code` | `CLAUDE.md` | `AGENTS.md` + skill/agent index |
 | `opencode` | `.opencode/AGENTS.md` | Same as Claude Code |
-| `codex` | `.codex/AGENTS.md` | `AGENTS.md` + skill/agent index + instruction index |
+| `codex` | `.codex/AGENTS.md` | Compact bootstrap + instruction index; Codex loads root `AGENTS.md` and skills natively |
 
 `AGENTS.md` is portable — Cursor, Claude Code, and OpenCode all read it. Targets
 add IDE-native formats on top.
@@ -105,6 +105,10 @@ Codex has no `applyTo` auto-loading, so the generated `~/.codex/AGENTS.md`
 indexes each instruction by its `applyTo` glob and points to the Codex-owned
 `~/.codex/instructions/<file>` copy for on-demand reads. The Copilot-only
 `~/.copilot/instructions/` path is never referenced from Codex documents.
+The Codex document does not embed the project contract, skill catalog, or custom
+agent roles: Codex already loads the nearest project `AGENTS.md` and scans its
+installed skill roots. Claude Code and OpenCode retain their generated indexes
+because their target integrations require them.
 Earlier versions wrote `~/.config/codex/AGENTS.md`; remove that stale file once
 after upgrading.
 

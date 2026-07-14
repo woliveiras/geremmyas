@@ -269,6 +269,9 @@ Default target is `copilot` (skills + instructions). With `--targets`:
 Instructions are copied to `~/.copilot/instructions/` on every global run,
 regardless of target. Codex reads `~/.codex/AGENTS.md` (its `CODEX_HOME`), which
 indexes each instruction by `applyTo` and points to `~/.codex/instructions/`.
+The file is a compact bootstrap: it defers to the nearest project `AGENTS.md`
+and does not duplicate Codex's native skill discovery or unsupported agent
+roles.
 Earlier versions wrote `~/.config/codex/AGENTS.md`; delete that stale file once
 after upgrading.
 

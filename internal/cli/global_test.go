@@ -180,8 +180,14 @@ func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
 	if !strings.Contains(content, generatedMarker) {
 		t.Fatalf("Codex AGENTS.md missing generated marker")
 	}
-	if !strings.Contains(content, "~/.agents/skills/") {
-		t.Fatalf("global Codex AGENTS.md should reference ~/.agents/skills/")
+	if strings.Contains(content, "## Skills (on demand)") || strings.Contains(content, "~/.agents/skills/") {
+		t.Fatalf("global Codex AGENTS.md should rely on native skill discovery:\n%s", content)
+	}
+	if strings.Contains(content, "## Core Rules") || strings.Contains(content, "## Agent roles") {
+		t.Fatalf("global Codex AGENTS.md should not embed the project contract or agent roles:\n%s", content)
+	}
+	if !strings.Contains(content, "nearest project-local `AGENTS.md`") {
+		t.Fatalf("global Codex AGENTS.md missing project contract precedence:\n%s", content)
 	}
 }
 
