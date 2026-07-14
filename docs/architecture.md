@@ -157,7 +157,8 @@ can ask once whether to force-overwrite customizable files.
 ## Global install (`global`)
 
 `geremmyas global [--targets ...] [--force] <pack>...` installs packs to
-user-level paths. Default target is `copilot` (backward compatible).
+user-level paths. Default target is `copilot` (backward compatible). The packs
+and targets passed to each invocation are the complete desired state.
 
 | Target | File copy | Generated output |
 | --- | --- | --- |
@@ -185,6 +186,22 @@ Not installed globally: `AGENTS.md`, `mise.toml`, project-level agents/hooks,
 Global **file copies** always overwrite. Generated files follow the same
 preserve/overwrite rules as project sync (`geremmyas:generated` marker, `--force`
 to overwrite customized files).
+
+### Global ownership and reconciliation
+
+Global state is recorded at
+`${XDG_STATE_HOME:-$HOME/.local/state}/geremmyas/global-manifest.json`. The
+versioned manifest stores selected packs, targets, destination paths, and the
+SHA-256 hash written by Geremmyas. After writing the desired artifacts, the CLI
+removes obsolete entries only when their current hash still matches the
+manifest. Modified files remain tracked and are reported as preserved; files
+without a manifest entry are never deleted.
+
+Manifest replacement uses a temporary file in the state directory followed by
+an atomic rename. A missing manifest triggers conservative migration: current
+catalog files with exact embedded-content matches are adopted, while unknown
+legacy and third-party content remains unowned. A corrupt or unsupported
+manifest stops the operation before global files are changed.
 
 ## `user/` directory
 

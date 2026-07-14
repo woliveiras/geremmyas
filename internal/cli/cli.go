@@ -472,6 +472,20 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	if err != nil {
 		return err
 	}
+	previousManifest, manifestExists, err := loadGlobalManifest()
+	if err != nil {
+		return err
+	}
+	if !manifestExists {
+		previousManifest, err = adoptKnownGlobalFiles(previousManifest, catalog)
+		if err != nil {
+			return err
+		}
+	}
+	desiredPaths, err := globalDesiredPaths(packs, targets)
+	if err != nil {
+		return err
+	}
 
 	copySkills, copyInstructions := globalCopyFlags(targets)
 	count := 0
@@ -490,6 +504,17 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 		}
 		printGeneratorSummaries(w, genSummaries)
 	}
+
+	packNames := make([]string, 0, len(packs))
+	for _, pack := range packs {
+		packNames = append(packNames, pack.Name)
+	}
+	reconcileSummary, err := reconcileGlobalManifest(previousManifest, desiredPaths, packNames, targets)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(w, "reconciled global state: removed=%d preserved=%d\n",
+		reconcileSummary.Removed, reconcileSummary.Preserved)
 
 	home := globalInstallDir()
 	if count > 0 {

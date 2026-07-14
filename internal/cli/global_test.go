@@ -338,3 +338,107 @@ func TestInstructionApplyToLabel(t *testing.T) {
 		t.Fatalf("instructionApplyToLabel(glob) = %q, want %q", got, "**/*.py")
 	}
 }
+
+func TestRunGlobalReconcilesRemovedPackFiles(t *testing.T) {
+	home := t.TempDir()
+	state := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", state)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "sdd", "python-ai"}, &out, &out); code != 0 {
+		t.Fatalf("initial global exit code = %d, output: %s", code, out.String())
+	}
+	stackSkill := filepath.Join(home, ".agents", "skills", "langgraph-agent-design", "SKILL.md")
+	mustExist(t, stackSkill)
+
+	out.Reset()
+	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("reconcile global exit code = %d, output: %s", code, out.String())
+	}
+	mustNotExist(t, stackSkill)
+	if !strings.Contains(out.String(), "removed=") {
+		t.Fatalf("global output missing reconciliation summary: %s", out.String())
+	}
+	mustExist(t, filepath.Join(state, "geremmyas", "global-manifest.json"))
+}
+
+func TestRunGlobalPreservesModifiedAndUnownedFiles(t *testing.T) {
+	home := t.TempDir()
+	state := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", state)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "sdd", "python-ai"}, &out, &out); code != 0 {
+		t.Fatalf("initial global exit code = %d, output: %s", code, out.String())
+	}
+	modified := filepath.Join(home, ".agents", "skills", "langgraph-agent-design", "SKILL.md")
+	if err := os.WriteFile(modified, []byte("user modified\n"), 0o644); err != nil {
+		t.Fatalf("modify managed skill: %v", err)
+	}
+	unowned := filepath.Join(home, ".agents", "skills", "external-skill", "SKILL.md")
+	if err := os.MkdirAll(filepath.Dir(unowned), 0o755); err != nil {
+		t.Fatalf("create external skill dir: %v", err)
+	}
+	if err := os.WriteFile(unowned, []byte("external\n"), 0o644); err != nil {
+		t.Fatalf("create external skill: %v", err)
+	}
+
+	out.Reset()
+	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("reconcile global exit code = %d, output: %s", code, out.String())
+	}
+	mustExist(t, modified)
+	mustExist(t, unowned)
+	if !strings.Contains(out.String(), "preserved=") {
+		t.Fatalf("global output missing preserved count: %s", out.String())
+	}
+}
+
+func TestRunGlobalRejectsCorruptManifestBeforeWriting(t *testing.T) {
+	home := t.TempDir()
+	state := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", state)
+	manifest := filepath.Join(state, "geremmyas", "global-manifest.json")
+	if err := os.MkdirAll(filepath.Dir(manifest), 0o755); err != nil {
+		t.Fatalf("create state dir: %v", err)
+	}
+	if err := os.WriteFile(manifest, []byte("not-json\n"), 0o644); err != nil {
+		t.Fatalf("write corrupt manifest: %v", err)
+	}
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code == 0 {
+		t.Fatalf("global succeeded with corrupt manifest: %s", out.String())
+	}
+	mustNotExist(t, filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md"))
+}
+
+func TestRunGlobalAdoptsAndPrunesKnownLegacyFiles(t *testing.T) {
+	home := t.TempDir()
+	state := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", state)
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("load catalog: %v", err)
+	}
+	legacyPacks, err := catalog.Resolve([]string{"python-ai"})
+	if err != nil {
+		t.Fatalf("resolve legacy pack: %v", err)
+	}
+	if _, err := globalInstallPacksFiltered(legacyPacks, true, true); err != nil {
+		t.Fatalf("seed legacy install: %v", err)
+	}
+	legacySkill := filepath.Join(home, ".agents", "skills", "langgraph-agent-design", "SKILL.md")
+	mustExist(t, legacySkill)
+	mustNotExist(t, filepath.Join(state, "geremmyas", "global-manifest.json"))
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+	mustNotExist(t, legacySkill)
+}

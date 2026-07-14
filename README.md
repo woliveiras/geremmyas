@@ -188,7 +188,7 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 | `add <pack>...` | Append packs to config only (**does not** sync) |
 | `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
 | `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
-| `global [--targets ...] [--force] <pack>...` | User-level install: Copilot paths + optional Cursor/Claude/OpenCode generators |
+| `global [--targets ...] [--force] <pack>...` | Reconcile the complete user-level pack/target state |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
 **Defaults:** non-interactive `init` writes `core` and `sdd`.
@@ -242,6 +242,14 @@ geremmyas global --targets claude-code,opencode sdd
 geremmyas global --targets codex sdd python-ai
 ```
 
+Each invocation is the complete desired global state, not an additive install.
+Geremmyas records owned files in
+`${XDG_STATE_HOME:-~/.local/state}/geremmyas/global-manifest.json`. When packs or
+targets are removed, unchanged owned files are deleted; modified and unowned
+files are preserved. The first managed run adopts only files whose content
+exactly matches the current embedded catalog, so unknown legacy and third-party
+skills are never removed automatically.
+
 Or use interactive selection:
 
 ```bash
@@ -264,7 +272,9 @@ indexes each instruction by `applyTo` and points to `~/.codex/instructions/`.
 Earlier versions wrote `~/.config/codex/AGENTS.md`; delete that stale file once
 after upgrading.
 
-Generated global files preserve user edits unless you pass `--force`.
+Generated global files preserve user edits unless you pass `--force`. A corrupt
+or unsupported manifest blocks the run before any global files are written;
+move the manifest aside only after reviewing the installed global directories.
 
 ### Pack catalog
 

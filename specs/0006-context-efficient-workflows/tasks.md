@@ -14,7 +14,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - verification: Manual artifact review and `git diff --check`.
   - commit: `docs: specify context-efficient agent workflows`
 
-- [ ] **Reconcile managed global state** (test-type: both)
+- [x] **Reconcile managed global state** (test-type: both)
   - blocked-by: Specify context-efficient workflow distribution
   - summary: Add an atomic ownership manifest and make `global` reconcile the
     complete desired pack/target state.
