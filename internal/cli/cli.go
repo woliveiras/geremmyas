@@ -53,7 +53,7 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runContext(stdout)
 	case "lint":
 		if runErr = catalog.ValidateTiers(); runErr == nil {
-			runErr = runLint(stdout)
+			runErr = runLint(stdout, catalog)
 		}
 	case "doctor":
 		runErr = runDoctor(stdout, catalog)

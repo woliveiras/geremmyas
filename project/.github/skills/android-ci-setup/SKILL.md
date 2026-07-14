@@ -167,107 +167,30 @@ Keep rules for reflection (Retrofit models, Room entities, serialization):
 
 ### 7. Add Version Catalog
 
-`gradle/libs.versions.toml`:
-
-```toml
-[versions]
-agp = "9.0.1"
-kotlin = "2.3.4"
-hilt = "2.57.1"
-detekt = "1.23.8"
-room = "2.7.1"
-
-[plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-detekt = { id = "dev.detekt", version.ref = "detekt" }
-
-[libraries]
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
-```
+Centralize plugin and library versions in `gradle/libs.versions.toml`. Keep
+Android Gradle Plugin, Kotlin, KSP, static analysis, and application libraries
+in the same catalog.
 
 ### 8. Add Dependabot
 
-`.github/dependabot.yml`:
-
-```yaml
-version: 2
-updates:
-  - package-ecosystem: gradle
-    directory: /
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
-```
+Configure weekly Gradle updates in `.github/dependabot.yml` and cap concurrent
+pull requests to avoid overwhelming maintainers.
 
 ### 9. Add Fastlane for Deployment (optional)
 
-`fastlane/Fastfile`:
-
-```ruby
-platform :android do
-  desc "Deploy to internal track"
-  lane :internal do
-    gradle(task: "bundle", build_type: "Release")
-    upload_to_play_store(
-      track: "internal",
-      aab: "app/build/outputs/bundle/release/app-release.aab",
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      skip_upload_metadata: true
-    )
-  end
-
-  desc "Promote internal to production"
-  lane :promote do
-    upload_to_play_store(
-      track: "internal",
-      track_promote_to: "production",
-      skip_upload_changelogs: false
-    )
-  end
-end
-```
+Add separate Fastlane lanes for uploading an AAB to the internal track and
+promoting that release to production.
 
 Use Play App Signing with a separate upload key. Never store signing keys
 in the repository.
 
 ### 10. Add CodeQL (optional)
 
-`.github/workflows/codeql.yml`:
+Run CodeQL for `java-kotlin` on pull requests, main-branch pushes, and a weekly
+schedule. Grant only `security-events: write` to the analysis job.
 
-```yaml
-name: CodeQL
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  schedule:
-    - cron: "0 6 * * 1"
-
-jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "17"
-      - uses: github/codeql-action/init@v3
-        with:
-          languages: java-kotlin
-      - uses: github/codeql-action/autobuild@v3
-      - uses: github/codeql-action/analyze@v3
-```
+Load [configuration examples](references/configuration-examples.md) when
+writing the version catalog, Dependabot, Fastlane, or CodeQL files.
 
 ### 11. Verify Pipeline
 

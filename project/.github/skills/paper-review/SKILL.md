@@ -1,6 +1,6 @@
 ---
 name: paper-review
-description: "Rewrites academic paper drafts (journal articles, arXiv preprints, conference papers) to eliminate AI-generated writing patterns while preserving technical accuracy, scientific claims, and citation integrity. Covers abstract structure, passive voice scope, novel inflation, hedging strings, and contribution framing. Use when rewriting an abstract, cleaning up a paper section, or removing AI patterns from academic text. Do not use for blog posts (use text-review) or for generating new content from scratch."
+description: "Rewrite academic drafts to remove AI writing patterns while preserving claims and citations. Use when editing abstracts or paper sections. Do not use for blog posts or generating new content."
 ---
 
 Rewrite the given text directly. No preamble, no explanation, no list of changes — deliver the rewritten text and nothing else.

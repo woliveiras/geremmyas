@@ -126,6 +126,24 @@ Skills that are optional or personal should get their own pack (like `blog` or
   or architecture work.
 - **Instruction:** file-scoped technology guidance selected by path.
 
+### Context budgets
+
+`geremmyas lint` enforces discovery and always-on context limits:
+
+| Surface | Limit |
+| --- | --- |
+| Skill frontmatter `description` | 240 characters |
+| Top-level skill body | 250 lines |
+| Nested files named `SKILL.md` | 0 |
+| Public skills in the `sdd` pack | 10 |
+| `project/AGENTS.md` | 700 words |
+
+Keep the top-level skill focused on routing, required gates, and the normal
+workflow. Put long examples, optional variants, detailed templates, and
+background material in clearly named files under `references/` or `assets/`,
+then tell the skill when to load each file. These limits keep metadata cheap to
+discover and prevent the default SDD contract from growing without review.
+
 ## Add an instruction
 
 1. Create `project/.github/instructions/<topic>.instructions.md`.
@@ -148,6 +166,7 @@ not shipped to consumers. Either add them to a pack or delete them to avoid drif
 ## Testing checklist
 
 - [ ] `go test ./...` passes
+- [ ] `geremmyas lint` passes
 - [ ] `geremmyas doctor` passes
 - [ ] New pack appears in `geremmyas list`
 - [ ] `init` + `sync` in a clean directory produces expected paths

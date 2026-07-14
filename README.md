@@ -375,6 +375,12 @@ for conventions that should be present whenever Copilot edits a matching file.
 Use skills for explicit workflows, and `assets/` or `references/` for long
 examples and recipes.
 
+`geremmyas lint` protects the default context budget: descriptions are limited
+to 240 characters, skill bodies to 250 lines, the `sdd` pack to 10 public
+skills, and `project/AGENTS.md` to 700 words. Nested support files must use
+descriptive names instead of `SKILL.md`. See
+[Creating packs, skills, and instructions](docs/creating-packs.md#context-budgets).
+
 | File | Applies To | Focus |
 |------|-----------|-------|
 | `typescript.instructions.md` | `**/*.ts, **/*.tsx` | Strict mode, interfaces, named exports |

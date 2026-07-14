@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,7 +19,7 @@ func TestLintDescriptionMissingNegativeScope(t *testing.T) {
 }
 
 func TestLintDescriptionLengthBoundary(t *testing.T) {
-	valid := paddedLintDescription(1024)
+	valid := paddedLintDescription(maxSkillDescriptionLength)
 	if violations := lintDescription(valid); len(violations) != 0 {
 		t.Fatalf("lintDescription(%d chars) returned violations: %+v", len(valid), violations)
 	}
@@ -46,12 +47,68 @@ func TestLintNameMatchesDirectory(t *testing.T) {
 }
 
 func TestLintBodyLengthBoundary(t *testing.T) {
-	if violations := lintBody(bodyWithLines(500)); len(violations) != 0 {
-		t.Fatalf("lintBody returned violations for 500 lines: %+v", violations)
+	if violations := lintBody(bodyWithLines(maxSkillBodyLines)); len(violations) != 0 {
+		t.Fatalf("lintBody returned violations for %d lines: %+v", maxSkillBodyLines, violations)
 	}
 
-	violations := lintBody(bodyWithLines(501))
+	violations := lintBody(bodyWithLines(maxSkillBodyLines + 1))
 	assertLintViolationCodes(t, violations, lintViolationBodyTooLong)
+}
+
+func TestCollectLintFindingsRejectsNestedSkillMarkdown(t *testing.T) {
+	root := t.TempDir()
+	writeSkillFixture(t, root, "good-skill", `---
+name: good-skill
+description: "Use when working on documentation. Do not use for production."
+---
+
+# Good skill
+`)
+	nested := filepath.Join(root, "project/.github/skills/good-skill/references/SKILL.md")
+	if err := os.MkdirAll(filepath.Dir(nested), 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+	if err := os.WriteFile(nested, []byte("nested"), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	findings, _, err := collectLintFindings(filepath.Join(root, "project/.github/skills"), root)
+	if err != nil {
+		t.Fatalf("collectLintFindings returned error: %v", err)
+	}
+	assertLintFindingHasCode(t, findings, "project/.github/skills/good-skill/references/SKILL.md", lintViolationNestedSkillFile)
+}
+
+func TestCollectRepositoryBudgetFindingsEnforcesSDDSkillLimit(t *testing.T) {
+	files := make([]FileEntry, maxSDDPublicSkills+1)
+	for i := range files {
+		files[i] = FileEntry{Target: fmt.Sprintf(".github/skills/skill-%02d", i)}
+	}
+	catalog := Catalog{Packs: []Pack{{Name: "sdd", Files: files}}}
+
+	findings, err := collectRepositoryBudgetFindings(catalog, t.TempDir())
+	if err != nil {
+		t.Fatalf("collectRepositoryBudgetFindings returned error: %v", err)
+	}
+	assertLintFindingHasCode(t, findings, "catalog/packs.json", lintViolationSDDSkillBudget)
+}
+
+func TestCollectRepositoryBudgetFindingsEnforcesAgentsWordLimit(t *testing.T) {
+	root := t.TempDir()
+	agentsPath := filepath.Join(root, "project/AGENTS.md")
+	if err := os.MkdirAll(filepath.Dir(agentsPath), 0o755); err != nil {
+		t.Fatalf("MkdirAll returned error: %v", err)
+	}
+	content := strings.Repeat("word ", maxAgentsWords+1)
+	if err := os.WriteFile(agentsPath, []byte(content), 0o644); err != nil {
+		t.Fatalf("WriteFile returned error: %v", err)
+	}
+
+	findings, err := collectRepositoryBudgetFindings(Catalog{}, root)
+	if err != nil {
+		t.Fatalf("collectRepositoryBudgetFindings returned error: %v", err)
+	}
+	assertLintFindingHasCode(t, findings, "project/AGENTS.md", lintViolationAgentsWordBudget)
 }
 
 func TestRunLintReportsViolations(t *testing.T) {
@@ -142,6 +199,21 @@ func assertLintViolationCodes(t *testing.T, violations []lintViolation, want ...
 	if strings.Join(got, ",") != strings.Join(want, ",") {
 		t.Fatalf("violation codes = %v, want %v", got, want)
 	}
+}
+
+func assertLintFindingHasCode(t *testing.T, findings []lintFinding, path, code string) {
+	t.Helper()
+	for _, finding := range findings {
+		if finding.Path != path {
+			continue
+		}
+		for _, violation := range finding.Violations {
+			if violation.Code == code {
+				return
+			}
+		}
+	}
+	t.Fatalf("findings = %+v, want %s on %s", findings, code, path)
 }
 
 func paddedLintDescription(total int) string {

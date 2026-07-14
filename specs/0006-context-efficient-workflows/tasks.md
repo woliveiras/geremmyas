@@ -42,7 +42,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Target capability table and Codex global bootstrap behavior.
   - commit: `feat: generate compact Codex context`
 
-- [~] **Consolidate the SDD skill catalog** (test-type: both)
+- [x] **Consolidate the SDD skill catalog** (test-type: both)
   - blocked-by: Generate compact Codex context
   - summary: Keep at most 10 user-facing SDD skills, move internal guardrails and
     composition steps to references, create opt-in packs for maintainer/decision
@@ -72,7 +72,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: CLI reference, interpretation guide, and ownership limitations.
   - commit: `feat: report agent context usage`
 
-- [ ] **Enforce context budgets** (test-type: unit)
+- [x] **Enforce context budgets** (test-type: unit)
   - blocked-by: Consolidate the SDD skill catalog, Report context usage
   - summary: Add lint rules for nested skills, metadata/body limits, SDD count,
     and `AGENTS.md` size; move remaining oversized examples to references.

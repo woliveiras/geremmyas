@@ -1,6 +1,6 @@
 ---
 name: text-review
-description: "Rewrites blog post drafts to eliminate AI-generated writing patterns while preserving the author's voice. Use when: removing AI patterns, humanizing text, editing technical posts. Do not use: for academic papers (use paper-review), content generation."
+description: "Rewrite blog drafts to remove AI writing patterns while preserving the author's voice. Use when editing technical posts. Do not use for academic papers or generating new content."
 ---
 
 

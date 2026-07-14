@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"unicode/utf8"
 )
 
 type lintViolation struct {
@@ -22,8 +23,13 @@ const (
 	lintViolationNameMismatch       = "name-mismatch"
 	lintViolationBodyTooLong        = "body-too-long"
 	lintViolationMissingSkillFile   = "missing-skill-md"
-	maxSkillDescriptionLength       = 1024
-	maxSkillBodyLines               = 500
+	lintViolationNestedSkillFile    = "nested-skill-md"
+	lintViolationSDDSkillBudget     = "sdd-skill-budget"
+	lintViolationAgentsWordBudget   = "agents-word-budget"
+	maxSkillDescriptionLength       = 240
+	maxSkillBodyLines               = 250
+	maxSDDPublicSkills              = 10
+	maxAgentsWords                  = 700
 )
 
 type lintFinding struct {
@@ -45,10 +51,10 @@ func lintDescription(description string) []lintViolation {
 			Message: "description must contain a negative-scope phrase",
 		})
 	}
-	if len(description) > maxSkillDescriptionLength {
+	if utf8.RuneCountInString(description) > maxSkillDescriptionLength {
 		violations = append(violations, lintViolation{
 			Code:    lintViolationDescriptionTooLong,
-			Message: "description must be at most 1024 characters",
+			Message: fmt.Sprintf("description must be at most %d characters", maxSkillDescriptionLength),
 		})
 	}
 	if strings.ContainsAny(description, "<>") {
@@ -76,7 +82,7 @@ func lintBody(body string) []lintViolation {
 	}
 	return []lintViolation{{
 		Code:    lintViolationBodyTooLong,
-		Message: "skill body must be at most 500 lines",
+		Message: fmt.Sprintf("skill body must be at most %d lines", maxSkillBodyLines),
 	}}
 }
 
@@ -106,7 +112,7 @@ func hasNegativeScopePhrase(description string) bool {
 	return false
 }
 
-func runLint(w io.Writer) error {
+func runLint(w io.Writer, catalog Catalog) error {
 	root, err := os.Getwd()
 	if err != nil {
 		return err
@@ -115,6 +121,14 @@ func runLint(w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	budgetFindings, err := collectRepositoryBudgetFindings(catalog, root)
+	if err != nil {
+		return err
+	}
+	findings = append(findings, budgetFindings...)
+	sort.Slice(findings, func(i, j int) bool {
+		return findings[i].Path < findings[j].Path
+	})
 	if len(findings) == 0 {
 		fmt.Fprintf(w, "lint: ok (%d skills checked)\n", checked)
 		return nil
@@ -122,11 +136,11 @@ func runLint(w io.Writer) error {
 	total := countLintViolations(findings)
 	fmt.Fprintf(w, "lint: %d violation(s) in %d skill(s) checked\n", total, checked)
 	for _, finding := range findings {
-		codes := make([]string, 0, len(finding.Violations))
+		details := make([]string, 0, len(finding.Violations))
 		for _, violation := range finding.Violations {
-			codes = append(codes, violation.Code)
+			details = append(details, fmt.Sprintf("%s (%s)", violation.Code, violation.Message))
 		}
-		fmt.Fprintf(w, "  %s: %s\n", finding.Path, strings.Join(codes, ", "))
+		fmt.Fprintf(w, "  %s: %s\n", finding.Path, strings.Join(details, "; "))
 	}
 	return fmt.Errorf("lint found %d violation(s)", total)
 }
@@ -157,6 +171,20 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 			return nil
 		}
 		checked++
+		rel, relErr := filepath.Rel(skillsRoot, path)
+		if relErr != nil {
+			return relErr
+		}
+		if strings.Count(filepath.ToSlash(rel), "/") > 1 {
+			entries = append(entries, lintFinding{
+				Path: relativeLintPath(root, path),
+				Violations: []lintViolation{{
+					Code:    lintViolationNestedSkillFile,
+					Message: "support files must not be named SKILL.md",
+				}},
+			})
+			return nil
+		}
 		finding, err := lintSkillFile(path, root)
 		if err != nil {
 			return err
@@ -185,6 +213,59 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 		return entries[i].Path < entries[j].Path
 	})
 	return entries, checked, nil
+}
+
+func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFinding, error) {
+	findings := []lintFinding{}
+	if count := countSDDPublicSkills(catalog); count > maxSDDPublicSkills {
+		findings = append(findings, lintFinding{
+			Path: "catalog/packs.json",
+			Violations: []lintViolation{{
+				Code:    lintViolationSDDSkillBudget,
+				Message: fmt.Sprintf("sdd pack must expose at most %d skills; found %d", maxSDDPublicSkills, count),
+			}},
+		})
+	}
+
+	agentsPath := filepath.Join(root, "project/AGENTS.md")
+	data, err := os.ReadFile(agentsPath)
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
+	if err == nil {
+		if count := len(strings.Fields(string(data))); count > maxAgentsWords {
+			findings = append(findings, lintFinding{
+				Path: "project/AGENTS.md",
+				Violations: []lintViolation{{
+					Code:    lintViolationAgentsWordBudget,
+					Message: fmt.Sprintf("project/AGENTS.md must contain at most %d words; found %d", maxAgentsWords, count),
+				}},
+			})
+		}
+	}
+	return findings, nil
+}
+
+func countSDDPublicSkills(catalog Catalog) int {
+	seen := map[string]struct{}{}
+	for _, pack := range catalog.Packs {
+		if pack.Name != "sdd" {
+			continue
+		}
+		for _, entry := range pack.Files {
+			const prefix = ".github/skills/"
+			target := filepath.ToSlash(entry.Target)
+			if !strings.HasPrefix(target, prefix) {
+				continue
+			}
+			name := strings.TrimPrefix(target, prefix)
+			if name == "" || strings.Contains(name, "/") {
+				continue
+			}
+			seen[name] = struct{}{}
+		}
+	}
+	return len(seen)
 }
 
 func lintSkillFile(path, root string) (lintFinding, error) {
