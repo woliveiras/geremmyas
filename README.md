@@ -276,6 +276,13 @@ roles.
 Earlier versions wrote `~/.config/codex/AGENTS.md`; delete that stale file once
 after upgrading.
 
+After upgrading from an append-only global install, rerun `geremmyas global`
+with the complete pack and target set you want, then inspect `geremmyas context`.
+The first run adopts exact current-catalog matches but leaves unknown legacy
+skills as `unowned`; review those paths before removing them manually. Former
+top-level SDD policy skills now live under their owning workflows as listed in
+[Guardrails Framework](docs/guardrails-framework.md#internal-references).
+
 Generated global files preserve user edits unless you pass `--force`. A corrupt
 or unsupported manifest blocks the run before any global files are written;
 move the manifest aside only after reviewing the installed global directories.

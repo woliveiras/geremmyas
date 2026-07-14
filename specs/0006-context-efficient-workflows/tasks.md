@@ -98,7 +98,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Agent routing and delegation guidance.
   - commit: `refactor: bound subagent workflows`
 
-- [ ] **Complete release verification** (test-type: integration)
+- [x] **Complete release verification** (test-type: integration)
   - blocked-by: Reconcile managed global state, Generate compact Codex context,
     Consolidate the SDD skill catalog, Report context usage, Enforce context
     budgets, Bound subagent workflows

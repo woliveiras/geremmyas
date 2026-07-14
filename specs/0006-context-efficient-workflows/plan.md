@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: Approved
+Status: Implemented
 
 ## Approach
 
@@ -71,3 +71,11 @@ approval.
 - Temporary-home integration: expand and shrink a global pack set, modify one
   managed file, add one unowned skill, and verify removal/preservation/reporting.
 - `git status --short` and one scoped commit per completed task.
+
+## Completion
+
+Completed on 2026-07-14. The full test, build, lint, doctor, and context matrix
+passed. A temporary-home integration expanded and reduced the desired global
+state, removed unchanged obsolete files, preserved a modified file, and
+reported an unowned skill. The implementation was delivered in one scoped
+commit per improvement.

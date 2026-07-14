@@ -3,7 +3,7 @@ spec: "0006"
 title: Context-efficient agent workflows
 family: multi-assistant
 phase: 4
-status: Approved
+status: Implemented
 owner: ""
 depends_on: ["0004", "0005"]
 origin: Audit of global skills, agents, and context usage
@@ -34,57 +34,57 @@ budgets, and gives subagents bounded contracts.
 
 ### Functional
 
-- [ ] Treat every `geremmyas global [--targets ...] <pack>...` invocation as the
+- [x] Treat every `geremmyas global [--targets ...] <pack>...` invocation as the
       complete desired state for Geremmyas-managed global artifacts.
-- [ ] Persist an ownership manifest under
+- [x] Persist an ownership manifest under
       `${XDG_STATE_HOME:-$HOME/.local/state}/geremmyas/` containing the selected
       packs, targets, destination paths, and installed content hashes.
-- [ ] Remove an obsolete managed file only when its current hash still matches
+- [x] Remove an obsolete managed file only when its current hash still matches
       the manifest. Preserve and report modified files and files without an
       ownership record. Remove empty directories only inside managed roots.
-- [ ] Make initial migration conservative: adopt desired files written by the
+- [x] Make initial migration conservative: adopt desired files written by the
       current run and exact current-catalog matches, but never delete unknown
       legacy or third-party files without an ownership record.
-- [ ] Include installed, updated, removed, preserved, and unowned counts in the
+- [x] Include installed, updated, removed, preserved, and unowned counts in the
       global reconciliation summary. Manifest writes must be atomic.
-- [ ] Generate a compact Codex global bootstrap that does not embed the project
+- [x] Generate a compact Codex global bootstrap that does not embed the project
       `AGENTS.md`, duplicate Codex's native skill catalog, or advertise unavailable
       agent pickers. Preserve the on-demand Codex instruction index.
-- [ ] Keep Claude Code and OpenCode generation behavior compatible where those
+- [x] Keep Claude Code and OpenCode generation behavior compatible where those
       targets still need an embedded contract or skill index.
-- [ ] Reduce the default `sdd` pack to at most 10 discoverable workflow skills.
+- [x] Reduce the default `sdd` pack to at most 10 discoverable workflow skills.
       Move internal policies, examples, and composed procedures to references or
       concise `AGENTS.md` invariants.
-- [ ] Keep explicit user capabilities discoverable, including feature
+- [x] Keep explicit user capabilities discoverable, including feature
       requirements/specification, bugfix, implementation, glossary, ADR, review,
       verification, and commit workflows. Move `skill-authoring` and general
       decision support to opt-in stack packs.
-- [ ] Rewrite the project `AGENTS.md` as a concise contract with phase-aware
+- [x] Rewrite the project `AGENTS.md` as a concise contract with phase-aware
       routing. It must not instruct agents to load completion-only skills early.
-- [ ] Add `geremmyas context` with a stable human-readable report for catalog,
+- [x] Add `geremmyas context` with a stable human-readable report for catalog,
       project, global, Codex system, and Codex plugin skill roots when present.
       Report top-level and nested `SKILL.md` counts, ownership state, frontmatter
       bytes, approximate tokens, and generated contract size.
-- [ ] Make unavailable roots non-fatal and label external plugin/system content
+- [x] Make unavailable roots non-fatal and label external plugin/system content
       as observed but not managed by Geremmyas.
-- [ ] Extend `geremmyas lint` to reject nested `SKILL.md` files, descriptions
+- [x] Extend `geremmyas lint` to reject nested `SKILL.md` files, descriptions
       over 240 characters, skill bodies over 250 lines, an SDD pack with more
       than 10 discoverable skills, or an `AGENTS.md` contract over 700 words.
-- [ ] Update bundled skills to satisfy those budgets by moving long examples and
+- [x] Update bundled skills to satisfy those budgets by moving long examples and
       recipes to references instead of deleting useful guidance.
-- [ ] Give `explorer`, `spec-writer`, `reviewer`, and `architect` explicit scope,
+- [x] Give `explorer`, `spec-writer`, `reviewer`, and `architect` explicit scope,
       evidence, unknowns, and concise-output contracts. Architecture fan-out to
       three subagents must be conditional on a material interface decision.
 
 ### Non-Functional
 
-- [ ] No new third-party Go dependencies.
-- [ ] Global reconciliation must never delete an unowned or modified file.
-- [ ] A failed install or manifest write must leave the previous manifest valid.
-- [ ] Context estimates are clearly labeled approximate and use a deterministic
+- [x] No new third-party Go dependencies.
+- [x] Global reconciliation must never delete an unowned or modified file.
+- [x] A failed install or manifest write must leave the previous manifest valid.
+- [x] Context estimates are clearly labeled approximate and use a deterministic
       byte-based formula rather than a model-specific tokenizer.
-- [ ] Existing project sync preservation behavior remains unchanged.
-- [ ] Each improvement is delivered as a separate Conventional Commit, with its
+- [x] Existing project sync preservation behavior remains unchanged.
+- [x] Each improvement is delivered as a separate Conventional Commit, with its
       tests and required documentation included in the same commit.
 
 ## Test Strategy
@@ -100,30 +100,30 @@ global reconciliation and context-root discovery.
 
 ## Acceptance Criteria
 
-- [ ] Given a managed global install containing `sdd` and `python-ai`, when
+- [x] Given a managed global install containing `sdd` and `python-ai`, when
       `global sdd` runs, then unchanged Python AI artifacts are removed and the
       manifest records only the desired state.
-- [ ] Given an obsolete managed file modified after installation, when a smaller
+- [x] Given an obsolete managed file modified after installation, when a smaller
       desired state is applied, then the file remains and the summary reports it
       as preserved.
-- [ ] Given an unowned skill in `~/.agents/skills`, when reconciliation runs,
+- [x] Given an unowned skill in `~/.agents/skills`, when reconciliation runs,
       then it is never deleted and is reported as unowned by `geremmyas context`.
-- [ ] Given a failed manifest replacement, when reconciliation exits, then the
+- [x] Given a failed manifest replacement, when reconciliation exits, then the
       previous valid manifest remains readable.
-- [ ] Given global and project Codex instructions, when the resulting context is
+- [x] Given global and project Codex instructions, when the resulting context is
       inspected, then the global document does not contain the project contract
       or a duplicate skills section and the project contract remains authoritative.
-- [ ] Given the default `core` plus `sdd` resolution, when catalog artifacts are
+- [x] Given the default `core` plus `sdd` resolution, when catalog artifacts are
       counted, then no more than 10 top-level skills are discoverable.
-- [ ] Given any bundled skill tree, when `geremmyas lint` runs, then nested
+- [x] Given any bundled skill tree, when `geremmyas lint` runs, then nested
       `SKILL.md` files and budget violations fail with actionable paths and codes.
-- [ ] Given `geremmyas context` on a machine with Geremmyas, system, plugin, and
+- [x] Given `geremmyas context` on a machine with Geremmyas, system, plugin, and
       project skills, when it runs, then each source is reported separately and
       only manifest-owned files are called managed.
-- [ ] Given a simple architecture exploration, when the architect role runs,
+- [x] Given a simple architecture exploration, when the architect role runs,
       then it does not require three subagents unless a material interface choice
       with multiple viable designs has been selected.
-- [ ] Given the completed feature, when documentation is read, then global
+- [x] Given the completed feature, when documentation is read, then global
       desired-state semantics, migration safety, context budgets, skill taxonomy,
       and subagent guidance are documented.
 
