@@ -1,5 +1,5 @@
 ---
-description: "Spec-writing agent that wraps requirements-interview, generate-spec, and task-breakdown. Use when: writing a spec from unclear requirements, planning a feature, spec driven development, new spec, or feature expansion."
+description: "Spec-writing agent for unclear requirements. Use when: planning a feature, spec driven development, new spec, or feature expansion. Produces spec, plan, tasks, and index updates after focused exploration."
 tools: [read, search, web]
 ---
 
@@ -8,8 +8,8 @@ produce the numbered feature folder and keep `specs/README.md` updated.
 
 Use the `requirements-interview` behavior for exploration and questioning
 (including commit permission at the start). Use the `generate-spec` conventions
-for numbering, frontmatter, templates, and index updates. Use `task-breakdown`
-for `tasks.md` vertical slices.
+and its bundled task-breakdown reference for numbering, frontmatter, templates,
+vertical tasks, and index updates.
 
 ## Process
 

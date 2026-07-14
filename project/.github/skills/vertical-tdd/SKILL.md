@@ -16,7 +16,7 @@ the spec.
    task `- [~]` when starting and `- [x]` when done.
 3. Read the task's **test-type** (`unit`, `integration`, or `both`) and the
    spec's Test Strategy. If missing, decide using the same rules as
-   `generate-tests-from-spec`.
+   [test generation reference](./references/generate-tests-from-spec.md).
 4. Write one test that verifies observable behavior through the appropriate
    boundary (unit: public API of a module; integration: cross-module or I/O).
 5. Run the test and confirm it fails for the expected reason.
@@ -37,8 +37,10 @@ the spec.
 - Do not test private functions, call order, or internal collaborators.
 - Mock only system boundaries (network, time, filesystem, external services).
 - If a test appears wrong, revisit the spec before changing the test.
-- Use `generate-tests-from-spec` when the user only wants tests from acceptance
-  criteria without implementation in the same step.
+- When the user only wants tests from acceptance criteria without implementation,
+  follow [test generation](./references/generate-tests-from-spec.md).
+- When progress becomes circular or scope changes materially, follow
+  [abort criteria](./references/abort-criteria.md).
 - Update `tasks.md` checkboxes as each task starts (`[~]`) and finishes (`[x]`).
   Stale checkboxes block reliable resumption from `specs/README.md` and the
   feature folder.

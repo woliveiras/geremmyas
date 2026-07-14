@@ -238,7 +238,7 @@ func regexpMatches(pattern, text string) []string {
 	return matches
 }
 
-func TestRunGlobalSDDInstallsGuardrailSkills(t *testing.T) {
+func TestRunGlobalSDDInstallsOnlyPublicWorkflowSkills(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 
@@ -248,18 +248,26 @@ func TestRunGlobalSDDInstallsGuardrailSkills(t *testing.T) {
 	}
 
 	for _, skill := range []string{
-		"approval-gates-before-implementation",
+		"requirements-interview",
+		"generate-spec",
+		"vertical-tdd",
+		"bugfix-loop",
+		"update-docs",
+		"git-commit",
+		"generate-glossary",
+		"generate-adr",
 		"verification-checklists",
-		"decision-framework",
-		"subagent-selection",
-		"agent-rationalization-blocking",
-		"abort-criteria",
-		"regression-testing",
 		"code-review-requesting",
 	} {
 		t.Run(skill, func(t *testing.T) {
 			mustExist(t, filepath.Join(home, ".agents", "skills", skill, "SKILL.md"))
 		})
+	}
+	for _, internal := range []string{
+		"approval-gates-before-implementation", "task-breakdown",
+		"generate-tests-from-spec", "subagent-selection", "regression-testing",
+	} {
+		mustNotExist(t, filepath.Join(home, ".agents", "skills", internal, "SKILL.md"))
 	}
 }
 

@@ -7,6 +7,8 @@ description: "Run a disciplined bugfix loop with reproduction, hypotheses, regre
 # Bugfix Loop
 
 Fix bugs by building evidence before changing code.
+Use the bundled [regression testing reference](./references/regression-testing.md)
+when converting the reproduction into a durable test.
 
 ## Document Location
 

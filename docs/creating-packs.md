@@ -33,7 +33,8 @@ All synced content lives under `project/`:
 Follow naming:
 
 - Instructions: `kebab-case.instructions.md` with YAML frontmatter and `applyTo` globs.
-- Skills: folder `kebab-case` with `SKILL.md` (see `skill-authoring` skill in repo).
+- Skills: folder `kebab-case` with one top-level `SKILL.md`; supporting files
+  under `assets/` or `references/` must not be named `SKILL.md`.
 - Agents: `kebab-case.agent.md`.
 
 ### 2. Register the pack in `catalog/packs.json`
@@ -103,8 +104,9 @@ Avoid duplicating the same `target` in multiple packs; the second install is ski
 
 ## Add a skill to the `sdd` pack
 
-SDD workflow skills are listed under the `sdd` pack in `packs.json`. To ship a
-new workflow skill to all SDD users:
+SDD is limited to user-invoked, general workflow capabilities. Before adding a
+discoverable skill, verify that the behavior cannot be a reference in an
+existing workflow or a custom agent role. To ship a new workflow skill:
 
 1. Create `project/.github/skills/<name>/SKILL.md`.
 2. Add a file entry to the `sdd` pack’s `files` array.
@@ -112,7 +114,17 @@ new workflow skill to all SDD users:
 4. Run tests and `doctor`.
 
 Skills that are optional or personal should get their own pack (like `blog` or
-`premortem`), not `sdd`.
+`premortem`), not `sdd`. Maintainer and decision helpers use the opt-in
+`skill-maintenance` and `decision-support` packs.
+
+### Skill taxonomy
+
+- **Skill:** a capability a user can request directly.
+- **Reference:** internal policy, checklist, template, example, or composition
+  step loaded only by its owning skill or agent.
+- **Agent:** an isolated role for expensive exploration, specification, review,
+  or architecture work.
+- **Instruction:** file-scoped technology guidance selected by path.
 
 ## Add an instruction
 

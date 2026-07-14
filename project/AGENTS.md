@@ -1,213 +1,91 @@
 # AGENTS.md
 
-This file is the operating contract for coding agents in this repository.
-Follow it before using generic global defaults.
+This is the operating contract for coding agents in this repository. The nearest
+project-local `AGENTS.md` overrides global defaults.
 
 ## Instruction Order
 
-1. Treat the nearest project-local `AGENTS.md` as the active operating contract.
-2. Use the project overview instructions document provided by the active
-  assistant target when you need project overview, commands, or repository
-  conventions.
-3. Load the technology instruction that matches the files being edited, using
-  the instruction index provided by your assistant target.
-4. Use `.github/skills/*/SKILL.md` for explicit workflows.
-5. Use `.github/agents/*.agent.md` only when a named role is useful.
+1. Read this contract and the active assistant's project overview.
+2. Read `GLOSSARY.md` before specs, tests, reviews, bugfix documents, ADRs, or
+   user-facing copy when that file exists.
+3. Load technology instructions only for files being edited.
+4. Load a skill only when its trigger matches the current phase.
+5. Use a custom agent only for an isolated role that materially benefits from a
+   separate context.
 
-If a global instruction conflicts with this file, this file wins.
+## Invariants
 
-## Core Rules
+- Understand the relevant request, spec, task, or bugfix document before code.
+- Never change tests merely to make them pass; reconcile behavior with the spec.
+- Every feature needs `spec.md`, `plan.md`, and `tasks.md` before implementation.
+- After creating or materially changing those artifacts, present them and stop
+  until the user explicitly approves the spec.
+- Every bug needs `docs/bugfixes/YYYY-MM-DD-<slug>.md`, a reproduction, an
+  approved fix proposal, and a regression test that fails before the fix.
+- Create postmortems only for production outages and ADRs only for complex,
+  hard-to-reverse decisions.
+- Preserve user work and never revert unrelated changes.
+- Do not commit, amend, or push without explicit permission and confirmation.
+- Keep `tasks.md` current: `[~]` while active and `[x]` only after verification.
 
-- Do not change production code before understanding the relevant spec, task,
-  bugfix document, or user request.
-- Do not modify tests just to make them pass. If a test appears wrong, revisit
-  the spec or acceptance criteria first.
-- Do not write production code for a feature that has a PRD but no spec. The PRD
-  frames the problem; the spec defines testable behavior. Both must exist before
-  implementation.
-- Always create a bugfix document in `docs/bugfixes/` for every bug. No
-  exceptions.
-- Always write a regression test for every bug fix. No exceptions.
-- Do not create postmortems unless the bug caused a production outage.
-- Do not create ADRs unless the decision is complex AND hard to reverse.
-- Do not create `CONSTITUTION.md` by default. Use this file for operational
-  rules unless the user explicitly asks for a separate constitution.
-- Do not commit, amend, or push without explicit user confirmation and without
-  commit permission granted during `requirements-interview`.
-- Preserve user changes. Never revert unrelated work.
-- Keep each feature's `tasks.md` checkbox state current during work: mark `- [~]`
-  when starting a task and `- [x]` when it is done. Do not leave stale
-  checkboxes.
+## Artifacts
 
-## Approval Gates
+- PRD: `docs/prds/YYYY-MM-DD-<feature-slug>.md`
+- Feature: `specs/NNNN-<feature-slug>/{spec,plan,tasks}.md`
+- Spec index: `specs/README.md`
+- Bugfix: `docs/bugfixes/YYYY-MM-DD-<bug-slug>.md`
+- Postmortem: `docs/postmortems/YYYY-MM-DD-<incident-slug>.md`
+- ADR: `docs/decisions/NNNN-title-with-dashes.md`
 
-These gates are mandatory. Do not skip them when using skills or agents
-directly (not only when using the SDD prompt).
+Use local dates, lowercase kebab-case slugs, and global four-digit spec numbers.
+Maintain `specs/README.md` whenever a spec is created or changes status.
 
-- **Spec gate:** After creating or updating `spec.md`, `plan.md`, and
-  `tasks.md`, present the spec to the user and **stop**. Do not write production
-  code or tests for the feature until the user explicitly approves the spec.
-- **Bugfix gate:** After documenting reproduction and a proposed fix in the
-  bugfix document, present the proposal to the user and **stop**. Do not apply
-  the fix until the user explicitly approves.
+## Work Routing
 
-## Domain Vocabulary
+### Features and expansions
 
-Read `GLOSSARY.md` before writing PRDs, specs, tests, reviews,
-bugfix documents, ADRs, or user-facing copy.
-
-Absence of this file does not block work.
-
-## Artifact Locations
-
-Use these paths unless the project already documents a different convention:
-
-| Artifact | Default path |
-| --- | --- |
-| Specs index | `specs/README.md` (families, status tables, numbering) |
-| PRD | `docs/prds/YYYY-MM-DD-<feature-slug>.md` |
-| Feature folder | `specs/NNNN-<feature-slug>/` |
-| Feature spec | `specs/NNNN-<feature-slug>/spec.md` |
-| Feature plan | `specs/NNNN-<feature-slug>/plan.md` |
-| Feature tasks | `specs/NNNN-<feature-slug>/tasks.md` |
-| Repo-level tasks | `tasks.md` |
-| Bugfix document | `docs/bugfixes/YYYY-MM-DD-<bug-slug>.md` |
-| Postmortem | `docs/postmortems/YYYY-MM-DD-<incident-slug>.md` |
-| ADR | `docs/decisions/NNNN-title-with-dashes.md` |
-
-Use the local date when creating timestamped PRDs, bugfixes, and postmortems.
-Spec folders use a **global four-digit number** plus slug: `NNNN-<feature-slug>`.
-Slugs are lowercase kebab-case and describe the user-visible capability.
-
-Read and maintain `specs/README.md` when creating, approving, or completing a
-spec: update family tables, status, and reserved blocks as needed.
-
-For every new feature, always create the feature folder with **all three**
-artifacts: `spec.md`, `plan.md`, and `tasks.md`. Do not implement until all
-three exist and the user has approved the spec.
-
-## Workflows
-
-### New Features
-
-1. Use `requirements-interview` to explore code and clarify requirements. At
-   the start, ask whether the agent may create git commits or the developer
-   handles commits. Store the answer for the session.
-2. Decide whether a PRD is needed (product behavior framing) or a spec alone
-   is enough (behavior already clear).
-3. If a PRD is needed: write or update the PRD, then write the spec from the
-   PRD. **Do not write production code until the spec exists.**
-4. Always create the feature folder with `spec.md`, `plan.md`, and `tasks.md`
-   (use `generate-spec`, `task-breakdown`, and/or `spec-writer` as needed).
-5. **Approval gate:** Present the spec (and plan/tasks summary) to the user.
-   Stop and wait for explicit approval before implementation or test generation
-   for the feature.
-6. For each task in `tasks.md`, choose test type (`unit`, `integration`, or
-   `both`) from the spec's test strategy and task scope.
-7. Use `vertical-tdd` to implement one behavior at a time (red-green-refactor).
-8. Use `reviewer` for spec-driven review.
-9. Use `update-docs` when API, architecture, setup, or configuration changed.
-10. Use `git-commit` only after verification, explicit confirmation, and only
-    if the user granted commit permission in step 1. Otherwise report changed
-    files and leave committing to the developer.
-
-### Existing Features
-
-1. Decide whether the product flow changes.
-2. If the product flow changes, update the PRD first, then update the spec.
-3. If the product flow does not change, write or update targeted specs in the
-   feature folder (`spec.md`, `plan.md`, `tasks.md` as needed).
-4. **Approval gate** applies when the spec changes materially.
-5. Continue through tasks, tests, implementation, review, and docs.
+1. Use `requirements-interview` to inspect existing behavior, resolve ambiguity,
+   and record commit permission. Update the PRD first when product flow changes.
+2. Use `generate-spec` to create or update the three feature artifacts.
+3. Stop at the approval gate. After approval, use `vertical-tdd` one behavior at
+   a time, then `update-docs` when API, architecture, setup, or config changed.
 
 ### Bugs
 
-1. Use `bugfix-loop`.
-2. Always save the bugfix document under `docs/bugfixes/`.
-3. Build a reproduction loop before changing production code.
-4. Document hypotheses and proposed fix; **approval gate:** present the
-   proposal and stop until the user approves.
-5. Add or update a regression test at the correct boundary (mandatory).
-6. Apply the fix and rerun the original reproduction.
-7. Write a postmortem only when the bug was a production outage.
+Use `bugfix-loop`. Reproduce before production edits, rank hypotheses, document
+the proposed fix, and stop for approval. Then add the regression test, apply the
+fix, rerun the original reproduction, and remove temporary instrumentation.
 
-## Progress and resumption
+### Explicit capabilities
 
-When switching sessions, tools, or pausing work:
+- `generate-glossary`: establish domain vocabulary.
+- `generate-adr`: record an accepted, durable architecture decision.
+- `verification-checklists`: require fresh evidence before completion.
+- `code-review-requesting`: prepare a verified change for review.
+- `git-commit`: inspect and commit only explicitly approved files.
 
-- Read `specs/README.md` for spec status across the repository.
-- Open the feature folder `specs/NNNN-<slug>/` for durable truth on one feature.
-- Use `tasks.md` checkboxes as the progress signal: `- [ ]` pending, `- [~]`
-  in progress, `- [x]` done.
-- Update checkboxes as work moves; do not create separate handoff documents.
-- Resume by reading `spec.md`, `plan.md`, and `tasks.md`, then continue from
-  the `- [~]` task or the first `- [ ]` after completed work.
-
-## Skill Routing
-
-Use these skills instead of reimplementing their procedures inline:
-
-- `requirements-interview`: clarify product and technical requirements; commit
-  permission at start.
-- `generate-spec`: write spec, plan, and tasks in a feature folder.
-- `task-breakdown`: create or update vertical tasks in `tasks.md`.
-- `generate-tests-from-spec`: generate tests from acceptance criteria (after
-  spec approval).
-- `vertical-tdd`: implement one behavior per red-green-refactor cycle.
-- `bugfix-loop`: investigate and fix bugs with reproduction and regression.
-- `generate-glossary`: create or update domain vocabulary.
-- `generate-adr`: record durable architecture decisions (bar: complex and hard
-  to reverse).
-- `update-docs`: sync documentation after implementation.
-- `git-commit`: inspect staged changes and create a commit with confirmation.
-
-Do not create GitHub Issues, labels, or issue state workflows unless the user
-explicitly asks.
-
-Use the matching technology instruction for edits in a single technology, and
-any workflow skills installed from geremmyas packs (for example Terraform, GCP,
-CI, LLM, Supabase, Postgres, ChromaDB) when the task crosses files, needs
-sequencing, or has approval or verification gates.
-
-## Guardrails Framework
-
-These 8 skills form a **error-prevention framework** that blocks common agent mistakes:
-
-**Hard Gates** (block work until conditions are met):
-- `approval-gates-before-implementation`: No code without explicit spec approval
-- `verification-checklists`: No task completion without fresh evidence
-
-**Decision Frameworks** (prevent hasty choices):
-- `decision-framework`: Structure complex decisions with trade-off documentation
-- `subagent-selection`: Choose delegate vs inline work strategically
-
-**Detection & Blocking** (identify anti-patterns):
-- `agent-rationalization-blocking`: Catch self-deception ("it's obvious", "probably fine")
-- `abort-criteria`: Recognize when to STOP (time budget exceeded, circular debugging)
-
-**Quality Workflows** (mandatory for code & bugs):
-- `regression-testing`: Test creation for every bug fix (multi-language)
-- `code-review-requesting`: Structured review request with pre-checks
-
-Load these skills **early in the task** to establish gates before implementation begins. See `docs/guardrails-framework.md` for complete patterns and integration examples.
+Stack-specific skills are opt-in. Use them only when the repository installs the
+matching pack and the task crosses that technology boundary.
 
 ## Agent Routing
 
-- Use `spec-writer` when requirements are unclear and a spec is needed.
-- Use `reviewer` for spec-driven review.
-- Use `architect` for architecture exploration with multiple design options.
-- Use `explorer` for read-only project mapping.
+- `explorer`: expensive read-only mapping across many files.
+- `spec-writer`: unclear requirements that need isolated exploration.
+- `reviewer`: implementation review against an approved spec.
+- `architect`: material architecture options after ordinary exploration.
 
-## Verification
+Work inline for a small query or narrow edit. Delegate independent, read-heavy
+work when the returned summary will be smaller than the exploration. Never
+delegate shared-state edits or redo a subagent's completed exploration inline.
 
-Before saying work is complete:
+## Completion
 
-- Run the focused tests for the changed behavior.
-- Run the nearest relevant suite when practical.
-- Report any verification that could not be run.
-- Check that temporary logs, harnesses, and instrumentation were removed.
-- Update `tasks.md`: mark every finished task `- [x]` and clear any stale `- [~]`.
-- Reconcile `plan.md`: annotate or mark done any planned item fully delivered.
-- Check `git status --short` and explain remaining changes.
+Before claiming completion:
 
-See [Guardrails Framework](docs/guardrails-framework.md) for hard gates and error-prevention workflows.
+1. Run focused tests and the nearest relevant suite.
+2. Confirm acceptance criteria, error paths, and required regression coverage.
+3. Remove temporary logs, harnesses, and instrumentation.
+4. Update `tasks.md`, reconcile `plan.md`, and update spec/index status.
+5. Run `git status --short` and explain remaining changes.
+
+Shell guardrails live in `.github/hooks/` for Copilot and generated Cursor hooks.

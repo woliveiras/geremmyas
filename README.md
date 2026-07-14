@@ -287,6 +287,7 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 | Group | Packs | Notes |
 | --- | --- | --- |
 | **Baseline** | `core`, `sdd` | Default init; `sdd` depends on `core` |
+| **Workflow helpers** | `decision-support`, `skill-maintenance` | Optional decision and catalog-maintainer skills |
 | **Writing & research** | `blog`, `research`, `premortem` | Optional content workflows |
 | **TypeScript / Node** | `typescript-base`, `typescript-ci`, `node-api`, `nestjs`, `fastify` | `nestjs` / `fastify` need `node-api` |
 | **React** | `react-web`, `react-router`, `react-state`, `react-data`, `tailwind` | Most depend on `react-web` → `typescript-base` |
@@ -410,10 +411,10 @@ skills for reusable workflows instead of duplicating skill procedures.
 
 | Agent | Role |
 |-------|------|
-| `spec-writer` | Explores requirements and routes to `requirements-interview`, `generate-spec`, and `task-breakdown` conventions. |
+| `spec-writer` | Explores unclear requirements and produces the complete spec/plan/tasks set. |
 | `explorer` | Read-only codebase mapper with a structured project summary. |
 | `reviewer` | Spec-driven reviewer that checks specs, tests, and code alignment. |
-| `architect` | Multi-design evaluation: explores → candidates → 3 parallel sub-designs → recommends. Saves ADRs or implementation plans. |
+| `architect` | Explores architecture candidates and uses parallel alternatives only for material interface decisions. |
 
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
 
@@ -437,26 +438,24 @@ Workflow skills ship with the `sdd` pack. Stack-specific recipe skills (for exam
 when you add the matching pack (`react-data`, `react-router`, etc.); core rules
 live in the paired instruction files.
 
-Recommended organization for future skills:
-
-- `engineering`: PRD, specs, planning, tasks, TDD, bugfix, review, architecture, docs.
-- `productivity`: skill authoring, concise communication, alignment before execution.
-- `personal`: workflows specific to your setup that should not install by default.
-- `utils`: rare tools, migrations, setup helpers, and guardrails.
+Use a top-level skill only for a capability users invoke directly. Composition
+steps, checklists, examples, and policy belong in the owning skill's
+`references/`; isolated roles belong in `.github/agents/`.
 
 | Skill | Purpose |
 |-------|---------|
 | `requirements-interview` | Explore code and clarify requirements before PRD/spec work |
 | `generate-spec` | Fill a structured spec from direct input (no interview) |
-| `task-breakdown` | Convert PRD, specs, or `plan.md` into vertical tasks with checkboxes |
-| `generate-tests-from-spec` | Generate unit or integration tests from approved spec criteria |
 | `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
 | `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
 | `update-docs` | Update `docs/` after implementing a feature |
 | `git-commit` | Review staged changes and create a Conventional Commit with confirmation |
 | `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
-| `skill-authoring` | Create or revise Copilot skills using this repo's conventions |
+| `verification-checklists` | Require fresh execution evidence before completion |
+| `code-review-requesting` | Prepare verified changes for structured review |
+| `decision-framework` | Evaluate material decisions (`decision-support` pack) |
+| `skill-authoring` | Create or revise skills (`skill-maintenance` pack) |
 | `typescript-ci-setup` | TypeScript CI pipeline (`typescript-ci` pack) |
 | `python-ci-setup` | Python CI pipeline (`python-ci` pack) |
 | `go-ci-setup` | Go CI pipeline (`go-ci` pack) |
@@ -554,10 +553,10 @@ This project is built around **Spec Driven Development** — specs and tests are
 ┌─────────┐     ┌──────────┐     ┌────────────┐     ┌──────────┐     ┌──────┐
 │  1.Spec │────▶│ 2.Tests  │────▶│ 3.Implement│────▶│ 4.Review │────▶│5.Docs│
 └─────────┘     └──────────┘     └────────────┘     └──────────┘     └──────┘
- @spec-writer    generate-tests-   Write code        @reviewer        update-docs
- or              from-spec skill   to pass tests     agent            skill
- generate-spec                     (never edit                        (if API/arch
- skill                             tests)                             changed)
+ @spec-writer    vertical-tdd      vertical-tdd      @reviewer        update-docs
+ or              red phase         green/refactor    agent            skill
+ generate-spec                                                       (if API/arch
+ skill                                                               changed)
 ```
 
 ### Workflow by Change Type
@@ -567,8 +566,8 @@ For new features:
 1. Use `requirements-interview` to clarify the product and technical shape.
 2. Write or update a PRD.
 3. Use `@spec-writer` or `generate-spec` to create testable specs.
-4. Use `task-breakdown` to produce vertical tasks in `tasks.md`.
-5. Use `vertical-tdd` or `generate-tests-from-spec` depending on whether you are implementing now or only generating tests.
+4. Produce vertical tasks in `tasks.md` as part of `generate-spec`.
+5. Use `vertical-tdd`; its test-generation reference also covers test-only work.
 6. Use `@reviewer` for spec-driven review.
 7. Use `update-docs` when public API, architecture, setup, or configuration changed.
 
@@ -616,7 +615,7 @@ Use the generate-spec skill to create a spec for JWT auth
 #### 2. Generate Tests
 
 ```
-Use the generate-tests-from-spec skill for specs/user-auth.md
+Use the vertical-tdd test-generation reference for specs/user-auth.md
 ```
 
 Each acceptance criterion from the spec becomes at least one test. Tests must fail initially (red phase).

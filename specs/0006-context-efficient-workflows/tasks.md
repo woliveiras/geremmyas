@@ -42,7 +42,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Target capability table and Codex global bootstrap behavior.
   - commit: `feat: generate compact Codex context`
 
-- [ ] **Consolidate the SDD skill catalog** (test-type: both)
+- [~] **Consolidate the SDD skill catalog** (test-type: both)
   - blocked-by: Generate compact Codex context
   - summary: Keep at most 10 user-facing SDD skills, move internal guardrails and
     composition steps to references, create opt-in packs for maintainer/decision

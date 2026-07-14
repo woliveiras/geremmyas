@@ -231,6 +231,33 @@ func TestCatalogSDDCoversEveryAgent(t *testing.T) {
 	}
 }
 
+func TestCatalogSDDHasFocusedDiscoverableSkills(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	sdd, ok := catalog.Pack("sdd")
+	if !ok {
+		t.Fatal("catalog missing sdd pack")
+	}
+	got := packSourceBasenames(sdd, "project/.github/skills/", "")
+	want := map[string]bool{
+		"bugfix-loop": true, "code-review-requesting": true,
+		"generate-adr": true, "generate-glossary": true,
+		"generate-spec": true, "git-commit": true,
+		"requirements-interview": true, "update-docs": true,
+		"verification-checklists": true, "vertical-tdd": true,
+	}
+	if len(got) != len(want) {
+		t.Fatalf("sdd discoverable skills = %v, want %v", got, want)
+	}
+	for name := range want {
+		if !got[name] {
+			t.Errorf("sdd missing discoverable skill %q", name)
+		}
+	}
+}
+
 func TestCatalogDoesNotReferenceNestedSkillMarkdownAsTopLevelSkill(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {

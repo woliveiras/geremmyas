@@ -7,6 +7,8 @@ description: "Interview before PRD or spec work by exploring code first, resolvi
 # Requirements Interview
 
 Reach shared understanding before writing PRDs, specs, plans, or tasks.
+For the full stop conditions, see
+[approval gates](./references/approval-gates.md).
 
 ## Process
 

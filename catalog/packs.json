@@ -23,24 +23,31 @@
         { "source": "project/.github/instructions/integration-testing.instructions.md", "target": ".github/instructions/integration-testing.instructions.md" },
         { "source": "project/.github/skills/requirements-interview", "target": ".github/skills/requirements-interview" },
         { "source": "project/.github/skills/generate-spec", "target": ".github/skills/generate-spec" },
-        { "source": "project/.github/skills/task-breakdown", "target": ".github/skills/task-breakdown" },
-        { "source": "project/.github/skills/generate-tests-from-spec", "target": ".github/skills/generate-tests-from-spec" },
         { "source": "project/.github/skills/vertical-tdd", "target": ".github/skills/vertical-tdd" },
         { "source": "project/.github/skills/bugfix-loop", "target": ".github/skills/bugfix-loop" },
         { "source": "project/.github/skills/update-docs", "target": ".github/skills/update-docs" },
         { "source": "project/.github/skills/git-commit", "target": ".github/skills/git-commit" },
         { "source": "project/.github/skills/generate-glossary", "target": ".github/skills/generate-glossary" },
         { "source": "project/.github/skills/generate-adr", "target": ".github/skills/generate-adr" },
-        { "source": "project/.github/skills/skill-authoring", "target": ".github/skills/skill-authoring" },
-        { "source": "project/.github/skills/approval-gates-before-implementation", "target": ".github/skills/approval-gates-before-implementation" },
         { "source": "project/.github/skills/verification-checklists", "target": ".github/skills/verification-checklists" },
-        { "source": "project/.github/skills/decision-framework", "target": ".github/skills/decision-framework" },
-        { "source": "project/.github/skills/subagent-selection", "target": ".github/skills/subagent-selection" },
-        { "source": "project/.github/skills/agent-rationalization-blocking", "target": ".github/skills/agent-rationalization-blocking" },
-        { "source": "project/.github/skills/abort-criteria", "target": ".github/skills/abort-criteria" },
-        { "source": "project/.github/skills/regression-testing", "target": ".github/skills/regression-testing" },
         { "source": "project/.github/skills/code-review-requesting", "target": ".github/skills/code-review-requesting" },
         { "source": "project/templates/specs/README.md", "target": "specs/README.md" }
+      ]
+    },
+    {
+      "name": "decision-support",
+      "tier": "stack",
+      "description": "Structured decision support for material architectural and strategic choices.",
+      "files": [
+        { "source": "project/.github/skills/decision-framework", "target": ".github/skills/decision-framework" }
+      ]
+    },
+    {
+      "name": "skill-maintenance",
+      "tier": "stack",
+      "description": "Maintainer workflow for creating and revising Geremmyas skill packages.",
+      "files": [
+        { "source": "project/.github/skills/skill-authoring", "target": ".github/skills/skill-authoring" }
       ]
     },
     {

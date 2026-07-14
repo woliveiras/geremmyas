@@ -13,6 +13,9 @@ No "pretty sure it's fixed" without output and review.
 Confidence ≠ Evidence. Compile success ≠ Runtime proof.
 </HARD-GATE>
 
+Use the [rationalization reference](./references/rationalization.md) when a
+completion claim depends on confidence instead of fresh evidence.
+
 ## When to Use
 
 - After implementing any behavior per vertical-tdd
@@ -22,7 +25,7 @@ Confidence ≠ Evidence. Compile success ≠ Runtime proof.
 
 ## When NOT to Use
 
-- During design phase (use approval-gates-before-implementation)
+- During design phase (use the project approval gate)
 - For reading code only (verification requires execution)
 - When blocked on external dependencies
 - During planning or speculation

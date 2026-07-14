@@ -86,7 +86,7 @@ description: "Structured decision-making preventing emotional and hasty choices.
 - Recovery: expensive, unclear
 
 **For low-reversibility decisions**:
-- Require explicit approval (see approval-gates-before-implementation)
+- Require explicit approval through the project `AGENTS.md` gate
 - Run premortem (see premortem skill)
 - Have rollback plan documented in advance
 - Consider pilot/canary before full commit

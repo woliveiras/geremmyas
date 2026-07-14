@@ -51,7 +51,8 @@ the structure documented in `AGENTS.md`.
 4. Fill in [spec template](./assets/spec-template.md) with correct frontmatter
    (`spec`, `title`, `family`, `phase`, `status: Draft`) and save as `spec.md`.
 5. Write `plan.md` with implementation sequencing and dependencies.
-6. Write initial `tasks.md` using `task-breakdown` conventions (vertical
+6. Write initial `tasks.md` using the bundled
+   [task breakdown](./references/task-breakdown.md) conventions (vertical
    slices, checkboxes, `test-type` per task).
 7. **Update `specs/README.md`:** add or update the row in the correct family/
    phase table (Spec link, Title, Status `Draft`, Depends on / Origin).
