@@ -30,6 +30,15 @@ The author uses multiple AI assistants but the framework only treats one of them
    `description` metadata (clear "use when" triggers and negative scope). Nothing
    enforces this, so weak descriptions degrade discovery, especially on
    assistants that rely on a markdown skill index instead of directory scanning.
+3. **Global installs accumulate context indefinitely.** Re-running
+   `geremmyas global` copies the newly selected packs but does not remove files
+   from earlier selections. Generated assistant documents can therefore describe
+   one pack set while the globally scanned skill directory contains the union of
+   every historical install.
+4. **Workflow policy is duplicated across layers.** The global contract embeds
+   the project contract, while guardrails and orchestration steps are advertised
+   again as independently discoverable skills. This consumes context and creates
+   conflicting trigger timing.
 
 ## Goals
 
@@ -38,6 +47,12 @@ The author uses multiple AI assistants but the framework only treats one of them
   project scope and global scope.
 - Add an automated quality check (`geremmyas lint`) for skill description
   metadata, runnable locally and in CI.
+- Make global installation declarative and ownership-aware so the selected packs
+  are the desired state, while preserving user-modified and external files.
+- Keep generated assistant context target-aware: do not repeat contracts or
+  native skill indexes on assistants that already discover them.
+- Provide context diagnostics and enforce catalog budgets so context growth is
+  visible before release.
 - Preserve the existing strengths: single canonical source with per-IDE
   generation, portable `AGENTS.md` contract, pack model with dependencies, shell
   guardrails, and SDD approval gates.
@@ -66,8 +81,10 @@ The author uses multiple AI assistants but the framework only treats one of them
 | Skill description validator (`geremmyas lint`) | In scope |
 | Auto-trigger bootstrap (session-start) | Deferred |
 | Claude as full plugin | Deferred |
-| Content hash + registry | Discarded |
-| Install lockfile | Discarded |
+| General content registry | Discarded |
+| Consumer project lockfile | Discarded |
+| Global ownership manifest | In scope for safe desired-state reconciliation |
+| Context diagnostics and budgets | In scope |
 | Skill generator | Discarded |
 | Marketplace / cohesive versioning | Discarded |
 
@@ -96,9 +113,19 @@ deliverables of this PRD:
   negative scope, exceed the description length limit, contain disallowed markup,
   whose `name` does not match the folder, or whose body exceeds the line limit;
   it passes clean skills and is wired into CI.
+- Re-running `geremmyas global` with a smaller pack set removes only unchanged
+  files previously recorded as Geremmyas-owned and reports modified or unowned
+  leftovers without deleting them.
+- Codex receives a compact global bootstrap instead of a duplicate project
+  contract or duplicate native skill catalog.
+- `geremmyas context` reports global, project, system, and plugin skill counts,
+  nested skill files, ownership state, and approximate context cost.
+- The default SDD catalog stays within explicit skill-count and metadata budgets.
 - No regression in existing targets, packs, guardrails, or SDD gates.
 
 ## Linked specs
 
 - `specs/0001-codex-target/` — Codex generation target.
 - `specs/0002-skill-validator/` — `geremmyas lint` skill description validator.
+- `specs/0006-context-efficient-workflows/` — managed global state, compact
+  target output, skill consolidation, diagnostics, budgets, and agent contracts.
