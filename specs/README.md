@@ -25,7 +25,7 @@ PRD: [docs/prds/2026-06-22-multi-assistant-framework.md](../docs/prds/2026-06-22
 | [0003](0003-version-command/spec.md) | Geremmyas version command | 1 | Implemented | Direct user request |
 | [0004](0004-skill-catalog-tiering/spec.md) | Skill catalog tiering | 2 | Implemented | Direct user request (catalog review) |
 | [0005](0005-codex-instructions/spec.md) | Codex global instruction distribution | 3 | Implemented | Direct user request (Codex not loading instructions) |
-| [0006](0006-context-efficient-workflows/spec.md) | Context-efficient agent workflows | 4 | Draft | Audit of global skills, agents, and context usage; depends on 0004 and 0005 |
+| [0006](0006-context-efficient-workflows/spec.md) | Context-efficient agent workflows | 4 | Approved | Audit of global skills, agents, and context usage; depends on 0004 and 0005 |
 
 ## Decisions
 

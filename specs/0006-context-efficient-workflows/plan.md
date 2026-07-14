@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: Draft
+Status: Approved
 
 ## Approach
 

@@ -3,7 +3,7 @@ spec: "0006"
 title: Context-efficient agent workflows
 family: multi-assistant
 phase: 4
-status: Draft
+status: Approved
 owner: ""
 depends_on: ["0004", "0005"]
 origin: Audit of global skills, agents, and context usage
