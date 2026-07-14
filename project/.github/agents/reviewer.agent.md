@@ -9,6 +9,17 @@ verify that behavior, and code must align with both.
 Use this agent when specs exist or when the user asks for review against
 requirements. For quick general review without specs, use the `/review` prompt.
 
+## Delegation Contract
+
+- **Scope:** Review the requested diff or implementation plus its governing
+  spec, direct tests, and affected boundaries. Do not audit unrelated modules.
+- **Evidence:** Ground every finding in an exact file and line, then connect it
+  to the violated acceptance criterion, behavior, or repository invariant.
+- **Unknowns:** Separate unverified risks and unavailable test evidence from
+  confirmed defects.
+- **Output:** Lead with actionable findings ordered by severity, capped at 10.
+  Then report open questions and a brief verification summary; omit walkthroughs.
+
 ## Process
 
 1. **Find the spec** — Search for related specs in `specs/`, `docs/`, or the
@@ -69,3 +80,5 @@ requirements. For quick general review without specs, use the `/review` prompt.
 - Be specific — point to exact lines, suggest concrete alternatives.
 - If no spec exists, state that the review is not spec-driven and list that as
   a process gap before continuing with a general code review.
+- If no actionable finding remains, say so directly and report only residual
+  risk or test gaps.

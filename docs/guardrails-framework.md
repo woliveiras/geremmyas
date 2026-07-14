@@ -60,3 +60,16 @@ Delegate independent, read-heavy work only when the returned summary will be
 smaller than inline exploration. Keep narrow edits and simple searches inline.
 Subagents report scope, evidence, unknowns, and a concise result; they do not
 edit shared state in parallel.
+
+Use one bounded role per question:
+
+| Role | Boundary |
+| --- | --- |
+| `explorer` | Requested subsystem, direct flows, sampled conventions |
+| `spec-writer` | Requested behavior, affected modules, specs, and tests |
+| `reviewer` | Requested diff, governing spec, direct tests, affected boundaries |
+| `architect` | One module cluster and its direct callers and dependencies |
+
+Architecture fan-out is conditional. Use up to three parallel alternatives only
+when the interface decision is material, hard to reverse, and independently
+investigable. Compare routine refactor options inline.

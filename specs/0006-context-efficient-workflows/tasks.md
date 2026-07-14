@@ -85,7 +85,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Skill authoring limits and context-budget rationale.
   - commit: `feat: enforce context budgets`
 
-- [ ] **Bound subagent workflows** (test-type: unit)
+- [x] **Bound subagent workflows** (test-type: unit)
   - blocked-by: Consolidate the SDD skill catalog
   - summary: Update explorer, spec-writer, reviewer, and architect contracts with
     bounded scope and output; make architecture fan-out conditional.

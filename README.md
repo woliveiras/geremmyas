@@ -437,6 +437,12 @@ skills for reusable workflows instead of duplicating skill procedures.
 | `reviewer` | Spec-driven reviewer that checks specs, tests, and code alignment. |
 | `architect` | Explores architecture candidates and uses parallel alternatives only for material interface decisions. |
 
+Every agent return is bounded by an explicit scope and separates repository
+evidence from unknowns. Delegate broad, read-heavy investigation when its
+summary will be smaller than doing the exploration inline. The `architect`
+fans out alternatives only for material, hard-to-reverse decisions; routine
+refactors compare options inline.
+
 Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
 
 #### When to Use What: Code Review

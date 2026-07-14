@@ -231,6 +231,49 @@ func TestCatalogSDDCoversEveryAgent(t *testing.T) {
 	}
 }
 
+func TestAgentContractsBoundDelegatedWork(t *testing.T) {
+	agents := []string{"architect", "explorer", "reviewer", "spec-writer"}
+	required := []string{
+		"## Delegation Contract",
+		"**Scope:**",
+		"**Evidence:**",
+		"**Unknowns:**",
+		"**Output:**",
+	}
+	for _, agent := range agents {
+		agent := agent
+		t.Run(agent, func(t *testing.T) {
+			path := "project/.github/agents/" + agent + ".agent.md"
+			data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
+			if err != nil {
+				t.Fatalf("ReadFile(%q) returned error: %v", path, err)
+			}
+			content := string(data)
+			for _, clause := range required {
+				if !strings.Contains(content, clause) {
+					t.Errorf("%s missing delegation clause %q", path, clause)
+				}
+			}
+		})
+	}
+}
+
+func TestArchitectFanOutIsConditional(t *testing.T) {
+	path := "project/.github/agents/architect.agent.md"
+	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
+	if err != nil {
+		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
+	}
+	content := strings.ToLower(string(data))
+	if !strings.Contains(content, "fan out only when") {
+		t.Fatal("architect contract must make fan-out conditional")
+	}
+	if strings.Contains(content, "always generate at least 3 alternatives") ||
+		strings.Contains(content, "always generate at least three alternatives") {
+		t.Fatal("architect contract still mandates routine three-way fan-out")
+	}
+}
+
 func TestCatalogSDDHasFocusedDiscoverableSkills(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {

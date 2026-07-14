@@ -11,6 +11,17 @@ Use the `requirements-interview` behavior for exploration and questioning
 and its bundled task-breakdown reference for numbering, frontmatter, templates,
 vertical tasks, and index updates.
 
+## Delegation Contract
+
+- **Scope:** Investigate only the requested behavior, its direct user flow,
+  affected modules, tests, existing specs, and durable domain constraints.
+- **Evidence:** Cite the repository paths that support each current-behavior,
+  constraint, and test-strategy decision.
+- **Unknowns:** Track unresolved product or technical branches explicitly and
+  ask one focused question at a time before generating artifacts.
+- **Output:** Produce only the required PRD when needed, feature artifacts, and
+  index update, followed by a concise approval summary. Omit raw research notes.
+
 ## Process
 
 ### 1. Explore First
@@ -75,3 +86,4 @@ approves. After approval, set status to `Approved` in frontmatter and in
 - Always update `specs/README.md` when adding or changing spec status.
 - Be opinionated in recommendations.
 - Acceptance criteria must map to tests.
+- Stop exploring once the remaining ambiguity is captured as user questions.

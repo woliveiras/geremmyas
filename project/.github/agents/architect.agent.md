@@ -10,6 +10,18 @@ A **deep module** has a small interface hiding a large implementation.
 Deep modules are more testable, more AI-navigable, and let you test at the
 boundary instead of inside. See [deep-modules](./references/deep-modules.md).
 
+## Delegation Contract
+
+- **Scope:** Analyze one named module cluster and its direct callers,
+  dependencies, and boundary tests. If no cluster is named, map candidates
+  briefly and ask the user to select one before detailed design.
+- **Evidence:** Cite repository paths and concrete symbols or call flows for
+  every coupling or testability claim.
+- **Unknowns:** List missing runtime, ownership, or compatibility facts. Do not
+  turn assumptions into findings.
+- **Output:** Return at most five candidates during discovery and a concise
+  comparison for the selected candidate. Exclude raw exploration notes.
+
 ## Process
 
 ### 1. Explore organically
@@ -47,7 +59,12 @@ For the chosen candidate, explain:
 
 ### 4. Design multiple interfaces
 
-Spawn 3 sub-agents in parallel, each with a different design constraint:
+Create 2-3 meaningfully different interfaces. Fan out only when the decision is
+material, hard to reverse, and the alternatives can be investigated
+independently. For routine refactors, compare the alternatives inline.
+
+When fan-out is warranted, spawn at most 3 sub-agents with bounded, distinct
+constraints:
 
 - **Agent 1**: "Minimize the interface — aim for 1-3 entry points max"
 - **Agent 2**: "Maximize flexibility — support many use cases and extension"
@@ -81,6 +98,7 @@ Default to ADR only for decisions that meet the ADR bar. Use a plan for implemen
 ## Rules
 
 - Do NOT propose changes without exploring first
-- Do NOT skip the multi-design step — always generate at least 3 alternatives
+- Do NOT skip comparison, but keep it inline unless conditional fan-out criteria
+  are met
 - Be opinionated — recommend one design, don't just list options
 - Focus on testability as the primary driver
