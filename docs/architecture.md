@@ -207,6 +207,21 @@ catalog files with exact embedded-content matches are adopted, while unknown
 legacy and third-party content remains unowned. A corrupt or unsupported
 manifest stops the operation before global files are changed.
 
+## Context diagnostics
+
+`geremmyas context` inventories the embedded catalog and filesystem roots that
+can contribute skill metadata: project `.github/skills`, global
+`~/.agents/skills`, Codex system skills, and the Codex plugin cache. Filesystem
+walks do not follow symlinks and missing roots are reported as zero rather than
+errors.
+
+Only global paths present in the ownership manifest are reported as managed.
+System and plugin content is labeled observed and remains outside Geremmyas's
+mutation boundary. Frontmatter cost uses a deterministic `(bytes + 3) / 4`
+token estimate, and contract stats report words, bytes, and the same estimate
+for project and global Codex `AGENTS.md` files. Plugin-cache counts are an upper
+bound because the host may activate only a subset of cached versions.
+
 ## `user/` directory
 
 Embedded but **not** installed by `sync` / `project`. Contains optional global

@@ -59,7 +59,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     and migration list for removed public skill names.
   - commit: `refactor: consolidate SDD workflow skills`
 
-- [ ] **Report context usage** (test-type: both)
+- [x] **Report context usage** (test-type: both)
   - blocked-by: Reconcile managed global state, Consolidate the SDD skill catalog
   - summary: Add `geremmyas context` to inventory known skill roots, distinguish
     owned and external content, and estimate metadata/context size.

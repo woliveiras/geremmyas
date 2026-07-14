@@ -49,6 +49,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		runErr = runProject(args[1:], stdout, catalog)
 	case "global":
 		runErr = runGlobal(args[1:], stdout, catalog)
+	case "context":
+		runErr = runContext(stdout)
 	case "lint":
 		if runErr = catalog.ValidateTiers(); runErr == nil {
 			runErr = runLint(stdout)
@@ -78,6 +80,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
+	fmt.Fprintln(w, "  geremmyas context")
 	fmt.Fprintln(w, "  geremmyas lint")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }

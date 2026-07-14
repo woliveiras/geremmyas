@@ -189,6 +189,7 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 | `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
 | `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
 | `global [--targets ...] [--force] <pack>...` | Reconcile the complete user-level pack/target state |
+| `context` | Report approximate context cost and skill ownership by source |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
 **Defaults:** non-interactive `init` writes `core` and `sdd`.
@@ -278,6 +279,20 @@ after upgrading.
 Generated global files preserve user edits unless you pass `--force`. A corrupt
 or unsupported manifest blocks the run before any global files are written;
 move the manifest aside only after reviewing the installed global directories.
+
+### Context report
+
+Run `geremmyas context` to compare the embedded catalog, current project,
+`~/.agents/skills`, Codex system skills, and Codex plugin cache. The report
+separates top-level and nested `SKILL.md` files, frontmatter bytes, approximate
+tokens, and global manifest ownership. Token counts use `(bytes + 3) / 4`; they
+are a stable comparison metric, not an exact model tokenizer result.
+
+External system and plugin roots are observed only. `unowned` means Geremmyas
+has no authority to remove that skill; `modified` means a manifest-owned global
+skill no longer matches the hash Geremmyas installed. Plugin-cache counts are an
+upper bound that can include inactive or older versions; the Codex host decides
+which cached plugins are active in a session.
 
 ### Pack catalog
 
