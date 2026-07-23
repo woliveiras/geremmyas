@@ -12,13 +12,19 @@ Rewrite the given text directly. No preamble, no explanation, no list of changes
 Remove or replace every instance of:
 
 - Em dashes (—): use a comma, parentheses, or a new sentence instead
+- Curly quotes and apostrophes (“ ” ‘ ’): use straight quotes so the text carries no copy-paste fingerprint
 - "delve into", "dive deep", "unpack", "explore" (as a section opener), "tackle"
 - "robust", "seamless", "powerful", "cutting-edge", "leverage" (verb), "harness" (verb), "utilize" (use "use")
 - "crucial", "essential", "vital", "pivotal", "key" (when used as a filler adjective)
+- AI-vocabulary words: "testament", "tapestry", "landscape" (as an abstract noun), "underscore", "showcase", "foster", "garner", "intricate", "intricacies", "meticulous", "realm"
 - "It's worth noting that", "It goes without saying", "Needless to say", "It is important to note that"
 - "In the realm of", "In the landscape of", "When it comes to", "In today's X world"
-- Forced tricolons: "accurate, efficient, and scalable" — keep if the three properties are independently measured, cut if decorative
+- Forced tricolons (the rule of three): "accurate, efficient, and scalable" — keep if the three properties are independently measured, cut if decorative
 - Hedging strings: "may potentially", "could possibly suggest", "might arguably be considered" → pick one hedge or eliminate
+- Significance and legacy padding: "stands as a testament to", "plays a pivotal role", "marks a turning point", "reflects a broader shift", "contributes to the broader field of" — state the specific finding instead
+- Trailing present-participle analysis: "-ing" clauses that editorialize at the end of a sentence ("...highlighting its significance", "...underscoring the importance", "...reflecting a broader trend") — cut or replace with a sourced claim
+- Copula avoidance: "serves as", "stands as", "represents" where "is" is meant — prefer the plain "is"
+- Vague attribution: "experts argue", "researchers note", "studies show", "it is widely regarded" without a citation — attach the citation or delete the claim
 
 ### Academic-specific AI tells
 
