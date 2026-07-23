@@ -105,3 +105,13 @@ Load these only when needed:
 - Include `Methodological gaps` when the design is incomplete.
 - Include `Next actions` with concrete research steps.
 - If asked to write results before data exists, provide only expected evidence structure, placeholder tables, analysis plan, or reporting template.
+
+## Write like a human
+
+Even in formal research prose, keep out the AI writing tells reviewers now flag:
+
+- No em dashes and no curly quotes; use straight quotes.
+- Cut AI vocabulary: "delve", "leverage", "robust", "crucial", "pivotal", "testament", "underscore", "showcase", "intricate", "meticulous", "landscape" (as an abstract noun).
+- Remove significance padding ("stands as a testament to", "plays a pivotal role"), trailing "-ing" analysis clauses ("...highlighting its significance"), and copula avoidance ("serves as" for "is").
+- Do not use "novel" or "state-of-the-art" without a named comparator. Attribute claims to a citation, not to "experts" or "studies".
+- Open sections with the finding or claim, not "In this report" or "It is important to note". Do not close sections with "In summary"/"In conclusion" restatements.
