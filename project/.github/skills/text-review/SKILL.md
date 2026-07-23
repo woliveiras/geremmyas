@@ -19,15 +19,29 @@ Prioritize three checks:
 Remove or replace every instance of:
 
 - The em dash character: use a comma, parentheses, colon, semicolon, or a new sentence instead
+- Curly quotes and curly apostrophes (“ ” ‘ ’): use straight quotes (" ') so the text does not carry a copy-paste fingerprint
 - "delve into", "dive deep", "dive into", "unpack", "tackle", "explore" (as a section opener), "demystify"
 - "robust", "seamless", "powerful", "cutting-edge", "game-changing", "leverage" (verb), "harness" (verb), "utilize" (use "use")
 - "crucial", "essential", "vital", "pivotal", "key" (when used as a filler adjective)
-- "not just X, but Y" constructions: flatten into a direct claim
+- AI-vocabulary nouns and verbs: "tapestry", "testament", "landscape" (as an abstract noun), "showcase", "underscore", "highlight" (as a filler verb), "foster", "garner", "intricate", "intricacies", "meticulous", "meticulously", "realm"
+- Promotional / travel-guide vocabulary: "boasts", "vibrant", "rich" (as filler), "nestled", "in the heart of", "renowned", "profound", "bustling", "hidden gem", "stunning"
+- "not just X, but Y" constructions - and the related "it's not X, it's Y", "X rather than Y", "no X, no Y, just Z": flatten into a direct claim
 - "It's worth noting that", "It's important to remember that", "It goes without saying that", "Needless to say"
 - "In the realm of", "In the world of", "In the landscape of", "When it comes to", "In today's X world", "In an era of"
 - "Let's", "we'll" used to create false intimacy when the author is writing alone
-- Forced tricolons: "fast, scalable, and reliable" - keep if genuinely meaningful, cut if decorative
+- Forced tricolons (the rule of three): "fast, scalable, and reliable" - keep if each item is doing real work, cut if decorative
 - "Happy coding!", "Let's get started!", "Stay tuned!" - remove closing platitudes
+
+### Significance and puffery tells
+
+LLMs inflate importance instead of stating facts. Remove or rewrite every instance of:
+
+- **Significance and legacy padding**: "stands as a testament to", "plays a pivotal role", "marks a turning point", "reflects a broader shift", "cements its legacy", "leaves an indelible mark", "in an evolving landscape". State what the thing does, not how important it supposedly is.
+- **Trailing present-participle analysis**: "-ing" clauses tacked onto the end of a sentence to editorialize, such as "...highlighting its importance", "...underscoring the significance", "...reflecting a broader trend", "...solidifying its role", "...contributing to the wider ecosystem". Cut the clause or turn it into a concrete, sourced claim.
+- **Copula avoidance**: "serves as", "stands as", "functions as", "represents" where "is" is meant; "boasts", "features", "offers" where "has" is meant. Prefer the plain "is"/"has".
+- **Vague attribution / weasel wording**: "experts argue", "observers note", "critics say", "studies show", "it is widely regarded" with no named source. Name the person or study, or delete the claim.
+- **Manufactured debate**: "has sparked debate about", "raises important questions about", "situated within a broader discussion of". Only keep it if you can cite the actual debate.
+- **Challenges-and-future-prospects formula**: "Despite its X, Y faces several challenges..." followed by a vaguely upbeat outlook. Replace with the specific problem and what actually happens next.
 
 ### Structural tells
 
@@ -37,6 +51,11 @@ Fix every instance of:
 - **Recapping conclusion**: if the conclusion only restates what was already said, cut the restatement and replace with an implication, a decision, or a next step the reader can take
 - **Mechanical transitions**: "Now that we've covered X, let's move on to Y" → cut entirely or merge into the next paragraph's opening sentence
 - **Bullets where prose works**: if a list has fewer than 4 items and each item is a sentence-length thought, rewrite as prose
+- **Inline-header vertical lists**: `**Bold header:** description` bullets read like a slide deck. Rewrite as prose or use a plain list without the bold-colon prefix.
+- **Title Case headings**: "How To Configure The Cache" → sentence case, "How to configure the cache".
+- **Boldface overuse**: bolding every key term or writing "key takeaways" in bold is a strong AI tell. Reserve bold for the rare word that genuinely needs emphasis.
+- **Decorative emoji**: emoji in front of headings or bullets. Remove unless the post's voice genuinely uses them.
+- **Section-closing restatements**: "In summary", "In conclusion", "Overall" paragraphs that repeat what was just said. Cut them or replace with an implication.
 - **Uniform paragraph length**: vary sentence and paragraph length. A short punch sentence after a dense technical block is a deliberate choice - use it.
 - **Hedging that avoids commitment**: "may", "might", "could potentially", "it depends on many factors" where a concrete recommendation is possible → make the call
 
