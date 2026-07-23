@@ -111,3 +111,13 @@ Chosen option: "{Option}", because {justification — reference the decision dri
 - Omit optional sections (Decision Drivers, Confirmation, Pros/Cons, More Information) if the decision is straightforward
 - Use `status: proposed` for decisions under discussion, `status: accepted` for final decisions, `status: implemented` for decisions that have been implemented, `status: deprecated` for decisions that are no longer recommended, and `status: superseded by ADR-NNNN` for decisions that have been replaced by a newer ADR
 - Number files sequentially: `0001-use-fastapi.md`, `0002-adopt-zustand.md`
+
+## Write like a human
+
+Write prose a practitioner would actually write, not generic assistant output. Keep the MADR template and required formatting, but keep these AI writing tells out of the prose:
+
+- No em dashes and no curly quotes: use commas, parentheses, or new sentences, and straight quotes (" ').
+- Cut filler vocabulary: "delve", "leverage", "utilize" (use "use"), "robust", "seamless", "crucial", "pivotal", "testament", "underscore", "showcase", "foster", "landscape" (as an abstract noun).
+- Drop significance padding ("stands as a testament to", "plays a pivotal role", "reflects a broader shift") and trailing "-ing" analysis clauses ("...highlighting its importance").
+- Prefer plain "is"/"has" over "serves as"/"boasts". Attribute every claim to a named source or delete it.
+- Skip forced tricolons and decorative emoji. State the point first; cut sentences that only announce a topic or restate the previous one.
