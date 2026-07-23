@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.5.0](https://github.com/woliveiras/geremmyas/compare/v3.4.0...v3.5.0) (2026-07-23)
+
+
+### Features
+
+* add context-efficient workflows spec, plan, and tasks to improve global state management ([e5fb98a](https://github.com/woliveiras/geremmyas/commit/e5fb98acdd77fe319596427bd10e3d6989b04847))
+* add guidelines for human-like writing in academic prose ([38d513b](https://github.com/woliveiras/geremmyas/commit/38d513bedc4d2162fa31404cebe458ab072f7c1b))
+* add guidelines for human-like writing in ADRs ([d0b27d1](https://github.com/woliveiras/geremmyas/commit/d0b27d180998aed3bc8b19a5242be3f509013aa2))
+* add guidelines for human-like writing in glossary definitions ([511810a](https://github.com/woliveiras/geremmyas/commit/511810a8198f2e64b293912b12471948953c3250))
+* add guidelines for human-like writing in research documentation ([f55bdce](https://github.com/woliveiras/geremmyas/commit/f55bdceac0b8df94155964abeb19eaa2f4d886a6))
+* add guidelines for human-like writing in specs ([aa05c8f](https://github.com/woliveiras/geremmyas/commit/aa05c8f233e43f00fd0b57c974eeb8ec61a60928))
+* add spec, plan, and tasks for Codex global instruction distribution ([aa26837](https://github.com/woliveiras/geremmyas/commit/aa26837e6e60e695b9a429010342b080a7c1d521))
+* enforce context budgets ([5484055](https://github.com/woliveiras/geremmyas/commit/54840558e53b4da8dc471d024f3d6664531df8ba))
+* enhance guidelines for human-like writing in documentation ([aadc04d](https://github.com/woliveiras/geremmyas/commit/aadc04d282cc5d034d6ecc7f4edb03d672aa67e3))
+* enhance paper review skill by adding more AI tell elimination guidelines ([9af6dd2](https://github.com/woliveiras/geremmyas/commit/9af6dd2e5c5cb1066a7c2aa0e01bbffd01ac0827))
+* expand guidelines for eliminating AI writing patterns in text reviews ([7e528ab](https://github.com/woliveiras/geremmyas/commit/7e528ab0533d098f56ebbfc4e7d583931913ebae))
+* generate compact Codex context ([1b90d77](https://github.com/woliveiras/geremmyas/commit/1b90d77baa3a8b6c699caf76023b97d5188461e4))
+* implement Codex global instruction distribution and update paths ([6e910d4](https://github.com/woliveiras/geremmyas/commit/6e910d45136d38971791be58d77e51994004378f))
+* reconcile managed global installs ([9dffa4c](https://github.com/woliveiras/geremmyas/commit/9dffa4cef19a6e90b3e0cf1c1fe0824726a78d85))
+* report agent context usage ([e01057f](https://github.com/woliveiras/geremmyas/commit/e01057fe1fdc3e20352545d975657b3326972970))
+
+
+### Bug Fixes
+
+* correct Codex documentation to avoid referencing Copilot instruction files ([564b350](https://github.com/woliveiras/geremmyas/commit/564b35074e923400dd216e571155acd28cd490fe))
+
+
+### Documentation
+
+* approve context-efficient agent workflows ([2334ec9](https://github.com/woliveiras/geremmyas/commit/2334ec9d6103ce0b95f9228a7a4f57b1190ea90e))
+* complete context workflow rollout ([f7bbcfc](https://github.com/woliveiras/geremmyas/commit/f7bbcfc694fd127a1b07175be92d419107891439))
+
+
+### Refactoring
+
+* bound subagent workflows ([c1e01fc](https://github.com/woliveiras/geremmyas/commit/c1e01fc1d726ea67b6cbba94eb69e0e5c4d488e2))
+* consolidate SDD workflow skills ([b7d8c94](https://github.com/woliveiras/geremmyas/commit/b7d8c9454d3dee4203f8b44a388aead6c132c7d4))
+
 ## [3.4.0](https://github.com/woliveiras/geremmyas/compare/v3.3.0...v3.4.0) (2026-07-01)
 
 
