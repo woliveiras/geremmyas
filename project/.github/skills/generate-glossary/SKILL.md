@@ -48,3 +48,13 @@ either file.
 - **Show relationships** — use bold term names, express cardinality where obvious
 - **Group by context** — split into tables when natural clusters emerge
 - **Include example dialogue** — 3-5 exchanges showing terms used precisely
+
+## Write like a human
+
+Write definitions and examples a practitioner would actually write, not generic assistant output. Keep the glossary format, but keep these AI writing tells out of the prose:
+
+- No em dashes and no curly quotes: use commas, parentheses, or new sentences, and straight quotes (" ').
+- Cut filler vocabulary: "delve", "leverage", "utilize" (use "use"), "robust", "seamless", "crucial", "pivotal", "testament", "underscore", "showcase", "foster", "landscape" (as an abstract noun).
+- Drop significance padding ("plays a pivotal role", "reflects a broader shift") and trailing "-ing" analysis clauses ("...highlighting its importance").
+- Prefer plain "is"/"has" over "serves as"/"boasts". Define what the term is; do not editorialize about its importance.
+- Skip forced tricolons and decorative emoji.
