@@ -81,3 +81,13 @@ Define test strategy in the spec (unit vs integration vs both).
 - Do not implement or write feature tests before spec approval.
 - When a spec reaches **Implemented**, update frontmatter and `specs/README.md`
   (status + links to PRs/commits in `spec.md`).
+
+## Write like a human
+
+Write prose a practitioner would actually write, not generic assistant output. Keep the spec template and required formatting, but keep these AI writing tells out of the prose:
+
+- No em dashes and no curly quotes: use commas, parentheses, or new sentences, and straight quotes (" ').
+- Cut filler vocabulary: "delve", "leverage", "utilize" (use "use"), "robust", "seamless", "crucial", "pivotal", "testament", "underscore", "showcase", "foster", "landscape" (as an abstract noun).
+- Drop significance padding ("stands as a testament to", "plays a pivotal role", "reflects a broader shift") and trailing "-ing" analysis clauses ("...highlighting its importance").
+- Prefer plain "is"/"has" over "serves as"/"boasts". Attribute every claim to a named source or delete it.
+- Skip forced tricolons and decorative emoji. State the point first; cut sentences that only announce a topic or restate the previous one.
