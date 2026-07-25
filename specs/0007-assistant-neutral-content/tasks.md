@@ -39,7 +39,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     `./geremmyas doctor`.
   - commit: `refactor: move canonical assistant content`
 
-- [ ] **Materialize and reconcile project targets** (test-type: both)
+- [x] **Materialize and reconcile project targets** (test-type: both)
   - blocked-by: Move canonical assistant content
   - summary: Make project sync write only shared plus selected target outputs and
     add hash-based project ownership reconciliation with legacy adoption.

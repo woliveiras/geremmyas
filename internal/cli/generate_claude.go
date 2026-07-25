@@ -173,7 +173,7 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 		if scope == scopeGlobal {
 			b.WriteString("Read the full procedure in `~/.agents/skills/<name>/SKILL.md` when the task matches:\n\n")
 		} else {
-			b.WriteString("Read the full procedure in `.github/skills/<name>/SKILL.md` when the task matches:\n\n")
+			b.WriteString("Read the full procedure in `.agents/skills/<name>/SKILL.md` when the task matches:\n\n")
 		}
 		for _, source := range artifacts.skills {
 			skillMD, err := findSkillMarkdown(source)
@@ -212,7 +212,7 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 		if scope == scopeGlobal {
 			b.WriteString("No native @agent picker. With the `cursor` global target, roles live in `~/.cursor/rules/agent-*.mdc`.\n\n")
 		} else {
-			b.WriteString("No native @agent picker in this IDE. Read `.github/agents/<file>` when the user names the role:\n\n")
+			b.WriteString("No native @agent picker in this IDE. Read `.agents/roles/<file>` when the user names the role:\n\n")
 		}
 		for _, source := range artifacts.agents {
 			content, err := readEmbeddedSource(source)
@@ -230,7 +230,7 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 			b.WriteString("**: ")
 			b.WriteString(desc)
 			if scope != scopeGlobal {
-				b.WriteString(" → `.github/agents/")
+				b.WriteString(" → `.agents/roles/")
 				b.WriteString(filepath.Base(source))
 				b.WriteString("`")
 			}
@@ -262,12 +262,21 @@ func readProjectFile(root, relTarget, embedFallback string) (string, error) {
 // instructionPointerBase returns the base path the generated AGENTS.md should
 // point to for on-demand instruction reads, and whether an Instructions section
 // should be rendered at all. Project scope always points to the synced
-// .github/instructions/ directory. Global scope only renders for Codex, which
+// target-owned instruction directory. Global scope only renders for Codex, which
 // mirrors instructions into ~/.codex/instructions/; other global IDE targets
 // have no mirror and are skipped.
 func instructionPointerBase(scope installScope, target string) (string, bool) {
 	if scope == scopeProject {
-		return ".github/instructions", true
+		switch target {
+		case TargetCodex:
+			return ".codex/instructions", true
+		case TargetClaudeCode:
+			return ".claude/instructions", true
+		case TargetOpenCode:
+			return ".opencode/instructions", true
+		default:
+			return "", false
+		}
 	}
 	if target == "codex" {
 		return "~/.codex/instructions", true

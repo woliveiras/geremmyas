@@ -23,14 +23,20 @@ type syncSummary struct {
 }
 
 func syncPacks(root string, packs []Pack, opts syncOptions) (syncSummary, error) {
+	entries := make([]FileEntry, 0)
+	for _, pack := range packs {
+		entries = append(entries, pack.Files...)
+	}
+	return syncEntries(root, entries, opts)
+}
+
+func syncEntries(root string, entries []FileEntry, opts syncOptions) (syncSummary, error) {
 	summary := syncSummary{}
 	copiedTargets := map[string]bool{}
 
-	for _, pack := range packs {
-		for _, entry := range pack.Files {
-			if err := copyEntry(root, entry, opts, &summary, copiedTargets); err != nil {
-				return summary, fmt.Errorf("pack %q: %w", pack.Name, err)
-			}
+	for _, entry := range entries {
+		if err := copyEntry(root, entry, opts, &summary, copiedTargets); err != nil {
+			return summary, fmt.Errorf("copy %q: %w", entry.Source, err)
 		}
 	}
 
@@ -74,6 +80,15 @@ func copyFile(root, source, target string, opts syncOptions, summary *syncSummar
 	}
 	copiedTargets[target] = true
 
+	blocked, err := pathContainsSymlink(root, target)
+	if err != nil {
+		return err
+	}
+	if blocked {
+		summary.Preserved++
+		return nil
+	}
+
 	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, filepath.ToSlash(source))
 	if err != nil {
 		return err
@@ -101,6 +116,24 @@ func copyFile(root, source, target string, opts syncOptions, summary *syncSummar
 		return err
 	}
 	return os.WriteFile(dest, data, 0o644)
+}
+
+func pathContainsSymlink(root, target string) (bool, error) {
+	current := filepath.Clean(root)
+	for _, part := range strings.Split(filepath.Clean(target), string(filepath.Separator)) {
+		current = filepath.Join(current, part)
+		info, err := os.Lstat(current)
+		if os.IsNotExist(err) {
+			continue
+		}
+		if err != nil {
+			return false, err
+		}
+		if info.Mode()&os.ModeSymlink != 0 {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func isCustomizableTarget(target string) bool {

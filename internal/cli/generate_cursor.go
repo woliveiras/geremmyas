@@ -102,6 +102,7 @@ func generateCursorAt(scope installScope, root string, artifacts packArtifacts, 
 			return summary, err
 		}
 		hooksJSON := fmt.Sprintf(`{
+  "_generated": "geremmyas:generated:cursor",
   "version": 1,
   "hooks": {
     "beforeShellExecution": [
@@ -217,7 +218,7 @@ func generateCursorAgentRule(scope installScope, root, source string, opts gener
 			strings.TrimSpace(body),
 		)
 	} else {
-		projectPath := ".github/agents/" + filepath.Base(source)
+		projectPath := ".agents/roles/" + filepath.Base(source)
 		ruleBody = fmt.Sprintf(
 			"Manual role (no @agent in Cursor). Read `%s` when user asks for this role.\n\n%s",
 			projectPath,
@@ -257,7 +258,7 @@ func formatCursorAgentsIndexRule(scope installScope, agentSources []string) stri
 			b.WriteString(name)
 			b.WriteString(".mdc`")
 		} else {
-			b.WriteString("`.github/agents/")
+			b.WriteString("`.agents/roles/")
 			b.WriteString(filepath.Base(source))
 			b.WriteString("`")
 		}

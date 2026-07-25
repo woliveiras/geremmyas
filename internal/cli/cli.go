@@ -206,17 +206,14 @@ func runSync(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+	result, err := syncProjectState(root, catalog, packs, targets, syncOptions{Force: *force})
 	if err != nil {
 		return err
 	}
-	printSyncSummary(w, len(packs), summary)
-
-	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
-	if err != nil {
-		return err
-	}
-	printGeneratorSummaries(w, genSummaries)
+	printSyncSummary(w, len(packs), result.Sync)
+	printGeneratorSummaries(w, result.Generators)
+	fmt.Fprintf(w, "project reconcile: removed=%d preserved=%d\n",
+		result.Reconcile.Removed, result.Reconcile.Preserved)
 
 	if hasTarget(targets, TargetCopilot) {
 		printMiseHint(w, root)
@@ -351,17 +348,14 @@ func runProject(args []string, w io.Writer, catalog Catalog) error {
 		return err
 	}
 
-	summary, err := syncPacks(root, packs, syncOptions{Force: *force})
+	result, err := syncProjectState(root, catalog, packs, targets, syncOptions{Force: *force})
 	if err != nil {
 		return err
 	}
-	printSyncSummary(w, len(packs), summary)
-
-	genSummaries, err := runTargetGenerators(root, targets, packs, generatorOptions{Force: *force})
-	if err != nil {
-		return err
-	}
-	printGeneratorSummaries(w, genSummaries)
+	printSyncSummary(w, len(packs), result.Sync)
+	printGeneratorSummaries(w, result.Generators)
+	fmt.Fprintf(w, "project reconcile: removed=%d preserved=%d\n",
+		result.Reconcile.Removed, result.Reconcile.Preserved)
 
 	if hasTarget(targets, TargetCopilot) {
 		printMiseHint(w, root)

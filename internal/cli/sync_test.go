@@ -32,6 +32,194 @@ func TestSyncPacksCopiesOnlySelectedPacks(t *testing.T) {
 	mustNotExist(t, filepath.Join(root, ".github/instructions/go.instructions.md"))
 }
 
+func TestRunSyncCodexOnlyOmitsCopilotArtifacts(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	mustExist(t, filepath.Join(root, "AGENTS.md"))
+	mustExist(t, filepath.Join(root, ".agents", "skills", "vertical-tdd", "SKILL.md"))
+	mustExist(t, filepath.Join(root, ".codex", "instructions", "testing.instructions.md"))
+	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
+	mustNotExist(t, filepath.Join(root, ".github", "copilot-instructions.md"))
+	mustNotExist(t, filepath.Join(root, ".github", "agents"))
+	mustNotExist(t, filepath.Join(root, ".github", "hooks"))
+	mustNotExist(t, filepath.Join(root, ".github", "skills"))
+	mustNotExist(t, filepath.Join(root, ".github", "instructions"))
+}
+
+func TestRunSyncMixedTargetsMaterializesNativeUnion(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,copilot"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	mustExist(t, filepath.Join(root, ".agents", "skills", "vertical-tdd", "SKILL.md"))
+	mustExist(t, filepath.Join(root, ".codex", "instructions", "testing.instructions.md"))
+	mustExist(t, filepath.Join(root, ".github", "skills", "vertical-tdd", "SKILL.md"))
+	mustExist(t, filepath.Join(root, ".github", "instructions", "testing.instructions.md"))
+	mustExist(t, filepath.Join(root, ".github", "hooks", "guardrails-rules.txt"))
+}
+
+func TestRunSyncRemovingTargetDeletesOnlyUnchangedOwnedFiles(t *testing.T) {
+	root := withTempCwd(t)
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,copilot"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("initial sync exit code = %d, output: %s", code, out.String())
+	}
+
+	modified := filepath.Join(root, ".github", "copilot-instructions.md")
+	if err := os.WriteFile(modified, []byte("custom\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile modified Copilot instructions: %v", err)
+	}
+	config := Config{Version: 1, Packs: []string{"core", "sdd"}, Targets: []string{TargetCodex}}
+	if err := os.WriteFile(filepath.Join(root, configFileName), []byte(formatConfig(config)), 0o644); err != nil {
+		t.Fatalf("WriteFile config: %v", err)
+	}
+
+	out.Reset()
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("Codex-only sync exit code = %d, output: %s", code, out.String())
+	}
+
+	if got := string(testMustRead(t, modified)); got != "custom\n" {
+		t.Fatalf("modified Copilot instructions = %q, want preserved custom content", got)
+	}
+	mustNotExist(t, filepath.Join(root, ".github", "skills", "vertical-tdd", "SKILL.md"))
+	mustNotExist(t, filepath.Join(root, ".github", "instructions", "testing.instructions.md"))
+	if !strings.Contains(out.String(), "project reconcile:") ||
+		!strings.Contains(out.String(), "preserved=1") {
+		t.Fatalf("sync output missing reconciliation summary:\n%s", out.String())
+	}
+}
+
+func TestRunSyncDoesNotFollowOrDeleteUnownedSymlink(t *testing.T) {
+	root := withTempCwd(t)
+	external := filepath.Join(t.TempDir(), "external.txt")
+	if err := os.WriteFile(external, []byte("external\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile external: %v", err)
+	}
+	link := filepath.Join(root, ".github", "skills", "external")
+	if err := os.MkdirAll(filepath.Dir(link), 0o755); err != nil {
+		t.Fatalf("MkdirAll symlink parent: %v", err)
+	}
+	if err := os.Symlink(external, link); err != nil {
+		t.Fatalf("Symlink: %v", err)
+	}
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	info, err := os.Lstat(link)
+	if err != nil {
+		t.Fatalf("Lstat unowned symlink: %v", err)
+	}
+	if info.Mode()&os.ModeSymlink == 0 {
+		t.Fatalf("%s is no longer a symlink", link)
+	}
+	if got := string(testMustRead(t, external)); got != "external\n" {
+		t.Fatalf("external content = %q, want unchanged", got)
+	}
+}
+
+func TestRunSyncDoesNotWriteThroughSelectedTargetSymlink(t *testing.T) {
+	root := withTempCwd(t)
+	externalRoot := t.TempDir()
+	link := filepath.Join(root, ".github", "skills", "vertical-tdd")
+	if err := os.MkdirAll(filepath.Dir(link), 0o755); err != nil {
+		t.Fatalf("MkdirAll symlink parent: %v", err)
+	}
+	if err := os.Symlink(externalRoot, link); err != nil {
+		t.Fatalf("Symlink: %v", err)
+	}
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "copilot"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	mustNotExist(t, filepath.Join(externalRoot, "SKILL.md"))
+	info, err := os.Lstat(link)
+	if err != nil {
+		t.Fatalf("Lstat selected target symlink: %v", err)
+	}
+	if info.Mode()&os.ModeSymlink == 0 {
+		t.Fatalf("%s is no longer a symlink", link)
+	}
+}
+
+func TestRunSyncMigratesExactLegacyArtifacts(t *testing.T) {
+	root := withTempCwd(t)
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	packs, err := catalog.Resolve([]string{"core", "sdd"})
+	if err != nil {
+		t.Fatalf("Resolve returned error: %v", err)
+	}
+	if _, err := syncPacks(root, packs, syncOptions{}); err != nil {
+		t.Fatalf("legacy syncPacks returned error: %v", err)
+	}
+	mustExist(t, filepath.Join(root, ".github", "skills", "vertical-tdd", "SKILL.md"))
+
+	config := Config{Version: 1, Packs: []string{"core", "sdd"}, Targets: []string{TargetCodex}}
+	if err := os.WriteFile(filepath.Join(root, configFileName), []byte(formatConfig(config)), 0o644); err != nil {
+		t.Fatalf("WriteFile config: %v", err)
+	}
+	var out strings.Builder
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("migrating sync exit code = %d, output: %s", code, out.String())
+	}
+
+	mustNotExist(t, filepath.Join(root, ".github", "skills", "vertical-tdd", "SKILL.md"))
+	mustExist(t, filepath.Join(root, ".agents", "skills", "vertical-tdd", "SKILL.md"))
+}
+
+func TestRunSyncRejectsCorruptProjectManifestBeforeCopying(t *testing.T) {
+	root := withTempCwd(t)
+	if err := os.MkdirAll(filepath.Join(root, ".geremmyas"), 0o755); err != nil {
+		t.Fatalf("MkdirAll manifest directory: %v", err)
+	}
+	if err := os.WriteFile(projectManifestPath(root), []byte("{broken"), 0o644); err != nil {
+		t.Fatalf("WriteFile corrupt manifest: %v", err)
+	}
+
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code == 0 {
+		t.Fatalf("sync corrupt manifest exit code = 0, output: %s", out.String())
+	}
+
+	mustNotExist(t, filepath.Join(root, "AGENTS.md"))
+	mustNotExist(t, filepath.Join(root, ".agents"))
+}
+
 func TestSyncCoreOnlyExcludesStackSkills(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {
@@ -181,7 +369,7 @@ func TestRunProjectCodexTargetCopiesReferencedSkills(t *testing.T) {
 	}
 
 	mustExist(t, filepath.Join(root, ".codex", "AGENTS.md"))
-	mustExist(t, filepath.Join(root, ".github", "skills", "bugfix-loop", "SKILL.md"))
+	mustExist(t, filepath.Join(root, ".agents", "skills", "bugfix-loop", "SKILL.md"))
 }
 
 func TestRunProjectAddsPackAndSyncsFiles(t *testing.T) {

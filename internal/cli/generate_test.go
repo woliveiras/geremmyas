@@ -232,7 +232,7 @@ func TestRunSyncGeneratedProjectDocsOnlyReferenceExistingSkills(t *testing.T) {
 
 			doc := string(testMustRead(t, filepath.Join(root, relPath)))
 			for _, skill := range referencedProjectSkills(doc) {
-				mustExist(t, filepath.Join(root, ".github", "skills", skill, "SKILL.md"))
+				mustExist(t, filepath.Join(root, ".agents", "skills", skill, "SKILL.md"))
 			}
 		})
 	}
@@ -301,5 +301,5 @@ func testMustRead(t *testing.T, path string) []byte {
 }
 
 func referencedProjectSkills(doc string) []string {
-	return regexpMatches(`\.github/skills/([^/]+)/SKILL\.md`, doc)
+	return regexpMatches(`\.agents/skills/([^/]+)/SKILL\.md`, doc)
 }

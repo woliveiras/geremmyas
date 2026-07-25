@@ -86,12 +86,21 @@ func planProjectArtifacts(packs []Pack, targets []string) ([]FileEntry, error) {
 					add(entry, filepath.Join(".github", "hooks", entry.Path))
 				}
 			case ArtifactAgent:
+				if hasAnyNonCopilotTarget(targets) {
+					add(entry, filepath.Join(".agents", "roles", entry.Path))
+				}
 				if hasTarget(targets, TargetCopilot) {
 					add(entry, ".github/agents")
 				}
 			case ArtifactInstruction:
 				if hasTarget(targets, TargetCodex) {
 					add(entry, filepath.Join(".codex", "instructions", entry.Path))
+				}
+				if hasTarget(targets, TargetClaudeCode) {
+					add(entry, filepath.Join(".claude", "instructions", entry.Path))
+				}
+				if hasTarget(targets, TargetOpenCode) {
+					add(entry, filepath.Join(".opencode", "instructions", entry.Path))
 				}
 				if hasTarget(targets, TargetCopilot) {
 					add(entry, filepath.Join(".github", "instructions", entry.Path))
