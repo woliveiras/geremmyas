@@ -23,7 +23,9 @@ type Pack struct {
 }
 
 type FileEntry struct {
+	Kind   string `json:"kind"`
 	Source string `json:"source"`
+	Path   string `json:"path"`
 	Target string `json:"target"`
 }
 
@@ -115,6 +117,23 @@ func (c Catalog) ValidateSources() error {
 			}
 			if _, err := fs.Stat(geremmyas.EmbeddedFiles, entry.Source); err != nil {
 				return fmt.Errorf("pack %q references missing source %q: %w", pack.Name, entry.Source, err)
+			}
+		}
+	}
+	return nil
+}
+
+// ValidateArtifactKinds checks that every catalog file declares a supported
+// semantic kind and a safe logical path. Target adapters use these fields
+// instead of inferring artifact meaning from assistant-native destinations.
+func (c Catalog) ValidateArtifactKinds() error {
+	for _, pack := range c.Packs {
+		for _, entry := range pack.Files {
+			if !validArtifactKinds[entry.Kind] {
+				return fmt.Errorf("pack %q has invalid artifact kind %q for %q", pack.Name, entry.Kind, entry.Source)
+			}
+			if err := validateLogicalPath(entry.Path); err != nil {
+				return fmt.Errorf("pack %q has invalid artifact path %q: %w", pack.Name, entry.Path, err)
 			}
 		}
 	}

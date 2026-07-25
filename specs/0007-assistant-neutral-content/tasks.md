@@ -15,7 +15,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - verification: Manual artifact review and `git diff --check`.
   - commit: `docs: specify assistant-neutral content model`
 
-- [ ] **Type artifacts and plan destinations** (test-type: unit)
+- [x] **Type artifacts and plan destinations** (test-type: unit)
   - blocked-by: Approve and record the assistant-neutral content model
   - summary: Add explicit catalog artifact kinds and a deterministic planner for
     shared and target-native destinations.

@@ -5,33 +5,130 @@
       "tier": "core",
       "description": "Project-level agent contract, Copilot instructions, hooks, and baseline tooling.",
       "files": [
-        { "source": "project/AGENTS.md", "target": "AGENTS.md" },
-        { "source": "project/.github/copilot-instructions.md", "target": ".github/copilot-instructions.md" },
-        { "source": "project/.github/hooks", "target": ".github/hooks" },
-        { "source": "project/mise.toml", "target": "mise.toml" }
+        {
+          "kind": "contract",
+          "source": "project/AGENTS.md",
+          "path": "AGENTS.md",
+          "target": "AGENTS.md"
+        },
+        {
+          "kind": "copilot-instructions",
+          "source": "project/.github/copilot-instructions.md",
+          "path": "copilot-instructions.md",
+          "target": ".github/copilot-instructions.md"
+        },
+        {
+          "kind": "hook",
+          "source": "project/.github/hooks",
+          "path": ".",
+          "target": ".github/hooks"
+        },
+        {
+          "kind": "tooling",
+          "source": "project/mise.toml",
+          "path": "mise.toml",
+          "target": "mise.toml"
+        }
       ]
     },
     {
       "name": "sdd",
       "tier": "core",
       "description": "Spec-driven development workflow: specs, plans, tasks, tests, review, docs, and bugfix loops.",
-      "depends": ["core"],
+      "depends": [
+        "core"
+      ],
       "files": [
-        { "source": "project/.github/agents", "target": ".github/agents" },
-        { "source": "project/.github/instructions/testing.instructions.md", "target": ".github/instructions/testing.instructions.md" },
-        { "source": "project/.github/instructions/e2e-testing.instructions.md", "target": ".github/instructions/e2e-testing.instructions.md" },
-        { "source": "project/.github/instructions/integration-testing.instructions.md", "target": ".github/instructions/integration-testing.instructions.md" },
-        { "source": "project/.github/skills/requirements-interview", "target": ".github/skills/requirements-interview" },
-        { "source": "project/.github/skills/generate-spec", "target": ".github/skills/generate-spec" },
-        { "source": "project/.github/skills/vertical-tdd", "target": ".github/skills/vertical-tdd" },
-        { "source": "project/.github/skills/bugfix-loop", "target": ".github/skills/bugfix-loop" },
-        { "source": "project/.github/skills/update-docs", "target": ".github/skills/update-docs" },
-        { "source": "project/.github/skills/git-commit", "target": ".github/skills/git-commit" },
-        { "source": "project/.github/skills/generate-glossary", "target": ".github/skills/generate-glossary" },
-        { "source": "project/.github/skills/generate-adr", "target": ".github/skills/generate-adr" },
-        { "source": "project/.github/skills/verification-checklists", "target": ".github/skills/verification-checklists" },
-        { "source": "project/.github/skills/code-review-requesting", "target": ".github/skills/code-review-requesting" },
-        { "source": "project/templates/specs/README.md", "target": "specs/README.md" }
+        {
+          "kind": "agent",
+          "source": "project/.github/agents",
+          "path": ".",
+          "target": ".github/agents"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/testing.instructions.md",
+          "path": "testing.instructions.md",
+          "target": ".github/instructions/testing.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/e2e-testing.instructions.md",
+          "path": "e2e-testing.instructions.md",
+          "target": ".github/instructions/e2e-testing.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/integration-testing.instructions.md",
+          "path": "integration-testing.instructions.md",
+          "target": ".github/instructions/integration-testing.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/requirements-interview",
+          "path": "requirements-interview",
+          "target": ".github/skills/requirements-interview"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/generate-spec",
+          "path": "generate-spec",
+          "target": ".github/skills/generate-spec"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/vertical-tdd",
+          "path": "vertical-tdd",
+          "target": ".github/skills/vertical-tdd"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/bugfix-loop",
+          "path": "bugfix-loop",
+          "target": ".github/skills/bugfix-loop"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/update-docs",
+          "path": "update-docs",
+          "target": ".github/skills/update-docs"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/git-commit",
+          "path": "git-commit",
+          "target": ".github/skills/git-commit"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/generate-glossary",
+          "path": "generate-glossary",
+          "target": ".github/skills/generate-glossary"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/generate-adr",
+          "path": "generate-adr",
+          "target": ".github/skills/generate-adr"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/verification-checklists",
+          "path": "verification-checklists",
+          "target": ".github/skills/verification-checklists"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/code-review-requesting",
+          "path": "code-review-requesting",
+          "target": ".github/skills/code-review-requesting"
+        },
+        {
+          "kind": "template",
+          "source": "project/templates/specs/README.md",
+          "path": "specs/README.md",
+          "target": "specs/README.md"
+        }
       ]
     },
     {
@@ -39,7 +136,12 @@
       "tier": "stack",
       "description": "Structured decision support for material architectural and strategic choices.",
       "files": [
-        { "source": "project/.github/skills/decision-framework", "target": ".github/skills/decision-framework" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/decision-framework",
+          "path": "decision-framework",
+          "target": ".github/skills/decision-framework"
+        }
       ]
     },
     {
@@ -47,7 +149,12 @@
       "tier": "stack",
       "description": "Maintainer workflow for creating and revising Geremmyas skill packages.",
       "files": [
-        { "source": "project/.github/skills/skill-authoring", "target": ".github/skills/skill-authoring" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/skill-authoring",
+          "path": "skill-authoring",
+          "target": ".github/skills/skill-authoring"
+        }
       ]
     },
     {
@@ -55,7 +162,12 @@
       "tier": "stack",
       "description": "Opinionated blog post review and rewriting workflow for technical authors.",
       "files": [
-        { "source": "project/.github/skills/text-review", "target": ".github/skills/text-review" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/text-review",
+          "path": "text-review",
+          "target": ".github/skills/text-review"
+        }
       ]
     },
     {
@@ -63,9 +175,24 @@
       "tier": "stack",
       "description": "Scientific paper, literature review, peer review, empirical case study, and academic paper-review workflows.",
       "files": [
-        { "source": "project/.github/skills/scientific-paper", "target": ".github/skills/scientific-paper" },
-        { "source": "project/.github/skills/scientific-case-study-research", "target": ".github/skills/scientific-case-study-research" },
-        { "source": "project/.github/skills/paper-review", "target": ".github/skills/paper-review" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/scientific-paper",
+          "path": "scientific-paper",
+          "target": ".github/skills/scientific-paper"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/scientific-case-study-research",
+          "path": "scientific-case-study-research",
+          "target": ".github/skills/scientific-case-study-research"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/paper-review",
+          "path": "paper-review",
+          "target": ".github/skills/paper-review"
+        }
       ]
     },
     {
@@ -73,96 +200,204 @@
       "tier": "stack",
       "description": "TypeScript baseline instructions with strict compiler, type modeling, and security at boundaries.",
       "files": [
-        { "source": "project/.github/instructions/typescript.instructions.md", "target": ".github/instructions/typescript.instructions.md" },
-        { "source": "project/.github/instructions/typescript-security.instructions.md", "target": ".github/instructions/typescript-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/typescript.instructions.md",
+          "path": "typescript.instructions.md",
+          "target": ".github/instructions/typescript.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/typescript-security.instructions.md",
+          "path": "typescript-security.instructions.md",
+          "target": ".github/instructions/typescript-security.instructions.md"
+        }
       ]
     },
     {
       "name": "typescript-ci",
       "tier": "stack",
       "description": "TypeScript CI/CD pipeline setup skill (tsc, ESLint, Prettier, tests, audit).",
-      "depends": ["typescript-base"],
+      "depends": [
+        "typescript-base"
+      ],
       "files": [
-        { "source": "project/.github/skills/typescript-ci-setup", "target": ".github/skills/typescript-ci-setup" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/typescript-ci-setup",
+          "path": "typescript-ci-setup",
+          "target": ".github/skills/typescript-ci-setup"
+        }
       ]
     },
     {
       "name": "node-api",
       "tier": "stack",
       "description": "Node.js API baseline with TypeScript and API security rules.",
-      "depends": ["typescript-base"],
+      "depends": [
+        "typescript-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/api-security.instructions.md", "target": ".github/instructions/api-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/api-security.instructions.md",
+          "path": "api-security.instructions.md",
+          "target": ".github/instructions/api-security.instructions.md"
+        }
       ]
     },
     {
       "name": "nestjs",
       "tier": "stack",
       "description": "NestJS API instructions.",
-      "depends": ["node-api"],
+      "depends": [
+        "node-api"
+      ],
       "files": [
-        { "source": "project/.github/instructions/nestjs.instructions.md", "target": ".github/instructions/nestjs.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/nestjs.instructions.md",
+          "path": "nestjs.instructions.md",
+          "target": ".github/instructions/nestjs.instructions.md"
+        }
       ]
     },
     {
       "name": "fastify",
       "tier": "stack",
       "description": "Fastify API instructions.",
-      "depends": ["node-api"],
+      "depends": [
+        "node-api"
+      ],
       "files": [
-        { "source": "project/.github/instructions/fastify.instructions.md", "target": ".github/instructions/fastify.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/fastify.instructions.md",
+          "path": "fastify.instructions.md",
+          "target": ".github/instructions/fastify.instructions.md"
+        }
       ]
     },
     {
       "name": "react-web",
       "tier": "stack",
       "description": "React web instructions with browser security rules.",
-      "depends": ["typescript-base"],
+      "depends": [
+        "typescript-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/react.instructions.md", "target": ".github/instructions/react.instructions.md" },
-        { "source": "project/.github/instructions/web-security.instructions.md", "target": ".github/instructions/web-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/react.instructions.md",
+          "path": "react.instructions.md",
+          "target": ".github/instructions/react.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/web-security.instructions.md",
+          "path": "web-security.instructions.md",
+          "target": ".github/instructions/web-security.instructions.md"
+        }
       ]
     },
     {
       "name": "react-router",
       "tier": "stack",
       "description": "React Router instructions and migration skill.",
-      "depends": ["react-web"],
+      "depends": [
+        "react-web"
+      ],
       "files": [
-        { "source": "project/.github/instructions/react-router.instructions.md", "target": ".github/instructions/react-router.instructions.md" },
-        { "source": "project/.github/skills/migrate-react-router", "target": ".github/skills/migrate-react-router" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/react-router.instructions.md",
+          "path": "react-router.instructions.md",
+          "target": ".github/instructions/react-router.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/migrate-react-router",
+          "path": "migrate-react-router",
+          "target": ".github/skills/migrate-react-router"
+        }
       ]
     },
     {
       "name": "react-state",
       "tier": "stack",
       "description": "Zustand and XState instructions and recipe skills.",
-      "depends": ["react-web"],
+      "depends": [
+        "react-web"
+      ],
       "files": [
-        { "source": "project/.github/instructions/zustand.instructions.md", "target": ".github/instructions/zustand.instructions.md" },
-        { "source": "project/.github/instructions/xstate.instructions.md", "target": ".github/instructions/xstate.instructions.md" },
-        { "source": "project/.github/skills/manage-state-with-zustand", "target": ".github/skills/manage-state-with-zustand" },
-        { "source": "project/.github/skills/model-state-with-xstate", "target": ".github/skills/model-state-with-xstate" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/zustand.instructions.md",
+          "path": "zustand.instructions.md",
+          "target": ".github/instructions/zustand.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/xstate.instructions.md",
+          "path": "xstate.instructions.md",
+          "target": ".github/instructions/xstate.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/manage-state-with-zustand",
+          "path": "manage-state-with-zustand",
+          "target": ".github/skills/manage-state-with-zustand"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/model-state-with-xstate",
+          "path": "model-state-with-xstate",
+          "target": ".github/skills/model-state-with-xstate"
+        }
       ]
     },
     {
       "name": "react-data",
       "tier": "stack",
       "description": "TanStack Query and Zod instructions and recipe skills.",
-      "depends": ["react-web"],
+      "depends": [
+        "react-web"
+      ],
       "files": [
-        { "source": "project/.github/instructions/tanstack-query.instructions.md", "target": ".github/instructions/tanstack-query.instructions.md" },
-        { "source": "project/.github/instructions/zod.instructions.md", "target": ".github/instructions/zod.instructions.md" },
-        { "source": "project/.github/skills/validate-with-zod", "target": ".github/skills/validate-with-zod" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/tanstack-query.instructions.md",
+          "path": "tanstack-query.instructions.md",
+          "target": ".github/instructions/tanstack-query.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/zod.instructions.md",
+          "path": "zod.instructions.md",
+          "target": ".github/instructions/zod.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/validate-with-zod",
+          "path": "validate-with-zod",
+          "target": ".github/skills/validate-with-zod"
+        }
       ]
     },
     {
       "name": "tailwind",
       "tier": "stack",
       "description": "Tailwind CSS instructions.",
-      "depends": ["react-web"],
+      "depends": [
+        "react-web"
+      ],
       "files": [
-        { "source": "project/.github/instructions/tailwind.instructions.md", "target": ".github/instructions/tailwind.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/tailwind.instructions.md",
+          "path": "tailwind.instructions.md",
+          "target": ".github/instructions/tailwind.instructions.md"
+        }
       ]
     },
     {
@@ -170,7 +405,12 @@
       "tier": "stack",
       "description": "Astro and MDX instructions.",
       "files": [
-        { "source": "project/.github/instructions/astro-mdx.instructions.md", "target": ".github/instructions/astro-mdx.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/astro-mdx.instructions.md",
+          "path": "astro-mdx.instructions.md",
+          "target": ".github/instructions/astro-mdx.instructions.md"
+        }
       ]
     },
     {
@@ -178,42 +418,109 @@
       "tier": "stack",
       "description": "Python baseline instructions with code quality, async, and security rules.",
       "files": [
-        { "source": "project/.github/instructions/python.instructions.md", "target": ".github/instructions/python.instructions.md" },
-        { "source": "project/.github/instructions/python-security.instructions.md", "target": ".github/instructions/python-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/python.instructions.md",
+          "path": "python.instructions.md",
+          "target": ".github/instructions/python.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/python-security.instructions.md",
+          "path": "python-security.instructions.md",
+          "target": ".github/instructions/python-security.instructions.md"
+        }
       ]
     },
     {
       "name": "python-ci",
       "tier": "stack",
       "description": "Python CI pipeline setup skill with linting, type checking, testing, security scanning, and Trusted Publishing.",
-      "depends": ["python-base", "infra-ci"],
+      "depends": [
+        "python-base",
+        "infra-ci"
+      ],
       "files": [
-        { "source": "project/.github/skills/python-ci-setup", "target": ".github/skills/python-ci-setup" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/python-ci-setup",
+          "path": "python-ci-setup",
+          "target": ".github/skills/python-ci-setup"
+        }
       ]
     },
     {
       "name": "python-api",
       "tier": "stack",
       "description": "FastAPI, Pydantic, and API security instructions.",
-      "depends": ["python-base"],
+      "depends": [
+        "python-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/fastapi.instructions.md", "target": ".github/instructions/fastapi.instructions.md" },
-        { "source": "project/.github/instructions/pydantic.instructions.md", "target": ".github/instructions/pydantic.instructions.md" },
-        { "source": "project/.github/instructions/api-security.instructions.md", "target": ".github/instructions/api-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/fastapi.instructions.md",
+          "path": "fastapi.instructions.md",
+          "target": ".github/instructions/fastapi.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/pydantic.instructions.md",
+          "path": "pydantic.instructions.md",
+          "target": ".github/instructions/pydantic.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/api-security.instructions.md",
+          "path": "api-security.instructions.md",
+          "target": ".github/instructions/api-security.instructions.md"
+        }
       ]
     },
     {
       "name": "python-ai",
       "tier": "stack",
       "description": "LangChain, LangGraph, and production LLM service instructions and workflow skills.",
-      "depends": ["python-base"],
+      "depends": [
+        "python-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/langchain.instructions.md", "target": ".github/instructions/langchain.instructions.md" },
-        { "source": "project/.github/instructions/langgraph.instructions.md", "target": ".github/instructions/langgraph.instructions.md" },
-        { "source": "project/.github/instructions/llm-service.instructions.md", "target": ".github/instructions/llm-service.instructions.md" },
-        { "source": "project/.github/instructions/pydantic.instructions.md", "target": ".github/instructions/pydantic.instructions.md" },
-        { "source": "project/.github/skills/llm-integration-review", "target": ".github/skills/llm-integration-review" },
-        { "source": "project/.github/skills/langgraph-agent-design", "target": ".github/skills/langgraph-agent-design" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/langchain.instructions.md",
+          "path": "langchain.instructions.md",
+          "target": ".github/instructions/langchain.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/langgraph.instructions.md",
+          "path": "langgraph.instructions.md",
+          "target": ".github/instructions/langgraph.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/llm-service.instructions.md",
+          "path": "llm-service.instructions.md",
+          "target": ".github/instructions/llm-service.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/pydantic.instructions.md",
+          "path": "pydantic.instructions.md",
+          "target": ".github/instructions/pydantic.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/llm-integration-review",
+          "path": "llm-integration-review",
+          "target": ".github/skills/llm-integration-review"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/langgraph-agent-design",
+          "path": "langgraph-agent-design",
+          "target": ".github/skills/langgraph-agent-design"
+        }
       ]
     },
     {
@@ -221,27 +528,56 @@
       "tier": "stack",
       "description": "Rust baseline instructions for idiomatic code, async/Tokio, and unsafe/FFI boundaries.",
       "files": [
-        { "source": "project/.github/instructions/rust.instructions.md", "target": ".github/instructions/rust.instructions.md" },
-        { "source": "project/.github/instructions/rust-async.instructions.md", "target": ".github/instructions/rust-async.instructions.md" },
-        { "source": "project/.github/instructions/rust-unsafe.instructions.md", "target": ".github/instructions/rust-unsafe.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/rust.instructions.md",
+          "path": "rust.instructions.md",
+          "target": ".github/instructions/rust.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/rust-async.instructions.md",
+          "path": "rust-async.instructions.md",
+          "target": ".github/instructions/rust-async.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/rust-unsafe.instructions.md",
+          "path": "rust-unsafe.instructions.md",
+          "target": ".github/instructions/rust-unsafe.instructions.md"
+        }
       ]
     },
     {
       "name": "rust-ci",
       "tier": "stack",
       "description": "Rust CI/CD pipeline setup skill with fmt, clippy, test, audit, Miri, and fuzzing.",
-      "depends": ["rust-base"],
+      "depends": [
+        "rust-base"
+      ],
       "files": [
-        { "source": "project/.github/skills/rust-ci-setup", "target": ".github/skills/rust-ci-setup" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/rust-ci-setup",
+          "path": "rust-ci-setup",
+          "target": ".github/skills/rust-ci-setup"
+        }
       ]
     },
     {
       "name": "rust-release",
       "tier": "stack",
       "description": "Rust release engineering skill for crate publishing, binary distribution, and cross-compilation.",
-      "depends": ["rust-base"],
+      "depends": [
+        "rust-base"
+      ],
       "files": [
-        { "source": "project/.github/skills/rust-release", "target": ".github/skills/rust-release" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/rust-release",
+          "path": "rust-release",
+          "target": ".github/skills/rust-release"
+        }
       ]
     },
     {
@@ -249,46 +585,96 @@
       "tier": "stack",
       "description": "Go baseline instructions with code quality, concurrency, and security rules.",
       "files": [
-        { "source": "project/.github/instructions/go.instructions.md", "target": ".github/instructions/go.instructions.md" },
-        { "source": "project/.github/instructions/go-security.instructions.md", "target": ".github/instructions/go-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/go.instructions.md",
+          "path": "go.instructions.md",
+          "target": ".github/instructions/go.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/go-security.instructions.md",
+          "path": "go-security.instructions.md",
+          "target": ".github/instructions/go-security.instructions.md"
+        }
       ]
     },
     {
       "name": "go-api",
       "tier": "stack",
       "description": "Go API instructions with Echo and API security rules.",
-      "depends": ["go-base"],
+      "depends": [
+        "go-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/echo.instructions.md", "target": ".github/instructions/echo.instructions.md" },
-        { "source": "project/.github/instructions/api-security.instructions.md", "target": ".github/instructions/api-security.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/echo.instructions.md",
+          "path": "echo.instructions.md",
+          "target": ".github/instructions/echo.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/api-security.instructions.md",
+          "path": "api-security.instructions.md",
+          "target": ".github/instructions/api-security.instructions.md"
+        }
       ]
     },
     {
       "name": "go-sqlite",
       "tier": "stack",
       "description": "Go SQLite instructions for database/sql and modernc.org/sqlite.",
-      "depends": ["go-base", "data-sqlite"],
+      "depends": [
+        "go-base",
+        "data-sqlite"
+      ],
       "files": [
-        { "source": "project/.github/instructions/go-sqlite.instructions.md", "target": ".github/instructions/go-sqlite.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/go-sqlite.instructions.md",
+          "path": "go-sqlite.instructions.md",
+          "target": ".github/instructions/go-sqlite.instructions.md"
+        }
       ]
     },
     {
       "name": "go-devtools",
       "tier": "stack",
       "description": "Go embed.FS and Air hot reload instructions.",
-      "depends": ["go-base"],
+      "depends": [
+        "go-base"
+      ],
       "files": [
-        { "source": "project/.github/instructions/go-embed.instructions.md", "target": ".github/instructions/go-embed.instructions.md" },
-        { "source": "project/.github/instructions/air.instructions.md", "target": ".github/instructions/air.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/go-embed.instructions.md",
+          "path": "go-embed.instructions.md",
+          "target": ".github/instructions/go-embed.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/air.instructions.md",
+          "path": "air.instructions.md",
+          "target": ".github/instructions/air.instructions.md"
+        }
       ]
     },
     {
       "name": "go-ci",
       "tier": "stack",
       "description": "Go CI pipeline setup skill with formatting, vetting, testing, vulnerability scanning, and container builds.",
-      "depends": ["go-base", "infra-ci"],
+      "depends": [
+        "go-base",
+        "infra-ci"
+      ],
       "files": [
-        { "source": "project/.github/skills/go-ci-setup", "target": ".github/skills/go-ci-setup" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/go-ci-setup",
+          "path": "go-ci-setup",
+          "target": ".github/skills/go-ci-setup"
+        }
       ]
     },
     {
@@ -296,8 +682,18 @@
       "tier": "stack",
       "description": "Docker and Docker Compose instructions.",
       "files": [
-        { "source": "project/.github/instructions/docker.instructions.md", "target": ".github/instructions/docker.instructions.md" },
-        { "source": "project/.github/instructions/docker-compose.instructions.md", "target": ".github/instructions/docker-compose.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/docker.instructions.md",
+          "path": "docker.instructions.md",
+          "target": ".github/instructions/docker.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/docker-compose.instructions.md",
+          "path": "docker-compose.instructions.md",
+          "target": ".github/instructions/docker-compose.instructions.md"
+        }
       ]
     },
     {
@@ -305,8 +701,18 @@
       "tier": "stack",
       "description": "GitHub Actions instructions and CI workflow skill.",
       "files": [
-        { "source": "project/.github/instructions/github-actions.instructions.md", "target": ".github/instructions/github-actions.instructions.md" },
-        { "source": "project/.github/skills/ci-workflow", "target": ".github/skills/ci-workflow" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/github-actions.instructions.md",
+          "path": "github-actions.instructions.md",
+          "target": ".github/instructions/github-actions.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/ci-workflow",
+          "path": "ci-workflow",
+          "target": ".github/skills/ci-workflow"
+        }
       ]
     },
     {
@@ -314,8 +720,18 @@
       "tier": "stack",
       "description": "Google Cloud CLI instructions and operation skill.",
       "files": [
-        { "source": "project/.github/instructions/gcp.instructions.md", "target": ".github/instructions/gcp.instructions.md" },
-        { "source": "project/.github/skills/gcloud-operation", "target": ".github/skills/gcloud-operation" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/gcp.instructions.md",
+          "path": "gcp.instructions.md",
+          "target": ".github/instructions/gcp.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/gcloud-operation",
+          "path": "gcloud-operation",
+          "target": ".github/skills/gcloud-operation"
+        }
       ]
     },
     {
@@ -323,8 +739,18 @@
       "tier": "stack",
       "description": "Terraform instructions and change workflow skill.",
       "files": [
-        { "source": "project/.github/instructions/terraform.instructions.md", "target": ".github/instructions/terraform.instructions.md" },
-        { "source": "project/.github/skills/terraform-change", "target": ".github/skills/terraform-change" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/terraform.instructions.md",
+          "path": "terraform.instructions.md",
+          "target": ".github/instructions/terraform.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/terraform-change",
+          "path": "terraform-change",
+          "target": ".github/skills/terraform-change"
+        }
       ]
     },
     {
@@ -332,8 +758,18 @@
       "tier": "stack",
       "description": "PostgreSQL instructions and query review skill.",
       "files": [
-        { "source": "project/.github/instructions/postgres.instructions.md", "target": ".github/instructions/postgres.instructions.md" },
-        { "source": "project/.github/skills/postgres-query-review", "target": ".github/skills/postgres-query-review" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/postgres.instructions.md",
+          "path": "postgres.instructions.md",
+          "target": ".github/instructions/postgres.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/postgres-query-review",
+          "path": "postgres-query-review",
+          "target": ".github/skills/postgres-query-review"
+        }
       ]
     },
     {
@@ -341,25 +777,46 @@
       "tier": "stack",
       "description": "Generic SQLite schema, transaction, migration, and query instructions.",
       "files": [
-        { "source": "project/.github/instructions/sqlite.instructions.md", "target": ".github/instructions/sqlite.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/sqlite.instructions.md",
+          "path": "sqlite.instructions.md",
+          "target": ".github/instructions/sqlite.instructions.md"
+        }
       ]
     },
     {
       "name": "node-sqlite",
       "tier": "stack",
       "description": "Node.js SQLite instructions.",
-      "depends": ["node-api", "data-sqlite"],
+      "depends": [
+        "node-api",
+        "data-sqlite"
+      ],
       "files": [
-        { "source": "project/.github/instructions/node-sqlite.instructions.md", "target": ".github/instructions/node-sqlite.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/node-sqlite.instructions.md",
+          "path": "node-sqlite.instructions.md",
+          "target": ".github/instructions/node-sqlite.instructions.md"
+        }
       ]
     },
     {
       "name": "python-sqlite",
       "tier": "stack",
       "description": "Python SQLite instructions.",
-      "depends": ["python-base", "data-sqlite"],
+      "depends": [
+        "python-base",
+        "data-sqlite"
+      ],
       "files": [
-        { "source": "project/.github/instructions/python-sqlite.instructions.md", "target": ".github/instructions/python-sqlite.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/python-sqlite.instructions.md",
+          "path": "python-sqlite.instructions.md",
+          "target": ".github/instructions/python-sqlite.instructions.md"
+        }
       ]
     },
     {
@@ -367,18 +824,40 @@
       "tier": "stack",
       "description": "ChromaDB and RAG workflow instructions and skill.",
       "files": [
-        { "source": "project/.github/instructions/chromadb.instructions.md", "target": ".github/instructions/chromadb.instructions.md" },
-        { "source": "project/.github/skills/chromadb-rag-workflow", "target": ".github/skills/chromadb-rag-workflow" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/chromadb.instructions.md",
+          "path": "chromadb.instructions.md",
+          "target": ".github/instructions/chromadb.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/chromadb-rag-workflow",
+          "path": "chromadb-rag-workflow",
+          "target": ".github/skills/chromadb-rag-workflow"
+        }
       ]
     },
     {
       "name": "supabase",
       "tier": "stack",
       "description": "Supabase instructions and workflow skill, including PostgreSQL dependency.",
-      "depends": ["data-postgres"],
+      "depends": [
+        "data-postgres"
+      ],
       "files": [
-        { "source": "project/.github/instructions/supabase.instructions.md", "target": ".github/instructions/supabase.instructions.md" },
-        { "source": "project/.github/skills/supabase-workflow", "target": ".github/skills/supabase-workflow" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/supabase.instructions.md",
+          "path": "supabase.instructions.md",
+          "target": ".github/instructions/supabase.instructions.md"
+        },
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/supabase-workflow",
+          "path": "supabase-workflow",
+          "target": ".github/skills/supabase-workflow"
+        }
       ]
     },
     {
@@ -386,18 +865,40 @@
       "tier": "stack",
       "description": "Android Kotlin with architecture, security, Room, and static analysis instructions.",
       "files": [
-        { "source": "project/.github/instructions/kotlin.instructions.md", "target": ".github/instructions/kotlin.instructions.md" },
-        { "source": "project/.github/instructions/android-security.instructions.md", "target": ".github/instructions/android-security.instructions.md" },
-        { "source": "project/.github/instructions/android-sqlite.instructions.md", "target": ".github/instructions/android-sqlite.instructions.md" }
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/kotlin.instructions.md",
+          "path": "kotlin.instructions.md",
+          "target": ".github/instructions/kotlin.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/android-security.instructions.md",
+          "path": "android-security.instructions.md",
+          "target": ".github/instructions/android-security.instructions.md"
+        },
+        {
+          "kind": "instruction",
+          "source": "project/.github/instructions/android-sqlite.instructions.md",
+          "path": "android-sqlite.instructions.md",
+          "target": ".github/instructions/android-sqlite.instructions.md"
+        }
       ]
     },
     {
       "name": "android-ci",
       "tier": "stack",
       "description": "Android CI/CD pipeline setup skill (lint, detekt, ktlint, tests, R8, Fastlane).",
-      "depends": ["android"],
+      "depends": [
+        "android"
+      ],
       "files": [
-        { "source": "project/.github/skills/android-ci-setup", "target": ".github/skills/android-ci-setup" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/android-ci-setup",
+          "path": "android-ci-setup",
+          "target": ".github/skills/android-ci-setup"
+        }
       ]
     },
     {
@@ -405,7 +906,12 @@
       "tier": "stack",
       "description": "Premortem skill for stress-testing plans, decisions, and launches before committing.",
       "files": [
-        { "source": "project/.github/skills/premortem", "target": ".github/skills/premortem" }
+        {
+          "kind": "skill",
+          "source": "project/.github/skills/premortem",
+          "path": "premortem",
+          "target": ".github/skills/premortem"
+        }
       ]
     }
   ]

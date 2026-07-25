@@ -373,6 +373,9 @@ func runDoctor(w io.Writer, catalog Catalog) error {
 	if err := catalog.ValidateSources(); err != nil {
 		return err
 	}
+	if err := catalog.ValidateArtifactKinds(); err != nil {
+		return err
+	}
 	if err := catalog.ValidateTiers(); err != nil {
 		return err
 	}
