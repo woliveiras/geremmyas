@@ -24,7 +24,7 @@ jobs:
         run: |
           shellcheck install.sh
           shellcheck uninstall.sh
-          shellcheck project/.github/hooks/scripts/block-dangerous-commands.sh
+          shellcheck targets/copilot/hooks/scripts/block-dangerous-commands.sh
 
   structure:
     name: Structure Check
@@ -41,11 +41,11 @@ jobs:
           test -f catalog/packs.json
           test -d cmd/geremmyas
           test -d internal/cli
-          test -d user/prompts
-          test -d project/.github/instructions
-          test -d project/.github/agents
-          test -d project/.github/skills
-          test -d project/.github/hooks
+          test -d content/prompts
+          test -d content/instructions
+          test -d content/agents
+          test -d content/skills
+          test -d targets/copilot/hooks
 
   skills-lint:
     name: Skills Lint

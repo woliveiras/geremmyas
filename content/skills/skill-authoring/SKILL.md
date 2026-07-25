@@ -1,12 +1,13 @@
 ---
 name: skill-authoring
-description: "Create or revise Copilot skills that match this repository's structure and naming conventions. Use when: writing a new skill, renaming a skill, reviewing skill quality. Do not use: for general writing, non-skill documentation."
+description: "Create or revise coding-assistant skills that match this repository's structure and conventions. Use when: writing, renaming, or reviewing a skill. Do not use: for general writing or non-skill documentation."
 ---
 
 
 # Skill Authoring
 
-Create skills that are small, discoverable, and specific to GitHub Copilot.
+Create portable skills that are small, discoverable, and usable by the
+assistants Geremmyas supports.
 
 ## Process
 
@@ -30,4 +31,4 @@ Create skills that are small, discoverable, and specific to GitHub Copilot.
 - [ ] The skill is a workflow or capability, not a passive document title.
 - [ ] `SKILL.md` is short enough to load into context comfortably.
 - [ ] Examples are concrete and reusable.
-- [ ] The skill is adapted for GitHub Copilot, not copied from another agent.
+- [ ] The skill is assistant-neutral unless a target-specific constraint is explicit.

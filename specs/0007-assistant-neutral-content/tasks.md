@@ -64,7 +64,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     and `go test ./internal/cli`.
   - commit: `fix: route global content by target`
 
-- [ ] **Generalize maintainer surfaces and documentation** (test-type: integration)
+- [x] **Generalize maintainer surfaces and documentation** (test-type: integration)
   - blocked-by: Move canonical assistant content, Materialize and reconcile
     project targets, Route global content by selected target
   - summary: Replace assistant-content dogfooding symlinks, update help and

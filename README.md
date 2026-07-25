@@ -12,7 +12,10 @@ Agents, skills, instructions, hooks, prompts, and a pack-based CLI for coding as
 
 ## Why?
 
-Every project needs the same Copilot setup: language-specific instructions, code review prompts, testing conventions, security guardrails. Instead of copying files between repos, install once and apply everywhere.
+Every project needs the same coding-assistant setup: language-specific
+instructions, review workflows, testing conventions, and security guardrails.
+Instead of copying files between repositories or tying shared content to one
+assistant, install once and materialize it for the selected targets.
 
 **What you get:**
 
@@ -36,35 +39,30 @@ Every project needs the same Copilot setup: language-specific instructions, code
 | [AGENTS.md](AGENTS.md) | Agent operating contract for synced projects |
 
 This maintainer repo also uses [`specs/README.md`](specs/README.md) for platform
-features. Root `.github/*` and `AGENTS.md` are mostly **symlinks** into `project/`
-— edit `project/` directly; do not run `geremmyas project` here.
-
-**Exception:** root `.github/copilot-instructions.md` points at
-`copilot-instructions.geremmyas.md` (this repo only). The generic template synced
-by the `core` pack remains `project/.github/copilot-instructions.md`.
+features. Shared sources live under `content/`; assistant-specific adapters
+live under `targets/`. Root files and selected `.github` paths are symlinks used
+for dogfooding. Do not run `geremmyas project` here.
 
 ```
 geremmyas/
 ├── install.sh / uninstall.sh          # Install scripts
-├── user/
-│   ├── copilot-instructions.md        # Global bootstrap that points agents to local AGENTS.md
-│   └── prompts/                       # Global prompts (review, refactor, test)
-└── project/
-    ├── AGENTS.md                      # Project-level operating contract for agents
-    ├── mise.toml                      # Tool version management (keeps env consistent)
-    └── .github/
-        ├── copilot-instructions.md    # Project-level Copilot instructions
-        ├── instructions/              # Auto-applied language, framework, and convention files
-        ├── agents/                    # 4 agents + 6 design references
-        │   └── references/            # Deep modules, interface design, etc.
-        ├── skills/                    # Workflow and utility skills with asset templates
-        └── hooks/                     # Command guardrails (BLOCK/ASK rules)
+├── catalog/packs.json                 # Semantic artifact catalog
+├── content/                           # Assistant-neutral canonical sources
+│   ├── AGENTS.md                      # Project operating contract
+│   ├── instructions/                  # Language and framework guidance
+│   ├── agents/                        # Reusable agent roles
+│   ├── skills/                        # Workflow and utility skills
+│   ├── guardrails/                    # Portable command policy
+│   ├── prompts/                       # Review, refactor, test, and SDD prompts
+│   └── templates/                     # Project artifact templates
+└── targets/
+    └── copilot/                       # Copilot-only instructions and hooks
 
 Global install (`geremmyas global [--targets ...] <pack>...`):
-  → ~/.agents/skills/           (copilot and/or cursor targets)
-  → ~/.copilot/instructions/    (copilot target)
+  → ~/.agents/skills/             (targets with portable skills)
+  → ~/.copilot/instructions/      (copilot target)
+  → ~/.codex/instructions/        (codex target)
   → ~/.cursor/rules/              (cursor target)
-  → ~/.cursor/hooks.json          (cursor target, when core pack includes hooks)
   → ~/.claude/CLAUDE.md           (claude-code target)
   → ~/.config/opencode/AGENTS.md  (opencode target)
 ```
@@ -197,18 +195,17 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 **Sync output:** `installed`, `updated`, `preserved`, `skipped` — see
 [docs/architecture.md](docs/architecture.md).
 
-**Preserved on sync** (unless `--force`): `AGENTS.md`, `specs/README.md`,
-`mise.toml`, `.github/copilot-instructions.md`, `.github/hooks/guardrails-rules.txt`.
+Project sync reconciles files through `.geremmyas/project-manifest.json`.
+Modified, unowned, and symlinked paths are preserved; obsolete files are
+removed only when they remain unchanged and owned.
 
 **Generated IDE files** (marker `geremmyas:generated`): `.cursor/rules/*.mdc`,
 `.cursor/hooks.json`, `CLAUDE.md`, `.opencode/AGENTS.md`, `.codex/AGENTS.md`. Re-sync
 updates them; custom edits preserved unless `--force`.
 
-**Global install** copies `.github/skills/` to `~/.agents/skills/` and
-`.github/instructions/` to `~/.copilot/instructions/` (always). With the `codex`
-target it also writes `~/.codex/AGENTS.md` and mirrors instructions to
-`~/.codex/instructions/`. It does not copy agents, hooks, `AGENTS.md`, or
-`mise.toml`.
+**Global install** routes semantic artifacts by target. Portable skills use
+`~/.agents/skills/`; Copilot and Codex instructions are written only when their
+respective targets are selected.
 
 Use `geremmyas add <pack>` then `geremmyas sync`, or use `project` to do both.
 
@@ -257,7 +254,7 @@ Or use interactive selection:
 geremmyas global
 ```
 
-Default target is `copilot` (skills + instructions). With `--targets`:
+Default target is `copilot` for backward compatibility. With `--targets`:
 
 | Target | Output |
 | --- | --- |
@@ -267,9 +264,10 @@ Default target is `copilot` (skills + instructions). With `--targets`:
 | `opencode` | `~/.config/opencode/AGENTS.md` |
 | `codex` | `~/.codex/AGENTS.md` + `~/.codex/instructions/` (instruction index) |
 
-Instructions are copied to `~/.copilot/instructions/` on every global run,
-regardless of target. Codex reads `~/.codex/AGENTS.md` (its `CODEX_HOME`), which
-indexes each instruction by `applyTo` and points to `~/.codex/instructions/`.
+Instructions are routed only to the selected assistants: Copilot uses
+`~/.copilot/instructions/`, while Codex uses `~/.codex/instructions/`. Codex
+also reads `~/.codex/AGENTS.md` (its `CODEX_HOME`), which indexes each
+instruction by `applyTo`.
 The file is a compact bootstrap: it defers to the nearest project `AGENTS.md`
 and does not duplicate Codex's native skill discovery or unsupported agent
 roles.
@@ -345,46 +343,50 @@ the project needs) versions without manual setup.
 
 ## What's Included
 
+### Prompts and target templates
 
-### User-level Templates
-
-The `user/` directory contains optional prompt and instruction templates. The
-binary installer does not copy these files globally. Repository setup is driven
-by `geremmyas.yml` and `geremmyas sync`.
-
-| File | Purpose |
-|------|---------|
-| `user/copilot-instructions.md` | Bootstrap template: find and follow local `AGENTS.md` |
-| `user/prompts/review.prompt.md` | Structured code review checklist |
-| `user/prompts/refactor.prompt.md` | Refactor preserving behavior |
-| `user/prompts/test.prompt.md` | Generate unit tests matching project patterns |
-| `user/prompts/sdd.prompt.md` | Full SDD cycle: spec -> test -> implement -> review -> docs |
-
-### Project-level
-
-
-Installed to the project root and `.github/`.
+Portable prompt templates live in `content/prompts/`. Assistant-specific
+bootstrap and instruction templates live under `targets/<assistant>/`.
+Repository setup is driven by `geremmyas.yml` and `geremmyas sync`.
 
 | File | Purpose |
 |------|---------|
-| `AGENTS.md` | Project operating contract for agents: workflows, artifact paths, skill routing, verification rules |
-| `.github/copilot-instructions.md` | Project overview, conventions, directory structure, and build/test commands |
+| `targets/copilot/global-instructions.md` | Copilot bootstrap: find and follow local `AGENTS.md` |
+| `content/prompts/review.prompt.md` | Structured code review checklist |
+| `content/prompts/refactor.prompt.md` | Refactor preserving behavior |
+| `content/prompts/test.prompt.md` | Generate unit tests matching project patterns |
+| `content/prompts/sdd.prompt.md` | Full SDD cycle: spec -> test -> implement -> review -> docs |
+
+### Project outputs
+
+The selected targets determine output paths. Shared artifacts remain at the
+project root; assistant-specific content is emitted only for that target.
+
+| Target | Principal outputs |
+|------|---------|
+| Shared | `AGENTS.md`, `mise.toml`, project templates |
+| Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
+| Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
+| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
 `AGENTS.md` is the source of truth for agent behavior in a repository. It should
 reference skills instead of duplicating their full procedures.
 `.github/copilot-instructions.md` remains useful for project facts and
 Copilot-wide context.
 
-#### Instructions (`.github/instructions/`)
+#### Instructions (`content/instructions/`)
 
 Instructions are short, auto-applied rules selected by `applyTo` globs. Use them
-for conventions that should be present whenever Copilot edits a matching file.
-Use skills for explicit workflows, and `assets/` or `references/` for long
-examples and recipes.
+for conventions that should be present whenever an assistant edits a matching
+file. Target planners place the same source in the assistant's native
+destination. Use skills for explicit workflows, and `assets/` or `references/`
+for long examples and recipes.
 
 `geremmyas lint` protects the default context budget: descriptions are limited
 to 240 characters, skill bodies to 250 lines, the `sdd` pack to 10 public
-skills, and `project/AGENTS.md` to 700 words. Nested support files must use
+skills, and `content/AGENTS.md` to 700 words. Nested support files must use
 descriptive names instead of `SKILL.md`. See
 [Creating packs, skills, and instructions](docs/creating-packs.md#context-budgets).
 
@@ -432,7 +434,7 @@ descriptive names instead of `SKILL.md`. See
 | `zod.instructions.md` | schemas and API files | Zod v4 schemas and parsing |
 | `zustand.instructions.md` | store files | Zustand v5 stores and middleware |
 
-#### Agents (`.github/agents/`)
+#### Agent roles (`content/agents/`)
 
 Agents are narrow roles with a specific output contract. They should route to
 skills for reusable workflows instead of duplicating skill procedures.
@@ -450,7 +452,9 @@ summary will be smaller than doing the exploration inline. The `architect`
 fans out alternatives only for material, hard-to-reverse decisions; routine
 refactors compare options inline.
 
-Agents reference design heuristics in `.github/agents/references/` (deep modules, interface design, complexity signals, dependency categories, pragmatic heuristics, seam finding).
+Agents reference design heuristics in `content/agents/references/` (deep
+modules, interface design, complexity signals, dependency categories,
+pragmatic heuristics, seam finding).
 
 #### When to Use What: Code Review
 
@@ -462,7 +466,7 @@ There are three review surfaces — each for a different context:
 | `/review` prompt | Type `/review` in Copilot Chat | **Quick general review** — security, readability, correctness checklist. Use for fast feedback on any code, no specs needed. |
 | Built-in `/review` | `/review` in Copilot CLI | **Diff-based review** — analyzes staged/branch changes automatically. Use for pre-commit or pre-PR checks. |
 
-#### Skills (`.github/skills/`)
+#### Skills (`content/skills/`)
 
 Skills are explicit capabilities. Workflow skills guide multi-step work; utility
 skills provide focused technical recipes or generated artifacts.
@@ -474,7 +478,7 @@ live in the paired instruction files.
 
 Use a top-level skill only for a capability users invoke directly. Composition
 steps, checklists, examples, and policy belong in the owning skill's
-`references/`; isolated roles belong in `.github/agents/`.
+`references/`; isolated roles belong in `content/agents/`.
 
 | Skill | Purpose |
 |-------|---------|
@@ -564,7 +568,7 @@ they conflict, ask before changing either file.
 Absence of both files should not block work. Create or update vocabulary only
 when real ambiguity, inconsistent naming, or overloaded domain language appears.
 
-#### Hooks (`.github/hooks/`)
+#### Copilot hooks (`.github/hooks/`)
 
 Command guardrails that intercept dangerous terminal commands:
 

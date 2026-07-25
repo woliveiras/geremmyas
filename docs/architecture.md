@@ -1,58 +1,63 @@
 # geremmyas architecture
 
-geremmyas is a Go CLI that ships Copilot agent content as **packs**. At build
-time, `catalog/`, `project/`, and `user/` are embedded into the binary. At
-runtime, the CLI copies selected pack files into a target repository or into
-user-level VS Code paths.
+geremmyas is a Go CLI that distributes coding-assistant content as packs. The
+catalog describes semantic artifacts; target adapters decide where each
+artifact is materialized for Copilot, Codex, Cursor, Claude Code, or OpenCode.
 
 ## Repository layout
 
 ```text
 cmd/geremmyas/          CLI entrypoint
-internal/cli/           Commands, catalog, config, sync, global install
-catalog/packs.json      Pack manifest (names, depends, source → target)
-project/                Canonical files synced into consumer repos
-user/                   Embedded prompts/bootstrap (not copied by project sync)
-assets.go               //go:embed catalog/** project/** user/**
+internal/cli/           Commands, catalog, planning, sync, and global install
+catalog/packs.json      Pack manifest (kind, source, target-neutral path)
+content/                Canonical assistant-neutral content
+targets/                Assistant-specific adapters and templates
+assets.go               //go:embed catalog/** content/** targets/**
 ```
+
+`content/` owns portable contracts, skills, instructions, roles, prompts,
+templates, guardrails, and tooling. `targets/<assistant>/` exists only when an
+artifact or runtime integration is genuinely assistant-specific. This prevents
+the source tree from treating `.github/` as the universal content model.
 
 ### Maintainer repo vs consumer repo
 
-This repository **dogfoods** content without running `geremmyas project`:
+This repository dogfoods the same sources without running `geremmyas project`:
 
-| Path at repo root | How it maps |
+| Root path | Canonical source |
 | --- | --- |
-| `AGENTS.md` | Symlink → `project/AGENTS.md` |
-| `.github/agents`, `hooks`, `instructions`, `skills` | Symlinks → `project/.github/…` |
-| `.github/copilot-instructions.md` | Symlink → `project/.github/copilot-instructions.geremmyas.md` (maintainer only) |
-| `project/.github/copilot-instructions.md` | Generic template; synced by `core` pack to consumers |
+| `AGENTS.md` | `content/AGENTS.md` |
+| `.github/agents`, `instructions`, `skills` | `content/` |
+| `.github/hooks` | `targets/copilot/hooks/` |
+| `.github/copilot-instructions.md` | `targets/copilot/maintainer-instructions.md` |
 
-Edit under `project/`; the root symlinks stay in sync. Do **not** run
-`geremmyas project` here — sync would replace symlinks with plain copies and
-fork the canonical tree.
+GitHub platform files such as workflows and issue templates remain in
+`.github/`; their location is a GitHub convention, not assistant coupling.
+Edit the canonical source rather than its root symlink. Do not run project sync
+in this repository.
 
-Consumer repos use `geremmyas.yml` + `geremmyas sync` (or `geremmyas project`)
-to copy from the embedded filesystem, not from your local checkout paths.
-
-## Embedded filesystem
+## Embedded filesystem and catalog
 
 ```go
-//go:embed catalog/** project/** user/**
+//go:embed catalog/** content/** targets/**
 var EmbeddedFiles embed.FS
 ```
 
-Implications:
+Each catalog entry has:
 
-- Pack `source` paths in `catalog/packs.json` must exist under those trees.
-- Changing `project/` or `catalog/` requires **rebuilding** the binary for local
-  testing (`go build ./cmd/geremmyas`).
-- Released binaries only include what was embedded at release build time.
+- `kind`: semantic type such as `skill`, `instruction`, `agent`, `hook`, or
+  `contract`;
+- `source`: embedded source path;
+- `path`: target-neutral relative name used by the materializer.
 
-Run `geremmyas doctor` to verify every pack source path is present in the embed.
+There is no consumer destination in the catalog. Rebuild the binary after
+changing embedded content, and run `geremmyas doctor` to validate sources and
+artifact metadata.
+
+Pack dependencies are resolved in dependency order. Duplicate semantic
+artifacts are deduplicated before target planning.
 
 ## Configuration
-
-`geremmyas.yml` in the target repository:
 
 ```yaml
 version: 1
@@ -61,182 +66,95 @@ packs:
   - sdd
 targets:
   - copilot
-  - cursor
-  - claude-code
+  - codex
 ```
 
 - Default packs for non-interactive `init`: `core`, `sdd`.
-- Default targets when omitted: `copilot` only (backward compatible).
-- Valid targets: `copilot`, `cursor`, `claude-code`, `opencode`, `codex`.
-- `add` / `remove` only edit packs; they do **not** sync files.
-- `sync` and `project` read the config, resolve dependencies, then run pack sync
-  and IDE generators.
+- Default target when omitted: `copilot`, for compatibility.
+- Valid targets: `copilot`, `codex`, `cursor`, `claude-code`, `opencode`.
+- `add` and `remove` edit configuration only.
+- `sync` and `project` resolve packs and materialize the selected target union.
 
-## Multi-IDE targets
+## Project materialization
 
-The canonical source is always `project/` (embedded at build time). Targets
-select which IDE-specific outputs `sync` / `project` generate:
+Portable sources can appear at different destinations:
 
-| Target | Output | Source |
-| --- | --- | --- |
-| `copilot` | `.github/skills/`, `.github/agents/`, `.github/instructions/`, hooks | Pack file copy (existing behavior) |
-| `cursor` | `.cursor/rules/*.mdc`, `.cursor/hooks.json` | Instructions, skills, agents, hooks |
-| `claude-code` | `CLAUDE.md` | `AGENTS.md` + skill/agent index |
-| `opencode` | `.opencode/AGENTS.md` | Same as Claude Code |
-| `codex` | `.codex/AGENTS.md` | Compact bootstrap + instruction index; Codex loads root `AGENTS.md` and skills natively |
-
-`AGENTS.md` is portable — Cursor, Claude Code, and OpenCode all read it. Targets
-add IDE-native formats on top.
-
-### Global install paths and Codex instructions
-
-`geremmyas global` installs into user-level directories. Codex reads its global
-contract from `$CODEX_HOME/AGENTS.md` (default `~/.codex/AGENTS.md`), not the XDG
-`~/.config/codex/` path.
-
-| Content | Destination |
+| Target | Principal project outputs |
 | --- | --- |
-| Skills | `~/.agents/skills/` |
-| Instructions (Copilot) | `~/.copilot/instructions/` (always copied) |
-| Codex `AGENTS.md` | `~/.codex/AGENTS.md` |
-| Codex instructions | `~/.codex/instructions/` (when `codex` target selected) |
+| Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
+| Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
+| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
-Codex has no `applyTo` auto-loading, so the generated `~/.codex/AGENTS.md`
-indexes each instruction by its `applyTo` glob and points to the Codex-owned
-`~/.codex/instructions/<file>` copy for on-demand reads. The Copilot-only
-`~/.copilot/instructions/` path is never referenced from Codex documents.
-The Codex document does not embed the project contract, skill catalog, or custom
-agent roles: Codex already loads the nearest project `AGENTS.md` and scans its
-installed skill roots. Claude Code and OpenCode retain their generated indexes
-because their target integrations require them.
-Earlier versions wrote `~/.config/codex/AGENTS.md`; remove that stale file once
-after upgrading.
+`AGENTS.md`, `mise.toml`, and selected templates are shared project outputs.
+Mixed target selection produces the union, so Copilot paths appear only when
+Copilot is selected.
 
-Generated files include a `geremmyas:generated` marker. Re-sync updates them;
-custom edits are preserved unless you pass `--force`.
+Generated adapter files include `geremmyas:generated`. Customized generated
+files are preserved unless `--force` is used.
 
-Override targets per run: `geremmyas sync --targets copilot,cursor`.
+### Project ownership and reconciliation
 
-## Pack resolution
+Project state is recorded in `.geremmyas/project-manifest.json`. It stores the
+selected packs, targets, destination paths, and hashes written by Geremmyas.
+Each sync computes the complete desired state and removes obsolete files only
+when they are still unchanged and owned.
 
-`catalog/packs.json` lists packs with optional `depends`. When you request
-`nestjs`, the CLI resolves the chain (for example `nestjs` → `node-api` →
-`typescript-base`) and installs all required packs in dependency order.
+Modified, unowned, and symlinked files are preserved. A missing manifest adopts
+only exact matches for known legacy Geremmyas outputs. A corrupt or unsupported
+manifest stops the operation before files are copied. Destination traversal is
+symlink-safe and will not write through a selected target path.
 
-Duplicate `target` paths across packs: the first copy wins; later copies count
-as `skipped`.
-
-## Project sync (`sync`, `project`)
-
-For each pack file entry:
-
-- **File** — copy `source` → `target` under the current working directory.
-- **Directory** — walk all files recursively (skills, hooks, agents).
-
-### Sync summary counters
+### Sync summary
 
 | Counter | Meaning |
 | --- | --- |
-| `installed` | New file on disk |
-| `updated` | Existing file overwritten |
-| `preserved` | Customizable file left unchanged (content differed, no `--force`) |
-| `skipped` | Unchanged content, or duplicate target already copied |
+| `installed` | New file |
+| `updated` | Owned or forced file replaced |
+| `preserved` | Local content intentionally left unchanged |
+| `skipped` | Content already current or duplicate output |
 
-### Customizable targets
+`geremmyas project` updates `geremmyas.yml` and then performs the same sync.
 
-Unless `--force`, these paths are **not** overwritten when local content differs:
+## Global materialization
 
-- `AGENTS.md`
-- `specs/README.md`
-- `mise.toml`
-- `.github/copilot-instructions.md`
-- `.github/hooks/guardrails-rules.txt`
+`geremmyas global [--targets ...] [--force] <pack>...` treats each invocation
+as the complete desired global state:
 
-Everything else (skills, instructions, agents, etc.) is updated when the embed
-differs.
+| Target | Principal global outputs |
+| --- | --- |
+| Copilot | `~/.agents/skills`, `~/.copilot/instructions` |
+| Codex | `~/.agents/skills`, `~/.codex/instructions`, `~/.codex/AGENTS.md` |
+| Cursor | `~/.agents/skills`, `~/.cursor/rules`, `~/.cursor/hooks.json` |
+| Claude Code | `~/.agents/skills`, `~/.claude/CLAUDE.md` |
+| OpenCode | `~/.agents/skills`, `~/.config/opencode/AGENTS.md` |
 
-`geremmyas project` = update `geremmyas.yml` + run sync. Interactive `project`
-can ask once whether to force-overwrite customizable files.
+Copilot instructions are written only when Copilot is selected. Codex
+instructions are written only when Codex is selected. Mixed selection produces
+their union.
 
-## Global install (`global`)
-
-`geremmyas global [--targets ...] [--force] <pack>...` installs packs to
-user-level paths. Default target is `copilot` (backward compatible). The packs
-and targets passed to each invocation are the complete desired state.
-
-| Target | File copy | Generated output |
-| --- | --- | --- |
-| `copilot` | skills → `~/.agents/skills/`, instructions → `~/.copilot/instructions/` | — |
-| `cursor` | skills → `~/.agents/skills/` (skill rules need them) | `~/.cursor/rules/*.mdc`, `~/.cursor/hooks.json` |
-| `claude-code` | — | `~/.claude/CLAUDE.md` |
-| `opencode` | — | `~/.config/opencode/AGENTS.md` |
-
-Examples:
-
-```bash
-geremmyas global core sdd                              # copilot only (default)
-geremmyas global --targets copilot,cursor core sdd     # VS Code + Cursor user rules
-geremmyas global --targets cursor sdd                  # Cursor rules + skills, no Copilot instructions
-geremmyas global --targets claude-code,opencode sdd    # IDE docs only
-```
-
-Global Cursor skill rules reference `~/.agents/skills/<name>/SKILL.md`. Global
-agent rules embed full agent content (agents are not copied to a separate global
-path).
-
-Not installed globally: `AGENTS.md`, `mise.toml`, project-level agents/hooks,
-`copilot-instructions.md`, `specs/README.md`, templates.
-
-Global **file copies** always overwrite. Generated files follow the same
-preserve/overwrite rules as project sync (`geremmyas:generated` marker, `--force`
-to overwrite customized files).
-
-### Global ownership and reconciliation
-
-Global state is recorded at
-`${XDG_STATE_HOME:-$HOME/.local/state}/geremmyas/global-manifest.json`. The
-versioned manifest stores selected packs, targets, destination paths, and the
-SHA-256 hash written by Geremmyas. After writing the desired artifacts, the CLI
-removes obsolete entries only when their current hash still matches the
-manifest. Modified files remain tracked and are reported as preserved; files
-without a manifest entry are never deleted.
-
-Manifest replacement uses a temporary file in the state directory followed by
-an atomic rename. A missing manifest triggers conservative migration: current
-catalog files with exact embedded-content matches are adopted, while unknown
-legacy and third-party content remains unowned. A corrupt or unsupported
-manifest stops the operation before global files are changed.
+Global ownership is recorded at
+`${XDG_STATE_HOME:-$HOME/.local/state}/geremmyas/global-manifest.json`.
+Reconciliation follows the same conservative rules as project sync: only
+unchanged owned files are removed, unknown files are never claimed, and corrupt
+manifests fail before mutation.
 
 ## Context diagnostics
 
-`geremmyas context` inventories the embedded catalog and filesystem roots that
-can contribute skill metadata: project `.github/skills`, global
-`~/.agents/skills`, Codex system skills, and the Codex plugin cache. Filesystem
-walks do not follow symlinks and missing roots are reported as zero rather than
-errors.
+`geremmyas context` inventories embedded catalog skills, current project
+skills, `~/.agents/skills`, Codex system skills, and the Codex plugin cache.
+Filesystem walks do not follow symlinks. Managed global paths come from the
+ownership manifest; system and plugin paths are observed only.
 
-Only global paths present in the ownership manifest are reported as managed.
-System and plugin content is labeled observed and remains outside Geremmyas's
-mutation boundary. Frontmatter cost uses a deterministic `(bytes + 3) / 4`
-token estimate, and contract stats report words, bytes, and the same estimate
-for project and global Codex `AGENTS.md` files. Plugin-cache counts are an upper
-bound because the host may activate only a subset of cached versions.
-
-## `user/` directory
-
-Embedded but **not** installed by `sync` / `project`. Contains optional global
-bootstrap (`user/copilot-instructions.md`) and prompts (`user/prompts/*.md`).
-Copy or reference these manually if you use them outside pack sync.
+Frontmatter cost uses `(bytes + 3) / 4` as a deterministic comparison metric,
+not an exact model tokenizer result.
 
 ## CI and releases
 
-- **CI** (`ci.yml`): tests on changes to Go and catalog paths.
-- **Release** (`release.yml`): release-please bumps version, tags, builds
-  cross-platform binaries, uploads to GitHub Releases.
-- **geremmyas.yml** workflow: build matrix on PR/push (subset of paths).
-
-Breaking releases: use Conventional Commits with `feat!:` or `BREAKING CHANGE:`
-in the commit body; release-please bumps the major version.
+- `ci.yml` runs Go tests, structural checks, skill lint, and shell checks.
+- `release.yml` uses release-please and builds cross-platform binaries.
+- Breaking changes use `feat!:` or a `BREAKING CHANGE:` footer.
 
 ## Mental model
 
@@ -244,21 +162,23 @@ in the commit body; release-please bumps the major version.
 flowchart LR
   subgraph build [Build time]
     catalog[catalog/packs.json]
-    project[project/**]
-    user[user/**]
-    embed[embed.FS in binary]
+    content[content/**]
+    adapters[targets/**]
+    embed[embed.FS]
     catalog --> embed
-    project --> embed
-    user --> embed
+    content --> embed
+    adapters --> embed
   end
   subgraph runtime [Runtime]
-    CLI[geremmyas CLI]
-    yml[geremmyas.yml]
-    repo[Consumer repo]
-    global["~/.agents/skills\n~/.copilot/instructions\n~/.cursor/rules\n~/.claude/CLAUDE.md"]
+    cli[geremmyas CLI]
+    config[geremmyas.yml]
+    planner[target-aware planner]
+    project[consumer project]
+    global[user-level directories]
   end
-  embed --> CLI
-  yml --> CLI
-  CLI -->|sync / project| repo
-  CLI -->|global| global
+  embed --> cli
+  config --> planner
+  cli --> planner
+  planner -->|sync / project| project
+  planner -->|global| global
 ```

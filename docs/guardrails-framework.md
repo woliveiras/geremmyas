@@ -29,7 +29,7 @@ These former top-level skills are now loaded only by their owning workflow:
 | `abort-criteria` | `vertical-tdd/references/abort-criteria.md` |
 | `regression-testing` | `bugfix-loop/references/regression-testing.md` |
 | `agent-rationalization-blocking` | `verification-checklists/references/rationalization.md` |
-| `subagent-selection` | `.github/agents/references/subagent-selection.md` and `AGENTS.md` |
+| `subagent-selection` | `content/agents/references/subagent-selection.md` and `AGENTS.md` |
 
 `decision-framework` remains available through the opt-in `decision-support`
 pack. `skill-authoring` remains available through `skill-maintenance`.

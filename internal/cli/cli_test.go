@@ -48,6 +48,12 @@ func TestRunHelpMentionsVersionCommand(t *testing.T) {
 	if code := Run([]string{"--help"}, &stdout, &stderr); code != 0 {
 		t.Fatalf("help exit code = %d, stderr: %s", code, stderr.String())
 	}
+	if !strings.Contains(stdout.String(), "coding assistant packs") {
+		t.Fatalf("help output must use assistant-neutral terminology:\n%s", stdout.String())
+	}
+	if strings.Contains(stdout.String(), "Copilot agent packs") {
+		t.Fatalf("help output contains Copilot-specific product description:\n%s", stdout.String())
+	}
 	if !strings.Contains(stdout.String(), "  geremmyas version") {
 		t.Fatalf("help output missing version command:\n%s", stdout.String())
 	}

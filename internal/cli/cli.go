@@ -69,7 +69,7 @@ func Run(args []string, stdout, stderr io.Writer) int {
 }
 
 func printHelp(w io.Writer) {
-	fmt.Fprintln(w, "geremmyas manages repository-local Copilot agent packs.")
+	fmt.Fprintln(w, "geremmyas manages repository-local coding assistant packs.")
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  geremmyas version")

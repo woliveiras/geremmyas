@@ -3,7 +3,7 @@
     {
       "name": "core",
       "tier": "core",
-      "description": "Project-level agent contract, Copilot instructions, hooks, and baseline tooling.",
+      "description": "Project-level agent contract, target adapters, guardrails, and baseline tooling.",
       "files": [
         {
           "kind": "contract",

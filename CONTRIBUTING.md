@@ -1,8 +1,8 @@
 # Contributing to geremmyas
 
-Thanks for your interest in contributing! This project ships opinionated Copilot
-configurations and a pack-based CLI. Contributions that improve quality, fix
-bugs, or add broadly useful defaults are welcome.
+Thanks for your interest in contributing! This project ships opinionated
+coding-assistant configurations and a pack-based CLI. Contributions that
+improve quality, fix bugs, or add broadly useful defaults are welcome.
 
 ## Documentation
 
@@ -11,7 +11,7 @@ bugs, or add broadly useful defaults are welcome.
 | [docs/architecture.md](docs/architecture.md) | How embed, sync, global install, and symlinks work |
 | [docs/creating-packs.md](docs/creating-packs.md) | Add or change packs, skills, and instructions |
 | [README.md](README.md) | User-facing install, CLI, and pack catalog |
-| [AGENTS.md](AGENTS.md) | Agent operating contract (symlink to `project/AGENTS.md`) |
+| [AGENTS.md](AGENTS.md) | Agent operating contract (symlink to `content/AGENTS.md`) |
 
 ## Setup
 
@@ -34,7 +34,7 @@ bugs, or add broadly useful defaults are welcome.
 ## How to Contribute
 
 1. **Create a branch** from `main` (`git checkout -b feat/my-change`)
-2. **Make your changes** under `project/` and/or `catalog/packs.json`
+2. **Make your changes** under `content/`, `targets/`, and/or `catalog/packs.json`
 3. **Run tests and linting**:
    ```bash
    go test ./...
@@ -53,9 +53,9 @@ bugs, or add broadly useful defaults are welcome.
 
 - **Packs**: new catalog entries with clear `depends` and focused file lists
 - **Instructions**: language or stack patterns with `applyTo` globs, not project-specific trivia
-- **Agents**: narrow roles with clear triggers (see `project/.github/agents/`)
+- **Agents**: narrow roles with clear triggers (see `content/agents/`)
 - **Skills**: reusable procedures; use `skill-authoring` skill in repo as reference
-- **Guardrails**: safe defaults in `project/.github/hooks/guardrails-rules.txt`
+- **Guardrails**: portable policy in `content/guardrails/`; target adapters in `targets/`
 - **CLI**: changes in `internal/cli/` with tests in `*_test.go`
 - **Docs**: updates to `docs/` and README when behavior or packs change
 
@@ -65,21 +65,21 @@ See **[docs/creating-packs.md](docs/creating-packs.md)** for the full checklist.
 
 Short version:
 
-1. Add files under `project/`
-2. Register paths in `catalog/packs.json`
+1. Add portable files under `content/`, or target-specific adapters under `targets/`
+2. Register semantic `kind`, `source`, and `path` entries in `catalog/packs.json`
 3. Run `go test ./...` and `geremmyas doctor`
 4. Test `init` + `sync` in a temporary directory
 
-**Do not** run `geremmyas project` in this repository; edit `project/` directly.
-Root symlinks keep Copilot aligned with the canonical tree. Copilot project
-context for **this repo** is in `project/.github/copilot-instructions.geremmyas.md`
-(not synced). The consumer template is `project/.github/copilot-instructions.md`.
+**Do not** run `geremmyas project` in this repository. Root symlinks expose
+canonical content for dogfooding. Copilot maintainer context lives in
+`targets/copilot/maintainer-instructions.md`; the consumer template is
+`targets/copilot/project-instructions.md`.
 
 ## Guidelines
 
 - Keep instruction and skill files concise
 - Follow naming: `kebab-case.instructions.md`, `skills/<name>/SKILL.md`
-- Every skill in `project/.github/skills/` should belong to a pack or be removed
+- Every skill in `content/skills/` should belong to a pack or be removed
 - All user-facing prose in English
 - Shell scripts: run `shellcheck` before submitting
 
@@ -89,8 +89,8 @@ context for **this repo** is in `project/.github/copilot-instructions.geremmyas.
 cmd/geremmyas/          Entry point
 internal/cli/           CLI implementation
 catalog/packs.json      Pack definitions
-project/                Canonical content synced to consumer repos
-user/                   Embedded prompts (optional, not synced by default)
+content/                Canonical assistant-neutral content
+targets/                Assistant-specific adapters and templates
 docs/                   Contributor and architecture documentation
 specs/                  Specs for geremmyas features (maintainer SDD)
 ```
