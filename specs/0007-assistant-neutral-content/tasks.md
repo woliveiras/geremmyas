@@ -78,7 +78,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     `git diff --check`, and `git status --short`.
   - commit: `docs: generalize assistant framework terminology`
 
-- [ ] **Complete release verification** (test-type: integration)
+- [x] **Complete release verification** (test-type: integration)
   - blocked-by: Materialize and reconcile project targets, Route global content
     by selected target, Generalize maintainer surfaces and documentation
   - summary: Run the complete verification matrix and reconcile all durable

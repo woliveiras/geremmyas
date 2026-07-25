@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: Approved
+Status: Implemented
 
 ## Approach
 
@@ -96,3 +96,23 @@ committed separately before implementation.
 - Clean temporary project smoke tests for each supported target and a mixed
   Codex/Copilot configuration.
 - `git diff --check`, `git status --short`, and scoped `git log` review.
+
+## Completion Evidence
+
+Completed on 2026-07-25 in seven scoped commits:
+
+1. `109fa58` — specification and architecture decision
+2. `9b69835` — typed artifacts and destination planning
+3. `0efa965` — neutral canonical source migration
+4. `0ece869` — target-aware project materialization and reconciliation
+5. `84a304b` — target-aware global routing
+6. `4019164` — maintainer surfaces, CI, help, and documentation
+7. Final reconciliation commit
+
+Fresh verification passed:
+
+- `go test ./internal/cli -count=1`
+- `go test ./... -count=1`
+- clean project sync for each supported target and for `codex,copilot`
+- `geremmyas lint`, `doctor`, and `context` from a fresh build
+- `gofmt`, ShellCheck, catalog source validation, and `git diff --check`

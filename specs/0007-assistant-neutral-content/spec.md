@@ -3,7 +3,7 @@ spec: "0007"
 title: Assistant-neutral canonical content
 family: multi-assistant
 phase: 5
-status: Approved
+status: Implemented
 owner: ""
 depends_on: ["0001", "0005", "0006"]
 origin: Direct user request following repository coupling audit
@@ -33,49 +33,49 @@ compatibility.
 
 ### Functional
 
-- [ ] Move canonical contracts, skills, instructions, agents, guardrail rules,
+- [x] Move canonical contracts, skills, instructions, agents, guardrail rules,
       prompts, and templates from `project/` and `user/` into a neutral
       `content/` tree.
-- [ ] Keep Copilot-only project instructions and hook adapters under
+- [x] Keep Copilot-only project instructions and hook adapters under
       `targets/copilot/`.
-- [ ] Replace `.github/*` prefix inference with explicit artifact kinds in the
+- [x] Replace `.github/*` prefix inference with explicit artifact kinds in the
       catalog model.
-- [ ] Materialize shared artifacts once and assistant-native artifacts only for
+- [x] Materialize shared artifacts once and assistant-native artifacts only for
       selected targets.
-- [ ] For a Codex project target, keep the repository `AGENTS.md`, install
+- [x] For a Codex project target, keep the repository `AGENTS.md`, install
       project skills under `.agents/skills`, and make on-demand instruction
       content reachable from the generated Codex index.
-- [ ] Preserve the existing Copilot destinations when `copilot` is selected:
+- [x] Preserve the existing Copilot destinations when `copilot` is selected:
       `.github/copilot-instructions.md`, `.github/instructions`,
       `.github/skills`, `.github/agents`, and `.github/hooks`.
-- [ ] Generate the union of required outputs for multiple selected targets
+- [x] Generate the union of required outputs for multiple selected targets
       without duplicate writes or order-dependent results.
-- [ ] Stop installing global Copilot instructions unless `copilot` is selected.
+- [x] Stop installing global Copilot instructions unless `copilot` is selected.
       Continue installing shared skills when required by any selected target and
       mirror Codex instructions only for `codex`.
-- [ ] Reconcile obsolete project artifacts conservatively using ownership and
+- [x] Reconcile obsolete project artifacts conservatively using ownership and
       content hashes. Remove only unchanged Geremmyas-owned files, preserve
       modified or unowned files, and never follow symlinks during cleanup.
-- [ ] Migrate pre-manifest installs conservatively by adopting exact matches to
+- [x] Migrate pre-manifest installs conservatively by adopting exact matches to
       known legacy Geremmyas content. Report preserved legacy files that cannot
       be proven safe to remove.
-- [ ] Replace maintainer dogfooding symlinks that expose shared content through
+- [x] Replace maintainer dogfooding symlinks that expose shared content through
       `.github/*` with target-specific links or generated adapters.
-- [ ] Update CLI help, catalog descriptions, diagnostics, documentation, and
+- [x] Update CLI help, catalog descriptions, diagnostics, documentation, and
       maintainer guidance to describe coding assistants rather than Copilot as
       the framework baseline.
 
 ### Non-Functional
 
-- [ ] Existing default configuration remains `copilot` for backward
+- [x] Existing default configuration remains `copilot` for backward
       compatibility.
-- [ ] Existing Copilot output content and overwrite protection remain
+- [x] Existing Copilot output content and overwrite protection remain
       compatible when `copilot` is selected.
-- [ ] Project reconciliation must not delete modified, unowned, or symlinked
+- [x] Project reconciliation must not delete modified, unowned, or symlinked
       files.
-- [ ] No new third-party Go dependencies.
-- [ ] macOS and Linux remain the supported platforms.
-- [ ] Each large implementation slice includes its tests and documentation in
+- [x] No new third-party Go dependencies.
+- [x] macOS and Linux remain the supported platforms.
+- [x] Each large implementation slice includes its tests and documentation in
       a separate Conventional Commit.
 
 ## Test Strategy
@@ -91,33 +91,33 @@ project/global materialization, and both for migration safety.
 
 ## Acceptance Criteria
 
-- [ ] Given the embedded catalog, when it is validated, then canonical sources
+- [x] Given the embedded catalog, when it is validated, then canonical sources
       use `content/` or `targets/<target>/` and every installable entry has an
       explicit artifact kind.
-- [ ] Given a clean project configured only for `codex`, when `geremmyas sync`
+- [x] Given a clean project configured only for `codex`, when `geremmyas sync`
       runs, then `AGENTS.md`, `.agents/skills`, Codex instruction/index output,
       and shared project files are present, while Copilot instructions, agents,
       and hooks are absent.
-- [ ] Given a clean project configured only for `copilot`, when sync runs, then
+- [x] Given a clean project configured only for `copilot`, when sync runs, then
       the current `.github/*` Copilot output contract is preserved.
-- [ ] Given a project configured for `codex` and `copilot`, when sync runs, then
+- [x] Given a project configured for `codex` and `copilot`, when sync runs, then
       both native output sets are present and shared content is written once.
-- [ ] Given a global install configured only for `codex`, when it runs, then no
+- [x] Given a global install configured only for `codex`, when it runs, then no
       files are written under `~/.copilot/instructions`.
-- [ ] Given a previous target-owned file whose content still matches the
+- [x] Given a previous target-owned file whose content still matches the
       ownership manifest, when that target is removed and sync runs, then the
       file is removed and empty managed directories are cleaned safely.
-- [ ] Given a previous target-owned file modified by the user, when its target
+- [x] Given a previous target-owned file modified by the user, when its target
       is removed, then the file remains and is reported as preserved.
-- [ ] Given an unowned file or symlink under a managed-looking directory, when
+- [x] Given an unowned file or symlink under a managed-looking directory, when
       reconciliation runs, then it is not followed, overwritten, or deleted.
-- [ ] Given an installation created before the project manifest exists, when
+- [x] Given an installation created before the project manifest exists, when
       migration runs, then exact known Geremmyas files may be adopted, while
       unknown or changed files remain untouched.
-- [ ] Given `geremmyas context`, help, README, and architecture documentation,
+- [x] Given `geremmyas context`, help, README, and architecture documentation,
       when inspected, then neutral canonical paths and target-specific outputs
       are described consistently.
-- [ ] Given the completed migration, when the full verification matrix runs,
+- [x] Given the completed migration, when the full verification matrix runs,
       then catalog validation, lint, unit/integration tests, build, doctor, and
       clean-install smoke tests pass.
 
