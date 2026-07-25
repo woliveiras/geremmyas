@@ -1,1 +1,1 @@
-project/AGENTS.md
+content/AGENTS.md

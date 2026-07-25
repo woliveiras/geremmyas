@@ -1,1 +1,1 @@
-../project/.github/copilot-instructions.geremmyas.md
+../targets/copilot/maintainer-instructions.md

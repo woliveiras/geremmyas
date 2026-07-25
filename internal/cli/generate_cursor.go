@@ -98,7 +98,7 @@ func generateCursorAt(scope installScope, root string, artifacts packArtifacts, 
 		if err := writeGeneratedFile(root, ".cursor/hooks/guardrails.sh", []byte(cursorHookScript), opts, &summary); err != nil {
 			return summary, err
 		}
-		if err := copyEmbeddedToRoot(root, "project/.github/hooks/guardrails-rules.txt", ".cursor/hooks/guardrails-rules.txt", opts, &summary); err != nil {
+		if err := copyEmbeddedToRoot(root, "content/guardrails/guardrails-rules.txt", ".cursor/hooks/guardrails-rules.txt", opts, &summary); err != nil {
 			return summary, err
 		}
 		hooksJSON := fmt.Sprintf(`{
@@ -179,8 +179,8 @@ func generateCursorSkillRule(scope installScope, root, source string, opts gener
 	if scope == scopeGlobal {
 		skillRef = globalSkillPath(name)
 	} else {
-		target := strings.TrimPrefix(filepathToSlash(source), "project/.github/skills/")
-		skillRef = ".github/skills/" + target + "/SKILL.md"
+		target := strings.TrimPrefix(filepathToSlash(source), "content/skills/")
+		skillRef = ".agents/skills/" + target + "/SKILL.md"
 	}
 	description := fm.get("description")
 	if description == "" {

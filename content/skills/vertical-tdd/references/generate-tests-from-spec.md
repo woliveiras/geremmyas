@@ -33,7 +33,7 @@ external services, acceptance criteria describing end-to-end behavior.
 
 Signals for **unit**: pure logic, single function/module, no I/O.
 
-3. Follow `.github/instructions/testing.instructions.md` and
+3. Follow the active target's `testing.instructions.md` and
    `integration-testing.instructions.md` when they apply to edited files.
 
 ## Procedure

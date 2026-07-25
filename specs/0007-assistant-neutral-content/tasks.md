@@ -27,7 +27,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     and `go test ./internal/cli`.
   - commit: `refactor: type assistant content artifacts`
 
-- [ ] **Move canonical assistant content** (test-type: both)
+- [x] **Move canonical assistant content** (test-type: both)
   - blocked-by: Type artifacts and plan destinations
   - summary: Move shared sources to `content/`, Copilot adapters to
     `targets/copilot/`, and update embeds, catalog, lint, diagnostics, and tests.

@@ -121,7 +121,7 @@ func mirrorCodexInstructions(root string, artifacts packArtifacts) error {
 }
 
 func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts, target, title string) (string, error) {
-	agentsBody, err := readProjectFile(root, "AGENTS.md", "project/AGENTS.md")
+	agentsBody, err := readProjectFile(root, "AGENTS.md", "content/AGENTS.md")
 	if err != nil {
 		return "", err
 	}

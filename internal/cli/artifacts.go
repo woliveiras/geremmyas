@@ -11,6 +11,7 @@ const (
 	ArtifactAgent               = "agent"
 	ArtifactContract            = "contract"
 	ArtifactCopilotInstructions = "copilot-instructions"
+	ArtifactGuardrail           = "guardrail"
 	ArtifactHook                = "hook"
 	ArtifactInstruction         = "instruction"
 	ArtifactSkill               = "skill"
@@ -22,6 +23,7 @@ var validArtifactKinds = map[string]bool{
 	ArtifactAgent:               true,
 	ArtifactContract:            true,
 	ArtifactCopilotInstructions: true,
+	ArtifactGuardrail:           true,
 	ArtifactHook:                true,
 	ArtifactInstruction:         true,
 	ArtifactSkill:               true,
@@ -78,6 +80,10 @@ func planProjectArtifacts(packs []Pack, targets []string) ([]FileEntry, error) {
 			case ArtifactHook:
 				if hasTarget(targets, TargetCopilot) {
 					add(entry, ".github/hooks")
+				}
+			case ArtifactGuardrail:
+				if hasTarget(targets, TargetCopilot) {
+					add(entry, filepath.Join(".github", "hooks", entry.Path))
 				}
 			case ArtifactAgent:
 				if hasTarget(targets, TargetCopilot) {

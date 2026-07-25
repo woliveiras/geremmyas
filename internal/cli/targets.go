@@ -119,20 +119,19 @@ func collectPackArtifacts(packs []Pack) packArtifacts {
 
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
-			target := filepathToSlash(entry.Target)
 			source := filepathToSlash(entry.Source)
 
-			switch {
-			case strings.HasPrefix(target, ".github/instructions/") && strings.HasSuffix(target, ".instructions.md"):
+			switch entry.Kind {
+			case ArtifactInstruction:
 				addUnique(&artifacts.instructions, source, instrSeen)
-			case target == ".github/agents" || strings.HasPrefix(target, ".github/agents/"):
+			case ArtifactAgent:
 				_ = walkEmbeddedMatches(source, func(path string) error {
 					if strings.HasSuffix(path, ".agent.md") {
 						addUnique(&artifacts.agents, path, agentSeen)
 					}
 					return nil
 				})
-			case strings.HasPrefix(target, ".github/skills/"):
+			case ArtifactSkill:
 				if strings.HasSuffix(source, "/SKILL.md") || strings.HasSuffix(source, "SKILL.md") {
 					addUnique(&artifacts.skills, filepath.Dir(source), skillSeen)
 				} else if _, err := fs.Stat(geremmyas.EmbeddedFiles, filepathToSlash(filepath.Join(source, "SKILL.md"))); err == nil {
@@ -149,9 +148,9 @@ func collectPackArtifacts(packs []Pack) packArtifacts {
 						return nil
 					})
 				}
-			case target == ".github/hooks" || strings.HasPrefix(target, ".github/hooks/"):
+			case ArtifactHook, ArtifactGuardrail:
 				artifacts.hasHooks = true
-			case target == "AGENTS.md":
+			case ArtifactContract:
 				artifacts.hasAGENTS = true
 			}
 		}

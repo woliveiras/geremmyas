@@ -40,7 +40,7 @@ func runContext(w io.Writer) error {
 		return err
 	}
 
-	catalogStats, err := collectEmbeddedContextStats("project/.github/skills")
+	catalogStats, err := collectEmbeddedContextStats("content/skills")
 	if err != nil {
 		return err
 	}

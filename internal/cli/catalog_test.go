@@ -50,7 +50,7 @@ func TestDoctorRejectsMissingCatalogSource(t *testing.T) {
 		Packs: []Pack{{
 			Name: "broken",
 			Files: []FileEntry{{
-				Source: "project/.github/skills/missing",
+				Source: "content/skills/missing",
 				Target: ".github/skills/missing",
 			}},
 		}},
@@ -129,7 +129,7 @@ func TestResearchPackIncludesPaperReview(t *testing.T) {
 	}
 	found := false
 	for _, file := range research.Files {
-		if file.Source == "project/.github/skills/paper-review" {
+		if file.Source == "content/skills/paper-review" {
 			found = true
 			break
 		}
@@ -185,11 +185,11 @@ func TestCatalogCoversEveryInstruction(t *testing.T) {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
 
-	sourceInstructions, err := embeddedBasenames("project/.github/instructions", ".instructions.md")
+	sourceInstructions, err := embeddedBasenames("content/instructions", ".instructions.md")
 	if err != nil {
 		t.Fatalf("embeddedBasenames returned error: %v", err)
 	}
-	catalogInstructions := catalogSourceBasenames(catalog, "project/.github/instructions/", ".instructions.md")
+	catalogInstructions := catalogSourceBasenames(catalog, "content/instructions/", ".instructions.md")
 
 	var missing []string
 	for instruction := range sourceInstructions {
@@ -209,7 +209,7 @@ func TestCatalogSDDCoversEveryAgent(t *testing.T) {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
 
-	sourceAgents, err := embeddedBasenames("project/.github/agents", ".agent.md")
+	sourceAgents, err := embeddedBasenames("content/agents", ".agent.md")
 	if err != nil {
 		t.Fatalf("embeddedBasenames returned error: %v", err)
 	}
@@ -217,7 +217,7 @@ func TestCatalogSDDCoversEveryAgent(t *testing.T) {
 	if !ok {
 		t.Fatal("catalog missing sdd pack")
 	}
-	catalogAgents := packSourceBasenames(sdd, "project/.github/agents/", ".agent.md")
+	catalogAgents := packSourceBasenames(sdd, "content/agents/", ".agent.md")
 
 	var missing []string
 	for agent := range sourceAgents {
@@ -243,7 +243,7 @@ func TestAgentContractsBoundDelegatedWork(t *testing.T) {
 	for _, agent := range agents {
 		agent := agent
 		t.Run(agent, func(t *testing.T) {
-			path := "project/.github/agents/" + agent + ".agent.md"
+			path := "content/agents/" + agent + ".agent.md"
 			data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
 			if err != nil {
 				t.Fatalf("ReadFile(%q) returned error: %v", path, err)
@@ -259,7 +259,7 @@ func TestAgentContractsBoundDelegatedWork(t *testing.T) {
 }
 
 func TestArchitectFanOutIsConditional(t *testing.T) {
-	path := "project/.github/agents/architect.agent.md"
+	path := "content/agents/architect.agent.md"
 	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
 	if err != nil {
 		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
@@ -283,7 +283,7 @@ func TestCatalogSDDHasFocusedDiscoverableSkills(t *testing.T) {
 	if !ok {
 		t.Fatal("catalog missing sdd pack")
 	}
-	got := packSourceBasenames(sdd, "project/.github/skills/", "")
+	got := packSourceBasenames(sdd, "content/skills/", "")
 	want := map[string]bool{
 		"bugfix-loop": true, "code-review-requesting": true,
 		"generate-adr": true, "generate-glossary": true,
@@ -310,9 +310,9 @@ func TestCatalogDoesNotReferenceNestedSkillMarkdownAsTopLevelSkill(t *testing.T)
 	var nested []string
 	for _, pack := range catalog.Packs {
 		for _, entry := range pack.Files {
-			if strings.HasPrefix(entry.Source, "project/.github/skills/") &&
+			if strings.HasPrefix(entry.Source, "content/skills/") &&
 				strings.HasSuffix(entry.Source, "/SKILL.md") &&
-				strings.Count(strings.TrimPrefix(entry.Source, "project/.github/skills/"), "/") > 1 {
+				strings.Count(strings.TrimPrefix(entry.Source, "content/skills/"), "/") > 1 {
 				nested = append(nested, pack.Name+":"+entry.Source)
 			}
 		}
@@ -375,7 +375,7 @@ func TestResolveRejectsUnknownPack(t *testing.T) {
 }
 
 func topLevelSkillNames() (map[string]bool, error) {
-	const root = "project/.github/skills"
+	const root = "content/skills"
 	const prefix = root + "/"
 	skills := map[string]bool{}
 
@@ -397,7 +397,7 @@ func topLevelSkillNames() (map[string]bool, error) {
 }
 
 func catalogSkillNames(catalog Catalog) map[string]bool {
-	const prefix = "project/.github/skills/"
+	const prefix = "content/skills/"
 	skills := map[string]bool{}
 
 	for _, pack := range catalog.Packs {

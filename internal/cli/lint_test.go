@@ -64,7 +64,7 @@ description: "Use when working on documentation. Do not use for production."
 
 # Good skill
 `)
-	nested := filepath.Join(root, "project/.github/skills/good-skill/references/SKILL.md")
+	nested := filepath.Join(root, "content/skills/good-skill/references/SKILL.md")
 	if err := os.MkdirAll(filepath.Dir(nested), 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}
@@ -72,17 +72,22 @@ description: "Use when working on documentation. Do not use for production."
 		t.Fatalf("WriteFile returned error: %v", err)
 	}
 
-	findings, _, err := collectLintFindings(filepath.Join(root, "project/.github/skills"), root)
+	findings, _, err := collectLintFindings(filepath.Join(root, "content/skills"), root)
 	if err != nil {
 		t.Fatalf("collectLintFindings returned error: %v", err)
 	}
-	assertLintFindingHasCode(t, findings, "project/.github/skills/good-skill/references/SKILL.md", lintViolationNestedSkillFile)
+	assertLintFindingHasCode(t, findings, "content/skills/good-skill/references/SKILL.md", lintViolationNestedSkillFile)
 }
 
 func TestCollectRepositoryBudgetFindingsEnforcesSDDSkillLimit(t *testing.T) {
 	files := make([]FileEntry, maxSDDPublicSkills+1)
 	for i := range files {
-		files[i] = FileEntry{Target: fmt.Sprintf(".github/skills/skill-%02d", i)}
+		name := fmt.Sprintf("skill-%02d", i)
+		files[i] = FileEntry{
+			Kind:   ArtifactSkill,
+			Path:   name,
+			Target: ".github/skills/" + name,
+		}
 	}
 	catalog := Catalog{Packs: []Pack{{Name: "sdd", Files: files}}}
 
@@ -95,7 +100,7 @@ func TestCollectRepositoryBudgetFindingsEnforcesSDDSkillLimit(t *testing.T) {
 
 func TestCollectRepositoryBudgetFindingsEnforcesAgentsWordLimit(t *testing.T) {
 	root := t.TempDir()
-	agentsPath := filepath.Join(root, "project/AGENTS.md")
+	agentsPath := filepath.Join(root, "content/AGENTS.md")
 	if err := os.MkdirAll(filepath.Dir(agentsPath), 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}
@@ -108,7 +113,7 @@ func TestCollectRepositoryBudgetFindingsEnforcesAgentsWordLimit(t *testing.T) {
 	if err != nil {
 		t.Fatalf("collectRepositoryBudgetFindings returned error: %v", err)
 	}
-	assertLintFindingHasCode(t, findings, "project/AGENTS.md", lintViolationAgentsWordBudget)
+	assertLintFindingHasCode(t, findings, "content/AGENTS.md", lintViolationAgentsWordBudget)
 }
 
 func TestRunLintReportsViolations(t *testing.T) {
@@ -133,7 +138,7 @@ description: "Missing trigger and negative scope"
 		t.Fatalf("lint exit code = %d, want non-zero. output: %s", code, out.String())
 	}
 	output := out.String()
-	if !strings.Contains(output, "lint: ") || !strings.Contains(output, "project/.github/skills/bad-skill/SKILL.md") {
+	if !strings.Contains(output, "lint: ") || !strings.Contains(output, "content/skills/bad-skill/SKILL.md") {
 		t.Fatalf("lint output missing report:\n%s", output)
 	}
 	if !strings.Contains(output, lintViolationMissingTrigger) || !strings.Contains(output, lintViolationMissingNegative) {
@@ -169,7 +174,7 @@ description: ""
 
 # Empty description
 `)
-	missingDir := filepath.Join(root, "project/.github/skills/missing-skill")
+	missingDir := filepath.Join(root, "content/skills/missing-skill")
 	if err := os.MkdirAll(missingDir, 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}
@@ -237,7 +242,7 @@ func bodyWithLines(lines int) string {
 
 func writeSkillFixture(t *testing.T, root, skillName, content string) string {
 	t.Helper()
-	path := filepath.Join(root, "project/.github/skills", skillName, "SKILL.md")
+	path := filepath.Join(root, "content/skills", skillName, "SKILL.md")
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatalf("MkdirAll returned error: %v", err)
 	}

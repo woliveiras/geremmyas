@@ -15,6 +15,23 @@ func TestCatalogArtifactKindsAreExplicitAndValid(t *testing.T) {
 	}
 }
 
+func TestCatalogSourcesUseNeutralOrTargetRoots(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+
+	for _, pack := range catalog.Packs {
+		for _, entry := range pack.Files {
+			if strings.HasPrefix(entry.Source, "content/") ||
+				strings.HasPrefix(entry.Source, "targets/") {
+				continue
+			}
+			t.Errorf("pack %q source %q is outside content/ and targets/", pack.Name, entry.Source)
+		}
+	}
+}
+
 func TestValidateArtifactKindsRejectsMissingAndUnknownKinds(t *testing.T) {
 	tests := []struct {
 		name string
@@ -30,7 +47,7 @@ func TestValidateArtifactKindsRejectsMissingAndUnknownKinds(t *testing.T) {
 				Name: "broken",
 				Files: []FileEntry{{
 					Kind:   tt.kind,
-					Source: "project/AGENTS.md",
+					Source: "content/AGENTS.md",
 					Path:   "AGENTS.md",
 					Target: "AGENTS.md",
 				}},
@@ -52,7 +69,7 @@ func TestDoctorRejectsUnknownArtifactKind(t *testing.T) {
 		Tier: TierStack,
 		Files: []FileEntry{{
 			Kind:   "assistant-magic",
-			Source: "project/AGENTS.md",
+			Source: "content/AGENTS.md",
 			Path:   "AGENTS.md",
 			Target: "AGENTS.md",
 		}},
@@ -74,25 +91,25 @@ func TestPlanProjectArtifactsUsesKindsInsteadOfGitHubTargets(t *testing.T) {
 		Files: []FileEntry{
 			{
 				Kind:   ArtifactContract,
-				Source: "project/AGENTS.md",
+				Source: "content/AGENTS.md",
 				Path:   "AGENTS.md",
 				Target: "AGENTS.md",
 			},
 			{
 				Kind:   ArtifactSkill,
-				Source: "project/.github/skills/vertical-tdd",
+				Source: "content/skills/vertical-tdd",
 				Path:   "vertical-tdd",
 				Target: ".github/skills/vertical-tdd",
 			},
 			{
 				Kind:   ArtifactInstruction,
-				Source: "project/.github/instructions/go.instructions.md",
+				Source: "content/instructions/go.instructions.md",
 				Path:   "go.instructions.md",
 				Target: ".github/instructions/go.instructions.md",
 			},
 			{
 				Kind:   ArtifactCopilotInstructions,
-				Source: "project/.github/copilot-instructions.md",
+				Source: "targets/copilot/project-instructions.md",
 				Path:   "copilot-instructions.md",
 				Target: ".github/copilot-instructions.md",
 			},
@@ -119,7 +136,7 @@ func TestPlanProjectArtifactsUsesKindsInsteadOfGitHubTargets(t *testing.T) {
 func TestPlanProjectArtifactsIsStableAndDeduplicated(t *testing.T) {
 	entry := FileEntry{
 		Kind:   ArtifactSkill,
-		Source: "project/.github/skills/vertical-tdd",
+		Source: "content/skills/vertical-tdd",
 		Path:   "vertical-tdd",
 		Target: ".github/skills/vertical-tdd",
 	}
@@ -143,7 +160,7 @@ func TestPlanProjectArtifactsRejectsUnsafeLogicalPath(t *testing.T) {
 		Name: "unsafe",
 		Files: []FileEntry{{
 			Kind:   ArtifactSkill,
-			Source: "project/.github/skills/unsafe",
+			Source: "content/skills/unsafe",
 			Path:   "../unsafe",
 			Target: ".github/skills/unsafe",
 		}},

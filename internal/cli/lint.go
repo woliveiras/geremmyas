@@ -117,7 +117,7 @@ func runLint(w io.Writer, catalog Catalog) error {
 	if err != nil {
 		return err
 	}
-	findings, checked, err := collectLintFindings(filepath.Join(root, "project/.github/skills"), root)
+	findings, checked, err := collectLintFindings(filepath.Join(root, "content/skills"), root)
 	if err != nil {
 		return err
 	}
@@ -227,7 +227,7 @@ func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFindin
 		})
 	}
 
-	agentsPath := filepath.Join(root, "project/AGENTS.md")
+	agentsPath := filepath.Join(root, "content/AGENTS.md")
 	data, err := os.ReadFile(agentsPath)
 	if err != nil && !os.IsNotExist(err) {
 		return nil, err
@@ -235,10 +235,10 @@ func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFindin
 	if err == nil {
 		if count := len(strings.Fields(string(data))); count > maxAgentsWords {
 			findings = append(findings, lintFinding{
-				Path: "project/AGENTS.md",
+				Path: "content/AGENTS.md",
 				Violations: []lintViolation{{
 					Code:    lintViolationAgentsWordBudget,
-					Message: fmt.Sprintf("project/AGENTS.md must contain at most %d words; found %d", maxAgentsWords, count),
+					Message: fmt.Sprintf("content/AGENTS.md must contain at most %d words; found %d", maxAgentsWords, count),
 				}},
 			})
 		}
@@ -253,12 +253,10 @@ func countSDDPublicSkills(catalog Catalog) int {
 			continue
 		}
 		for _, entry := range pack.Files {
-			const prefix = ".github/skills/"
-			target := filepath.ToSlash(entry.Target)
-			if !strings.HasPrefix(target, prefix) {
+			if entry.Kind != ArtifactSkill {
 				continue
 			}
-			name := strings.TrimPrefix(target, prefix)
+			name := entry.Path
 			if name == "" || strings.Contains(name, "/") {
 				continue
 			}
