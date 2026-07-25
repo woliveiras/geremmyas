@@ -51,6 +51,11 @@ The author uses multiple AI assistants but the framework only treats one of them
   are the desired state, while preserving user-modified and external files.
 - Keep generated assistant context target-aware: do not repeat contracts or
   native skill indexes on assistants that already discover them.
+- Make the canonical content model assistant-neutral. Assistant-native paths
+  such as `.github/` and `.codex/` are output destinations owned by target
+  adapters, not source taxonomy.
+- Make project sync honor the selected targets so a clean Codex-only install
+  does not receive Copilot instructions, agents, or hooks.
 - Provide context diagnostics and enforce catalog budgets so context growth is
   visible before release.
 - Preserve the existing strengths: single canonical source with per-IDE
@@ -85,6 +90,8 @@ The author uses multiple AI assistants but the framework only treats one of them
 | Consumer project lockfile | Discarded |
 | Global ownership manifest | In scope for safe desired-state reconciliation |
 | Context diagnostics and budgets | In scope |
+| Assistant-neutral canonical content | In scope |
+| Target-aware project materialization | In scope |
 | Skill generator | Discarded |
 | Marketplace / cohesive versioning | Discarded |
 
@@ -101,7 +108,8 @@ deliverables of this PRD:
   builds. Subagents are used only for read-only investigation and for reviewing a
   diff against the tests, returning to the main thread.
 - **Single canonical source.** `project/` stays the source of truth; all targets
-  are generated from it.
+  are generated from it. The canonical tree may be renamed and reorganized as
+  part of removing assistant-specific source paths, but remains singular.
 - **Platform.** macOS and Linux only.
 
 ## Success criteria
@@ -122,6 +130,9 @@ deliverables of this PRD:
   nested skill files, ownership state, and approximate context cost.
 - The default SDD catalog stays within explicit skill-count and metadata budgets.
 - No regression in existing targets, packs, guardrails, or SDD gates.
+- A clean install materializes only shared artifacts and the outputs required by
+  the selected targets. Existing modified or unowned files are never removed by
+  migration.
 
 ## Linked specs
 
@@ -129,3 +140,5 @@ deliverables of this PRD:
 - `specs/0002-skill-validator/` — `geremmyas lint` skill description validator.
 - `specs/0006-context-efficient-workflows/` — managed global state, compact
   target output, skill consolidation, diagnostics, budgets, and agent contracts.
+- `specs/0007-assistant-neutral-content/` — neutral canonical content, typed
+  artifacts, and target-aware project/global materialization.
