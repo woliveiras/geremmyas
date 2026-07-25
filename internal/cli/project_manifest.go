@@ -218,14 +218,13 @@ func projectGeneratedPaths(packs []Pack, targets []string) []string {
 
 func adoptKnownLegacyProjectFiles(root string, manifest projectManifest, catalog Catalog) (projectManifest, error) {
 	known := map[string]string{}
-	for _, pack := range catalog.Packs {
-		for _, entry := range pack.Files {
-			if entry.Target == "" {
-				continue
-			}
-			if err := addEmbeddedDestinationHashes(known, root, entry.Target, entry.Source); err != nil {
-				return manifest, err
-			}
+	legacy, err := planProjectArtifacts(catalog.Packs, []string{TargetCopilot})
+	if err != nil {
+		return manifest, err
+	}
+	for _, entry := range legacy {
+		if err := addEmbeddedDestinationHashes(known, root, entry.Target, entry.Source); err != nil {
+			return manifest, err
 		}
 	}
 	for path, expectedHash := range known {

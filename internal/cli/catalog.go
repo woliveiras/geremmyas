@@ -26,7 +26,7 @@ type FileEntry struct {
 	Kind   string `json:"kind"`
 	Source string `json:"source"`
 	Path   string `json:"path"`
-	Target string `json:"target"`
+	Target string `json:"-"`
 }
 
 // Valid pack tiers.
@@ -112,7 +112,7 @@ func (c Catalog) Resolve(names []string) ([]Pack, error) {
 func (c Catalog) ValidateSources() error {
 	for _, pack := range c.Packs {
 		for _, entry := range pack.Files {
-			if entry.Source == "" || entry.Target == "" {
+			if entry.Source == "" {
 				return fmt.Errorf("pack %q contains invalid file entry", pack.Name)
 			}
 			if _, err := fs.Stat(geremmyas.EmbeddedFiles, entry.Source); err != nil {

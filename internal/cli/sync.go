@@ -23,9 +23,9 @@ type syncSummary struct {
 }
 
 func syncPacks(root string, packs []Pack, opts syncOptions) (syncSummary, error) {
-	entries := make([]FileEntry, 0)
-	for _, pack := range packs {
-		entries = append(entries, pack.Files...)
+	entries, err := planProjectArtifacts(packs, []string{TargetCopilot})
+	if err != nil {
+		return syncSummary{}, err
 	}
 	return syncEntries(root, entries, opts)
 }

@@ -85,10 +85,7 @@ func globalCopyFlags(targets []string) (skills, instructions bool) {
 		hasTarget(targets, TargetClaudeCode) ||
 		hasTarget(targets, TargetCodex) ||
 		hasTarget(targets, TargetOpenCode)
-	// Instructions are copied to ~/.copilot/instructions/ unconditionally so
-	// they are available regardless of which assistant is installed. The codex
-	// target additionally mirrors them into ~/.codex/instructions/.
-	instructions = true
+	instructions = hasTarget(targets, TargetCopilot)
 	return skills, instructions
 }
 

@@ -8,32 +8,27 @@
         {
           "kind": "contract",
           "source": "content/AGENTS.md",
-          "path": "AGENTS.md",
-          "target": "AGENTS.md"
+          "path": "AGENTS.md"
         },
         {
           "kind": "copilot-instructions",
           "source": "targets/copilot/project-instructions.md",
-          "path": "copilot-instructions.md",
-          "target": ".github/copilot-instructions.md"
+          "path": "copilot-instructions.md"
         },
         {
           "kind": "hook",
           "source": "targets/copilot/hooks",
-          "path": ".",
-          "target": ".github/hooks"
+          "path": "."
         },
         {
           "kind": "tooling",
           "source": "content/mise.toml",
-          "path": "mise.toml",
-          "target": "mise.toml"
+          "path": "mise.toml"
         },
         {
           "kind": "guardrail",
           "source": "content/guardrails/guardrails-rules.txt",
-          "path": "guardrails-rules.txt",
-          "target": ".github/hooks/guardrails-rules.txt"
+          "path": "guardrails-rules.txt"
         }
       ]
     },
@@ -48,92 +43,77 @@
         {
           "kind": "agent",
           "source": "content/agents",
-          "path": ".",
-          "target": ".github/agents"
+          "path": "."
         },
         {
           "kind": "instruction",
           "source": "content/instructions/testing.instructions.md",
-          "path": "testing.instructions.md",
-          "target": ".github/instructions/testing.instructions.md"
+          "path": "testing.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/e2e-testing.instructions.md",
-          "path": "e2e-testing.instructions.md",
-          "target": ".github/instructions/e2e-testing.instructions.md"
+          "path": "e2e-testing.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/integration-testing.instructions.md",
-          "path": "integration-testing.instructions.md",
-          "target": ".github/instructions/integration-testing.instructions.md"
+          "path": "integration-testing.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/requirements-interview",
-          "path": "requirements-interview",
-          "target": ".github/skills/requirements-interview"
+          "path": "requirements-interview"
         },
         {
           "kind": "skill",
           "source": "content/skills/generate-spec",
-          "path": "generate-spec",
-          "target": ".github/skills/generate-spec"
+          "path": "generate-spec"
         },
         {
           "kind": "skill",
           "source": "content/skills/vertical-tdd",
-          "path": "vertical-tdd",
-          "target": ".github/skills/vertical-tdd"
+          "path": "vertical-tdd"
         },
         {
           "kind": "skill",
           "source": "content/skills/bugfix-loop",
-          "path": "bugfix-loop",
-          "target": ".github/skills/bugfix-loop"
+          "path": "bugfix-loop"
         },
         {
           "kind": "skill",
           "source": "content/skills/update-docs",
-          "path": "update-docs",
-          "target": ".github/skills/update-docs"
+          "path": "update-docs"
         },
         {
           "kind": "skill",
           "source": "content/skills/git-commit",
-          "path": "git-commit",
-          "target": ".github/skills/git-commit"
+          "path": "git-commit"
         },
         {
           "kind": "skill",
           "source": "content/skills/generate-glossary",
-          "path": "generate-glossary",
-          "target": ".github/skills/generate-glossary"
+          "path": "generate-glossary"
         },
         {
           "kind": "skill",
           "source": "content/skills/generate-adr",
-          "path": "generate-adr",
-          "target": ".github/skills/generate-adr"
+          "path": "generate-adr"
         },
         {
           "kind": "skill",
           "source": "content/skills/verification-checklists",
-          "path": "verification-checklists",
-          "target": ".github/skills/verification-checklists"
+          "path": "verification-checklists"
         },
         {
           "kind": "skill",
           "source": "content/skills/code-review-requesting",
-          "path": "code-review-requesting",
-          "target": ".github/skills/code-review-requesting"
+          "path": "code-review-requesting"
         },
         {
           "kind": "template",
           "source": "content/templates/specs/README.md",
-          "path": "specs/README.md",
-          "target": "specs/README.md"
+          "path": "specs/README.md"
         }
       ]
     },
@@ -145,8 +125,7 @@
         {
           "kind": "skill",
           "source": "content/skills/decision-framework",
-          "path": "decision-framework",
-          "target": ".github/skills/decision-framework"
+          "path": "decision-framework"
         }
       ]
     },
@@ -158,8 +137,7 @@
         {
           "kind": "skill",
           "source": "content/skills/skill-authoring",
-          "path": "skill-authoring",
-          "target": ".github/skills/skill-authoring"
+          "path": "skill-authoring"
         }
       ]
     },
@@ -171,8 +149,7 @@
         {
           "kind": "skill",
           "source": "content/skills/text-review",
-          "path": "text-review",
-          "target": ".github/skills/text-review"
+          "path": "text-review"
         }
       ]
     },
@@ -184,20 +161,17 @@
         {
           "kind": "skill",
           "source": "content/skills/scientific-paper",
-          "path": "scientific-paper",
-          "target": ".github/skills/scientific-paper"
+          "path": "scientific-paper"
         },
         {
           "kind": "skill",
           "source": "content/skills/scientific-case-study-research",
-          "path": "scientific-case-study-research",
-          "target": ".github/skills/scientific-case-study-research"
+          "path": "scientific-case-study-research"
         },
         {
           "kind": "skill",
           "source": "content/skills/paper-review",
-          "path": "paper-review",
-          "target": ".github/skills/paper-review"
+          "path": "paper-review"
         }
       ]
     },
@@ -209,14 +183,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/typescript.instructions.md",
-          "path": "typescript.instructions.md",
-          "target": ".github/instructions/typescript.instructions.md"
+          "path": "typescript.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/typescript-security.instructions.md",
-          "path": "typescript-security.instructions.md",
-          "target": ".github/instructions/typescript-security.instructions.md"
+          "path": "typescript-security.instructions.md"
         }
       ]
     },
@@ -231,8 +203,7 @@
         {
           "kind": "skill",
           "source": "content/skills/typescript-ci-setup",
-          "path": "typescript-ci-setup",
-          "target": ".github/skills/typescript-ci-setup"
+          "path": "typescript-ci-setup"
         }
       ]
     },
@@ -247,8 +218,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/api-security.instructions.md",
-          "path": "api-security.instructions.md",
-          "target": ".github/instructions/api-security.instructions.md"
+          "path": "api-security.instructions.md"
         }
       ]
     },
@@ -263,8 +233,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/nestjs.instructions.md",
-          "path": "nestjs.instructions.md",
-          "target": ".github/instructions/nestjs.instructions.md"
+          "path": "nestjs.instructions.md"
         }
       ]
     },
@@ -279,8 +248,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/fastify.instructions.md",
-          "path": "fastify.instructions.md",
-          "target": ".github/instructions/fastify.instructions.md"
+          "path": "fastify.instructions.md"
         }
       ]
     },
@@ -295,14 +263,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/react.instructions.md",
-          "path": "react.instructions.md",
-          "target": ".github/instructions/react.instructions.md"
+          "path": "react.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/web-security.instructions.md",
-          "path": "web-security.instructions.md",
-          "target": ".github/instructions/web-security.instructions.md"
+          "path": "web-security.instructions.md"
         }
       ]
     },
@@ -317,14 +283,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/react-router.instructions.md",
-          "path": "react-router.instructions.md",
-          "target": ".github/instructions/react-router.instructions.md"
+          "path": "react-router.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/migrate-react-router",
-          "path": "migrate-react-router",
-          "target": ".github/skills/migrate-react-router"
+          "path": "migrate-react-router"
         }
       ]
     },
@@ -339,26 +303,22 @@
         {
           "kind": "instruction",
           "source": "content/instructions/zustand.instructions.md",
-          "path": "zustand.instructions.md",
-          "target": ".github/instructions/zustand.instructions.md"
+          "path": "zustand.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/xstate.instructions.md",
-          "path": "xstate.instructions.md",
-          "target": ".github/instructions/xstate.instructions.md"
+          "path": "xstate.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/manage-state-with-zustand",
-          "path": "manage-state-with-zustand",
-          "target": ".github/skills/manage-state-with-zustand"
+          "path": "manage-state-with-zustand"
         },
         {
           "kind": "skill",
           "source": "content/skills/model-state-with-xstate",
-          "path": "model-state-with-xstate",
-          "target": ".github/skills/model-state-with-xstate"
+          "path": "model-state-with-xstate"
         }
       ]
     },
@@ -373,20 +333,17 @@
         {
           "kind": "instruction",
           "source": "content/instructions/tanstack-query.instructions.md",
-          "path": "tanstack-query.instructions.md",
-          "target": ".github/instructions/tanstack-query.instructions.md"
+          "path": "tanstack-query.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/zod.instructions.md",
-          "path": "zod.instructions.md",
-          "target": ".github/instructions/zod.instructions.md"
+          "path": "zod.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/validate-with-zod",
-          "path": "validate-with-zod",
-          "target": ".github/skills/validate-with-zod"
+          "path": "validate-with-zod"
         }
       ]
     },
@@ -401,8 +358,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/tailwind.instructions.md",
-          "path": "tailwind.instructions.md",
-          "target": ".github/instructions/tailwind.instructions.md"
+          "path": "tailwind.instructions.md"
         }
       ]
     },
@@ -414,8 +370,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/astro-mdx.instructions.md",
-          "path": "astro-mdx.instructions.md",
-          "target": ".github/instructions/astro-mdx.instructions.md"
+          "path": "astro-mdx.instructions.md"
         }
       ]
     },
@@ -427,14 +382,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/python.instructions.md",
-          "path": "python.instructions.md",
-          "target": ".github/instructions/python.instructions.md"
+          "path": "python.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/python-security.instructions.md",
-          "path": "python-security.instructions.md",
-          "target": ".github/instructions/python-security.instructions.md"
+          "path": "python-security.instructions.md"
         }
       ]
     },
@@ -450,8 +403,7 @@
         {
           "kind": "skill",
           "source": "content/skills/python-ci-setup",
-          "path": "python-ci-setup",
-          "target": ".github/skills/python-ci-setup"
+          "path": "python-ci-setup"
         }
       ]
     },
@@ -466,20 +418,17 @@
         {
           "kind": "instruction",
           "source": "content/instructions/fastapi.instructions.md",
-          "path": "fastapi.instructions.md",
-          "target": ".github/instructions/fastapi.instructions.md"
+          "path": "fastapi.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/pydantic.instructions.md",
-          "path": "pydantic.instructions.md",
-          "target": ".github/instructions/pydantic.instructions.md"
+          "path": "pydantic.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/api-security.instructions.md",
-          "path": "api-security.instructions.md",
-          "target": ".github/instructions/api-security.instructions.md"
+          "path": "api-security.instructions.md"
         }
       ]
     },
@@ -494,38 +443,32 @@
         {
           "kind": "instruction",
           "source": "content/instructions/langchain.instructions.md",
-          "path": "langchain.instructions.md",
-          "target": ".github/instructions/langchain.instructions.md"
+          "path": "langchain.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/langgraph.instructions.md",
-          "path": "langgraph.instructions.md",
-          "target": ".github/instructions/langgraph.instructions.md"
+          "path": "langgraph.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/llm-service.instructions.md",
-          "path": "llm-service.instructions.md",
-          "target": ".github/instructions/llm-service.instructions.md"
+          "path": "llm-service.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/pydantic.instructions.md",
-          "path": "pydantic.instructions.md",
-          "target": ".github/instructions/pydantic.instructions.md"
+          "path": "pydantic.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/llm-integration-review",
-          "path": "llm-integration-review",
-          "target": ".github/skills/llm-integration-review"
+          "path": "llm-integration-review"
         },
         {
           "kind": "skill",
           "source": "content/skills/langgraph-agent-design",
-          "path": "langgraph-agent-design",
-          "target": ".github/skills/langgraph-agent-design"
+          "path": "langgraph-agent-design"
         }
       ]
     },
@@ -537,20 +480,17 @@
         {
           "kind": "instruction",
           "source": "content/instructions/rust.instructions.md",
-          "path": "rust.instructions.md",
-          "target": ".github/instructions/rust.instructions.md"
+          "path": "rust.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/rust-async.instructions.md",
-          "path": "rust-async.instructions.md",
-          "target": ".github/instructions/rust-async.instructions.md"
+          "path": "rust-async.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/rust-unsafe.instructions.md",
-          "path": "rust-unsafe.instructions.md",
-          "target": ".github/instructions/rust-unsafe.instructions.md"
+          "path": "rust-unsafe.instructions.md"
         }
       ]
     },
@@ -565,8 +505,7 @@
         {
           "kind": "skill",
           "source": "content/skills/rust-ci-setup",
-          "path": "rust-ci-setup",
-          "target": ".github/skills/rust-ci-setup"
+          "path": "rust-ci-setup"
         }
       ]
     },
@@ -581,8 +520,7 @@
         {
           "kind": "skill",
           "source": "content/skills/rust-release",
-          "path": "rust-release",
-          "target": ".github/skills/rust-release"
+          "path": "rust-release"
         }
       ]
     },
@@ -594,14 +532,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/go.instructions.md",
-          "path": "go.instructions.md",
-          "target": ".github/instructions/go.instructions.md"
+          "path": "go.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/go-security.instructions.md",
-          "path": "go-security.instructions.md",
-          "target": ".github/instructions/go-security.instructions.md"
+          "path": "go-security.instructions.md"
         }
       ]
     },
@@ -616,14 +552,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/echo.instructions.md",
-          "path": "echo.instructions.md",
-          "target": ".github/instructions/echo.instructions.md"
+          "path": "echo.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/api-security.instructions.md",
-          "path": "api-security.instructions.md",
-          "target": ".github/instructions/api-security.instructions.md"
+          "path": "api-security.instructions.md"
         }
       ]
     },
@@ -639,8 +573,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/go-sqlite.instructions.md",
-          "path": "go-sqlite.instructions.md",
-          "target": ".github/instructions/go-sqlite.instructions.md"
+          "path": "go-sqlite.instructions.md"
         }
       ]
     },
@@ -655,14 +588,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/go-embed.instructions.md",
-          "path": "go-embed.instructions.md",
-          "target": ".github/instructions/go-embed.instructions.md"
+          "path": "go-embed.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/air.instructions.md",
-          "path": "air.instructions.md",
-          "target": ".github/instructions/air.instructions.md"
+          "path": "air.instructions.md"
         }
       ]
     },
@@ -678,8 +609,7 @@
         {
           "kind": "skill",
           "source": "content/skills/go-ci-setup",
-          "path": "go-ci-setup",
-          "target": ".github/skills/go-ci-setup"
+          "path": "go-ci-setup"
         }
       ]
     },
@@ -691,14 +621,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/docker.instructions.md",
-          "path": "docker.instructions.md",
-          "target": ".github/instructions/docker.instructions.md"
+          "path": "docker.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/docker-compose.instructions.md",
-          "path": "docker-compose.instructions.md",
-          "target": ".github/instructions/docker-compose.instructions.md"
+          "path": "docker-compose.instructions.md"
         }
       ]
     },
@@ -710,14 +638,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/github-actions.instructions.md",
-          "path": "github-actions.instructions.md",
-          "target": ".github/instructions/github-actions.instructions.md"
+          "path": "github-actions.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/ci-workflow",
-          "path": "ci-workflow",
-          "target": ".github/skills/ci-workflow"
+          "path": "ci-workflow"
         }
       ]
     },
@@ -729,14 +655,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/gcp.instructions.md",
-          "path": "gcp.instructions.md",
-          "target": ".github/instructions/gcp.instructions.md"
+          "path": "gcp.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/gcloud-operation",
-          "path": "gcloud-operation",
-          "target": ".github/skills/gcloud-operation"
+          "path": "gcloud-operation"
         }
       ]
     },
@@ -748,14 +672,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/terraform.instructions.md",
-          "path": "terraform.instructions.md",
-          "target": ".github/instructions/terraform.instructions.md"
+          "path": "terraform.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/terraform-change",
-          "path": "terraform-change",
-          "target": ".github/skills/terraform-change"
+          "path": "terraform-change"
         }
       ]
     },
@@ -767,14 +689,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/postgres.instructions.md",
-          "path": "postgres.instructions.md",
-          "target": ".github/instructions/postgres.instructions.md"
+          "path": "postgres.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/postgres-query-review",
-          "path": "postgres-query-review",
-          "target": ".github/skills/postgres-query-review"
+          "path": "postgres-query-review"
         }
       ]
     },
@@ -786,8 +706,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/sqlite.instructions.md",
-          "path": "sqlite.instructions.md",
-          "target": ".github/instructions/sqlite.instructions.md"
+          "path": "sqlite.instructions.md"
         }
       ]
     },
@@ -803,8 +722,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/node-sqlite.instructions.md",
-          "path": "node-sqlite.instructions.md",
-          "target": ".github/instructions/node-sqlite.instructions.md"
+          "path": "node-sqlite.instructions.md"
         }
       ]
     },
@@ -820,8 +738,7 @@
         {
           "kind": "instruction",
           "source": "content/instructions/python-sqlite.instructions.md",
-          "path": "python-sqlite.instructions.md",
-          "target": ".github/instructions/python-sqlite.instructions.md"
+          "path": "python-sqlite.instructions.md"
         }
       ]
     },
@@ -833,14 +750,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/chromadb.instructions.md",
-          "path": "chromadb.instructions.md",
-          "target": ".github/instructions/chromadb.instructions.md"
+          "path": "chromadb.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/chromadb-rag-workflow",
-          "path": "chromadb-rag-workflow",
-          "target": ".github/skills/chromadb-rag-workflow"
+          "path": "chromadb-rag-workflow"
         }
       ]
     },
@@ -855,14 +770,12 @@
         {
           "kind": "instruction",
           "source": "content/instructions/supabase.instructions.md",
-          "path": "supabase.instructions.md",
-          "target": ".github/instructions/supabase.instructions.md"
+          "path": "supabase.instructions.md"
         },
         {
           "kind": "skill",
           "source": "content/skills/supabase-workflow",
-          "path": "supabase-workflow",
-          "target": ".github/skills/supabase-workflow"
+          "path": "supabase-workflow"
         }
       ]
     },
@@ -874,20 +787,17 @@
         {
           "kind": "instruction",
           "source": "content/instructions/kotlin.instructions.md",
-          "path": "kotlin.instructions.md",
-          "target": ".github/instructions/kotlin.instructions.md"
+          "path": "kotlin.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/android-security.instructions.md",
-          "path": "android-security.instructions.md",
-          "target": ".github/instructions/android-security.instructions.md"
+          "path": "android-security.instructions.md"
         },
         {
           "kind": "instruction",
           "source": "content/instructions/android-sqlite.instructions.md",
-          "path": "android-sqlite.instructions.md",
-          "target": ".github/instructions/android-sqlite.instructions.md"
+          "path": "android-sqlite.instructions.md"
         }
       ]
     },
@@ -902,8 +812,7 @@
         {
           "kind": "skill",
           "source": "content/skills/android-ci-setup",
-          "path": "android-ci-setup",
-          "target": ".github/skills/android-ci-setup"
+          "path": "android-ci-setup"
         }
       ]
     },
@@ -915,8 +824,7 @@
         {
           "kind": "skill",
           "source": "content/skills/premortem",
-          "path": "premortem",
-          "target": ".github/skills/premortem"
+          "path": "premortem"
         }
       ]
     }

@@ -157,8 +157,22 @@ func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	}
 
 	mustExist(t, filepath.Join(home, ".agents", "skills"))
-	mustExist(t, filepath.Join(home, ".copilot", "instructions"))
+	mustNotExist(t, filepath.Join(home, ".copilot", "instructions"))
 	mustExist(t, filepath.Join(home, ".cursor", "rules"))
+}
+
+func TestRunGlobalCodexOnlyDoesNotCreateCopilotInstructions(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	var out strings.Builder
+	if code := Run([]string{"global", "--targets", "codex", "core", "sdd"}, &out, &out); code != 0 {
+		t.Fatalf("global exit code = %d, output: %s", code, out.String())
+	}
+
+	mustExist(t, filepath.Join(home, ".agents", "skills"))
+	mustExist(t, filepath.Join(home, ".codex", "instructions", "testing.instructions.md"))
+	mustNotExist(t, filepath.Join(home, ".copilot", "instructions"))
 }
 
 func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
@@ -199,10 +213,10 @@ func TestGlobalCopyFlagsTargetMatrix(t *testing.T) {
 		wantInstructions bool
 	}{
 		{name: "copilot", targets: []string{TargetCopilot}, wantSkills: true, wantInstructions: true},
-		{name: "cursor", targets: []string{TargetCursor}, wantSkills: true, wantInstructions: true},
-		{name: "claude-code", targets: []string{TargetClaudeCode}, wantSkills: true, wantInstructions: true},
-		{name: "codex", targets: []string{TargetCodex}, wantSkills: true, wantInstructions: true},
-		{name: "opencode", targets: []string{TargetOpenCode}, wantSkills: true, wantInstructions: true},
+		{name: "cursor", targets: []string{TargetCursor}, wantSkills: true, wantInstructions: false},
+		{name: "claude-code", targets: []string{TargetClaudeCode}, wantSkills: true, wantInstructions: false},
+		{name: "codex", targets: []string{TargetCodex}, wantSkills: true, wantInstructions: false},
+		{name: "opencode", targets: []string{TargetOpenCode}, wantSkills: true, wantInstructions: false},
 		{name: "copilot and codex", targets: []string{TargetCopilot, TargetCodex}, wantSkills: true, wantInstructions: true},
 	}
 
@@ -318,8 +332,7 @@ func TestRunGlobalCodexMirrorsInstructionFiles(t *testing.T) {
 	} {
 		mustExist(t, filepath.Join(home, ".codex", "instructions", file))
 	}
-	// Instructions are also copied to the Copilot location unconditionally.
-	mustExist(t, filepath.Join(home, ".copilot", "instructions", "fastapi.instructions.md"))
+	mustNotExist(t, filepath.Join(home, ".copilot", "instructions", "fastapi.instructions.md"))
 }
 
 func TestRunGlobalCodexOmitsInstructionsWhenNone(t *testing.T) {

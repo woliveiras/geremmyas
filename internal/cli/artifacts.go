@@ -68,11 +68,7 @@ func planProjectArtifacts(packs []Pack, targets []string) ([]FileEntry, error) {
 
 			switch entry.Kind {
 			case ArtifactContract, ArtifactTemplate, ArtifactTooling:
-				target := entry.Target
-				if target == "" {
-					target = entry.Path
-				}
-				add(entry, target)
+				add(entry, entry.Path)
 			case ArtifactCopilotInstructions:
 				if hasTarget(targets, TargetCopilot) {
 					add(entry, ".github/copilot-instructions.md")

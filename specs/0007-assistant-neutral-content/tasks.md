@@ -52,7 +52,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     and `go test ./internal/cli`.
   - commit: `feat: materialize project content by target`
 
-- [ ] **Route global content by selected target** (test-type: both)
+- [x] **Route global content by selected target** (test-type: both)
   - blocked-by: Type artifacts and plan destinations
   - summary: Replace unconditional Copilot instruction copying with target-aware
     global destination planning and reconciliation.

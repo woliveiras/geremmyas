@@ -69,7 +69,7 @@ func adoptKnownGlobalFiles(manifest globalManifest, catalog Catalog) (globalMani
 	known := map[string]string{}
 	for _, pack := range catalog.Packs {
 		for _, entry := range pack.Files {
-			baseDir, relPath, ok := globalDestination(entry.Target)
+			baseDir, relPath, ok := globalDestination(entry)
 			if !ok {
 				continue
 			}
@@ -241,9 +241,9 @@ func globalDesiredPaths(packs []Pack, targets []string) ([]string, error) {
 	copySkills, copyInstructions := globalCopyFlags(targets)
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
-			baseDir, relPath, ok := globalDestination(entry.Target)
-			if !ok || (strings.HasPrefix(entry.Target, ".github/skills/") && !copySkills) ||
-				(strings.HasPrefix(entry.Target, ".github/instructions/") && !copyInstructions) {
+			baseDir, relPath, ok := globalDestination(entry)
+			if !ok || (entry.Kind == ArtifactSkill && !copySkills) ||
+				(entry.Kind == ArtifactInstruction && !copyInstructions) {
 				continue
 			}
 			if err := addEmbeddedDestinationPaths(paths, baseDir, relPath, entry.Source); err != nil {

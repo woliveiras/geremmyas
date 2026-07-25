@@ -5,26 +5,23 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
 	geremmyas "github.com/woliveiras/geremmyas"
 )
 
-// globalDestination resolves the user-level path for a given project target.
+// globalDestination resolves the user-level path for a semantic artifact.
 // Returns empty string if the target has no user-level equivalent.
-func globalDestination(target string) (baseDir string, relPath string, ok bool) {
+func globalDestination(entry FileEntry) (baseDir string, relPath string, ok bool) {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return "", "", false
 	}
 
-	switch {
-	case strings.HasPrefix(target, ".github/skills/"):
-		rel := strings.TrimPrefix(target, ".github/skills/")
-		return filepath.Join(home, ".agents", "skills"), rel, true
-	case strings.HasPrefix(target, ".github/instructions/"):
-		rel := strings.TrimPrefix(target, ".github/instructions/")
-		return filepath.Join(home, ".copilot", "instructions"), rel, true
+	switch entry.Kind {
+	case ArtifactSkill:
+		return filepath.Join(home, ".agents", "skills"), entry.Path, true
+	case ArtifactInstruction:
+		return filepath.Join(home, ".copilot", "instructions"), entry.Path, true
 	default:
 		// agents, hooks, copilot-instructions.md, AGENTS.md, mise.toml
 		// are project-level only
@@ -45,14 +42,14 @@ func globalInstallPacksFiltered(packs []Pack, skills, instructions bool) (int, e
 	count := 0
 	for _, pack := range packs {
 		for _, entry := range pack.Files {
-			baseDir, relPath, ok := globalDestination(entry.Target)
+			baseDir, relPath, ok := globalDestination(entry)
 			if !ok {
 				continue
 			}
-			if strings.HasPrefix(entry.Target, ".github/skills/") && !skills {
+			if entry.Kind == ArtifactSkill && !skills {
 				continue
 			}
-			if strings.HasPrefix(entry.Target, ".github/instructions/") && !instructions {
+			if entry.Kind == ArtifactInstruction && !instructions {
 				continue
 			}
 			copied, err := globalCopyEntry(baseDir, relPath, entry)
