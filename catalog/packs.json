@@ -176,6 +176,18 @@
       ]
     },
     {
+      "name": "game-art-2d",
+      "tier": "stack",
+      "description": "Codex-only workflow for producing and integrating 2D game art in Phaser and Godot.",
+      "files": [
+        {
+          "kind": "skill",
+          "source": "content/skills/game-art-2d",
+          "path": "game-art-2d"
+        }
+      ]
+    },
+    {
       "name": "typescript-base",
       "tier": "stack",
       "description": "TypeScript baseline instructions with strict compiler, type modeling, and security at boundaries.",

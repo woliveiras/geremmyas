@@ -1,0 +1,4 @@
+interface:
+  display_name: "2D Game Art Studio"
+  short_description: "Design and ship coherent 2D game art"
+  default_prompt: "Use $game-art-2d to create a production-ready pixel-art asset for the current game."
