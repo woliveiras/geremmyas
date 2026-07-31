@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Feel 2D"
+  short_description: "Tune responsive, readable 2D game feel"
+  default_prompt: "Use $game-feel-2d to improve the responsiveness and feedback of this 2D mechanic."

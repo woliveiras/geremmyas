@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game UI Accessibility"
+  short_description: "Build accessible, responsive game UI"
+  default_prompt: "Use $game-ui-accessibility to build an accessible, responsive interface for this game."

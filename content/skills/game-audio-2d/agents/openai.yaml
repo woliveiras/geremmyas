@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Audio 2D"
+  short_description: "Integrate reliable audio for 2D games"
+  default_prompt: "Use $game-audio-2d to integrate, mix, and validate audio for this 2D game."

@@ -188,6 +188,66 @@
       ]
     },
     {
+      "name": "game-dev",
+      "tier": "stack",
+      "description": "Complete 2D game-development workflows for Phaser and Godot.",
+      "depends": [
+        "game-art-2d"
+      ],
+      "files": [
+        {
+          "kind": "skill",
+          "source": "content/skills/gameplay-programming-2d",
+          "path": "gameplay-programming-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-testing-2d",
+          "path": "game-testing-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-feel-2d",
+          "path": "game-feel-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-ai-2d",
+          "path": "game-ai-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-performance-2d",
+          "path": "game-performance-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/procedural-generation-2d",
+          "path": "procedural-generation-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-save-n-progress",
+          "path": "game-save-n-progress"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-audio-2d",
+          "path": "game-audio-2d"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-ui-accessibility",
+          "path": "game-ui-accessibility"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/game-build-and-release",
+          "path": "game-build-and-release"
+        }
+      ]
+    },
+    {
       "name": "typescript-base",
       "tier": "stack",
       "description": "TypeScript baseline instructions with strict compiler, type modeling, and security at boundaries.",

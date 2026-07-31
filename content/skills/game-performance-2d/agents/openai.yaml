@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Performance 2D"
+  short_description: "Profile and optimize 2D games"
+  default_prompt: "Use $game-performance-2d to profile this 2D game and optimize the verified bottlenecks."

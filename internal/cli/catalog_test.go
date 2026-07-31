@@ -139,6 +139,39 @@ func TestResearchPackIncludesPaperReview(t *testing.T) {
 	}
 }
 
+func TestGameDevPackIncludesCompleteSkillFamily(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	gameDev, ok := catalog.Pack("game-dev")
+	if !ok {
+		t.Fatal("catalog missing game-dev pack")
+	}
+
+	got := packSourceBasenames(gameDev, "content/skills/", "")
+	want := map[string]bool{
+		"game-ai-2d":               true,
+		"game-audio-2d":            true,
+		"game-build-and-release":   true,
+		"game-feel-2d":             true,
+		"game-performance-2d":      true,
+		"game-save-n-progress":     true,
+		"game-testing-2d":          true,
+		"game-ui-accessibility":    true,
+		"gameplay-programming-2d":  true,
+		"procedural-generation-2d": true,
+	}
+	if len(got) != len(want) {
+		t.Fatalf("game-dev discoverable skills = %v, want %v", got, want)
+	}
+	for name := range want {
+		if !got[name] {
+			t.Errorf("game-dev missing discoverable skill %q", name)
+		}
+	}
+}
+
 func TestDoctorWithoutConfigReportsInitHint(t *testing.T) {
 	withTempCwd(t)
 	catalog, err := loadCatalog()
@@ -345,6 +378,7 @@ func TestCatalogCompositePackDependencyClosure(t *testing.T) {
 	}
 
 	tests := map[string][]string{
+		"game-dev":      {"game-art-2d", "game-dev"},
 		"go-ci":         {"go-base", "infra-ci", "go-ci"},
 		"python-ci":     {"python-base", "infra-ci", "python-ci"},
 		"react-data":    {"typescript-base", "react-web", "react-data"},

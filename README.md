@@ -309,7 +309,7 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 | **Baseline** | `core`, `sdd` | Default init; `sdd` depends on `core` |
 | **Workflow helpers** | `decision-support`, `skill-maintenance` | Optional decision and catalog-maintainer skills |
 | **Writing & research** | `blog`, `research`, `premortem` | Optional content workflows |
-| **Games** | `game-art-2d` | Codex-only 2D art workflow for Phaser and Godot |
+| **Games** | `game-art-2d`, `game-dev` | 2D art pack or complete Phaser/Godot development family |
 | **TypeScript / Node** | `typescript-base`, `typescript-ci`, `node-api`, `nestjs`, `fastify` | `nestjs` / `fastify` need `node-api` |
 | **React** | `react-web`, `react-router`, `react-state`, `react-data`, `tailwind` | Most depend on `react-web` → `typescript-base` |
 | **Python** | `python-base`, `python-api`, `python-ai`, `python-ci`, `python-sqlite` | `python-ci` needs `infra-ci` |
@@ -496,6 +496,16 @@ steps, checklists, examples, and policy belong in the owning skill's
 | `decision-framework` | Evaluate material decisions (`decision-support` pack) |
 | `skill-authoring` | Create or revise skills (`skill-maintenance` pack) |
 | `game-art-2d` | Create and integrate 2D game art for Phaser and Godot with Codex (`game-art-2d` pack) |
+| `gameplay-programming-2d` | Build reliable movement, combat, interaction, physics, and scene-flow systems (`game-dev` pack) |
+| `game-testing-2d` | Test deterministic simulation, engine integration, and exported game behavior (`game-dev` pack) |
+| `game-feel-2d` | Tune controls, movement, camera, impact, and accessible feedback (`game-dev` pack) |
+| `game-ai-2d` | Build testable enemy perception, decisions, navigation, and encounters (`game-dev` pack) |
+| `game-performance-2d` | Profile and optimize measured 2D game bottlenecks (`game-dev` pack) |
+| `procedural-generation-2d` | Generate deterministic, validated maps and content (`game-dev` pack) |
+| `game-save-n-progress` | Implement versioned saves, settings, and progression (`game-dev` pack) |
+| `game-audio-2d` | Integrate routed, bounded, and platform-aware game audio (`game-dev` pack) |
+| `game-ui-accessibility` | Build responsive menus, HUDs, focus flows, and accessibility settings (`game-dev` pack) |
+| `game-build-and-release` | Produce and verify Phaser bundles and Godot exports (`game-dev` pack) |
 | `typescript-ci-setup` | TypeScript CI pipeline (`typescript-ci` pack) |
 | `python-ci-setup` | Python CI pipeline (`python-ci` pack) |
 | `go-ci-setup` | Go CI pipeline (`go-ci` pack) |

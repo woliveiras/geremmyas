@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Build And Release"
+  short_description: "Build, verify, and ship game releases"
+  default_prompt: "Use $game-build-and-release to create and verify a reproducible release build for this game."

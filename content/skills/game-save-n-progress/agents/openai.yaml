@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Save N Progress"
+  short_description: "Implement durable saves and progression"
+  default_prompt: "Use $game-save-n-progress to implement versioned saves and reliable game progression."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Gameplay Programming 2D"
+  short_description: "Build reliable 2D gameplay systems"
+  default_prompt: "Use $gameplay-programming-2d to implement a reliable, testable gameplay system for this 2D game."
