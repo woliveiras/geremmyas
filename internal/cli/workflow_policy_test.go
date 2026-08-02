@@ -118,6 +118,10 @@ func TestAutonomousFeaturePolicyMaterializesForEveryTarget(t *testing.T) {
 			}
 		}
 		if strings.Contains(strings.ToLower(string(source)), "execute") {
+			cursor := strings.ToLower(string(testMustRead(t, filepath.Join(root, ".cursor", "agents", agent+".md"))))
+			if !strings.Contains(cursor, "readonly: false") {
+				t.Errorf("Cursor native agent %s cannot execute its verification contract", agent)
+			}
 			opencode := strings.ToLower(string(testMustRead(t, filepath.Join(root, ".opencode", "agents", agent+".md"))))
 			for _, policy := range []string{"\"git\": deny", "\"git *\": deny"} {
 				if !strings.Contains(opencode, policy) {

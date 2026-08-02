@@ -121,6 +121,10 @@ func renderOpenCodeAgent(description, body string, tools map[string]bool) string
 }
 
 func renderCursorAgent(name, description, body string, tools map[string]bool) string {
+	// Cursor exposes a coarse readonly mode rather than separate edit/execute
+	// capabilities. Agents that must execute verification need the active mode;
+	// their canonical delegation contract still prohibits edits and Git writes.
+	readonly := !tools["edit"] && !tools["execute"]
 	return fmt.Sprintf("---\nname: %s\ndescription: %q\nmodel: inherit\nreadonly: %t\n---\n\n<!-- %s:cursor-agent -->\n\n%s\n",
-		name, description, !tools["edit"], generatedMarker, strings.TrimSpace(body))
+		name, description, readonly, generatedMarker, strings.TrimSpace(body))
 }
