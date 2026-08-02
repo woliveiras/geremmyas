@@ -21,8 +21,9 @@ production operation is part of this plan.
 
 1. **Done:** Update feature intake, specification, status, TDD, completion,
    prompt, and template contracts so machine readiness replaces human approval.
-2. Convert bugfix approval into an autonomous reproduce-red-fix-green-document
-   loop while retaining regression and evidence requirements.
+2. **Done:** Convert bugfix approval into an autonomous
+   reproduce-red-fix-green-document loop while retaining regression and evidence
+   requirements.
 3. Make atomic local commits the default, add explicit opt-out behavior, and
    derive staging and messages from task ownership and the verified diff.
 4. Expand subagent contracts for proactive specialist implementation, audit,

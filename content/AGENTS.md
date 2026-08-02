@@ -23,7 +23,7 @@ project-local `AGENTS.md` overrides global defaults.
   human approval.
 - Honor explicit session overrides such as read-only, plan-only, or no-edits.
 - Every bug needs `docs/bugfixes/YYYY-MM-DD-<slug>.md`, a reproduction, an
-  approved fix proposal, and a regression test that fails before the fix.
+  evidence-backed fix proposal, and a regression test that fails before the fix.
 - Create postmortems only for production outages and ADRs only for complex,
   hard-to-reverse decisions.
 - Preserve user work and never revert unrelated changes.
@@ -63,8 +63,13 @@ Maintain `specs/README.md` whenever a spec is created or changes status.
 ### Bugs
 
 Use `bugfix-loop`. Reproduce before production edits, rank hypotheses, document
-the proposed fix, and stop for approval. Then add the regression test, apply the
-fix, rerun the original reproduction, and remove temporary instrumentation.
+the proposed fix, and prove the regression test fails. Then apply the smallest
+root-cause fix, rerun the regression test, original reproduction, and nearby
+suite, remove temporary instrumentation, and record the actual cause. Continue
+autonomously unless the objective materially expands, production or external
+authority is required, or the same blocker survives three evidence-driven
+cycles. Record subjective or unavailable checks as residual evidence instead of
+blocking local completion.
 
 ### Explicit capabilities
 

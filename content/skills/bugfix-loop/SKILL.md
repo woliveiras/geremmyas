@@ -53,14 +53,24 @@ docs/postmortems/YYYY-MM-DD-<incident-slug>.md
    temporary logs clearly so they can be removed.
 6. Convert the minimized reproduction into a regression test at the correct
    seam (mandatory before applying the fix).
-7. **Approval gate:** Present the bugfix document, hypotheses, proposed fix, and
-   regression test plan to the user and **stop**. Do not apply the fix until the
-   user explicitly approves.
-8. Apply the fix, then rerun the regression test and the original reproduction
-   loop.
-9. Remove temporary instrumentation and record the actual cause.
-10. If the bug was an outage, write a postmortem. If it was not an outage, stop
-    at the bugfix document and regression test.
+7. Run the regression test and record its expected failure before changing
+   production code. A test that starts green is not regression evidence; correct
+   the seam or reproduction first.
+8. Apply the smallest change that addresses the highest-ranked hypothesis
+   supported by evidence.
+9. Rerun the regression test, original reproduction loop, and nearest relevant
+   suite. If evidence falsifies the hypothesis, update the document, rank the
+   remaining hypotheses, and start another evidence-driven cycle.
+10. Remove temporary instrumentation, record the actual cause and why the fix
+    addresses it, and capture any residual evidence that could not be automated
+    or run locally.
+11. Escalate only when the requested objective must materially expand,
+    production or external authority is required, or the same blocker remains
+    after three consecutive evidence-driven cycles. Otherwise continue
+    autonomously.
+12. If the bug was an outage, write a postmortem. Otherwise complete the
+    workflow with the updated bugfix document and regression test as its durable
+    audit trail.
 
 ## Bugfix Document Template
 
@@ -115,7 +125,11 @@ One or two sentences describing the broken behavior and the expected behavior.
 
 - Test file:
 - Test name:
-- Failure observed before fix: yes | no
+- Red command:
+- Expected failure reason:
+- Observed red output or Investigation Log entry:
+- Green command:
+- Observed green output or Investigation Log entry:
 
 ## Fix
 
@@ -125,10 +139,19 @@ One or two sentences describing the broken behavior and the expected behavior.
 
 ## Verification
 
+- [ ] Regression test failed before the fix for the expected reason (command
+      and output recorded above or in the Investigation Log)
 - [ ] Regression test passes
 - [ ] Original reproduction no longer reproduces
 - [ ] Related test suite passes
 - [ ] Temporary instrumentation removed
+
+## Residual Evidence
+
+- Check not automated or unavailable locally:
+- Reason:
+- Risk remaining:
+- Follow-up or production authority required:
 
 ## Follow-ups
 
@@ -139,9 +162,17 @@ One or two sentences describing the broken behavior and the expected behavior.
 
 - Always create or update a bugfix document. No exceptions.
 - Always write a regression test for every bug fix. No exceptions.
-- Do not apply a fix before the user approves the bugfix proposal (approval gate).
-- Do not guess a fix before reproduction unless the user explicitly accepts the
-  risk.
+- Do not apply a fix until the regression test has failed for the expected
+  reason. Reproduction, ranked hypotheses, and red evidence are executable
+  controls; conversation does not control progress.
+- Do not guess a fix before reproduction. If reproduction is unavailable, keep
+  investigating or escalate after the same blocker survives three
+  consecutive evidence-driven cycles.
+- Keep fixes minimal and tied to the documented actual cause. Treat adjacent
+  improvements as separate work when they materially expand the objective.
+- Record subjective, environment-specific, or unavailable checks as residual
+  evidence. They do not block local completion unless they expose a failing
+  acceptance criterion or require production or external authority.
 - Do not create a postmortem unless the bug caused a production outage.
 - Create `docs/bugfixes/` and `docs/postmortems/` lazily, only when the first
   document of each type is needed.

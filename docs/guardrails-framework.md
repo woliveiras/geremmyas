@@ -12,7 +12,7 @@ advertised as skills.
 | Requirements | `requirements-interview` | Explore first, record commit permission, classify the change |
 | Specification | `generate-spec` | Create spec, plan, tasks, then prove machine readiness |
 | Implementation | `vertical-tdd` | One observable behavior per red-green-refactor cycle |
-| Bugfix | `bugfix-loop` | Reproduce, rank hypotheses, stop for approval, add regression test |
+| Bugfix | `bugfix-loop` | Reproduce, rank hypotheses, prove red, fix, prove green, document cause |
 | Completion | `verification-checklists` | Fresh focused and nearby-suite evidence before `[x]` |
 | Review | `code-review-requesting` | Present scope, rationale, tests, risks, and unknowns |
 | Commit | `git-commit` | Stage only approved files; no amend or push without permission |
@@ -61,11 +61,16 @@ the package there; a newly unresolved material decision returns it to `Draft`.
 independent review with no actionable finding. Commit, push, merge, and release
 evidence are recorded separately.
 
-### Bugfix gate
+### Bugfix evidence gate
 
-Every bug has a bugfix document and reproduction. Present hypotheses, proposed
-fix, and regression-test boundary, then stop for approval before changing
-production code.
+Every bug has a bugfix document, a deterministic reproduction when feasible,
+ranked hypotheses, and a regression test that fails for the expected reason
+before production code changes. The agent then applies the smallest fix, reruns
+the original reproduction plus focused and nearby tests, records the actual
+cause, and removes temporary instrumentation. The loop does not pause for
+routine proposal acknowledgement. Escalation is limited to a material objective
+change, an external or production authority boundary, or the same unresolved
+blocker after three consecutive evidence cycles.
 
 ### Completion gate
 

@@ -102,6 +102,90 @@ func TestSDDPromptIsDocumentedAsCanonicalOnly(t *testing.T) {
 	}
 }
 
+func TestBugfixWorkflowRunsAutonomousEvidenceLoop(t *testing.T) {
+	surfaces := []string{
+		"content/AGENTS.md",
+		"content/skills/bugfix-loop/SKILL.md",
+	}
+	forbidden := []string{
+		"approved fix proposal",
+		"stop for approval",
+		"approval gate",
+		"until the user explicitly approves",
+		"before the user approves",
+	}
+	for _, path := range surfaces {
+		content := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, path))
+		for _, phrase := range forbidden {
+			if strings.Contains(content, phrase) {
+				t.Errorf("%s retains obsolete bugfix gate %q", path, phrase)
+			}
+		}
+	}
+
+	loop := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, "content/skills/bugfix-loop/SKILL.md"))
+	for _, phrase := range []string{
+		"docs/bugfixes/",
+		"ranked hypotheses",
+		"failed before the fix for the expected reason",
+		"before changing production code",
+		"actual cause",
+		"original reproduction",
+		"temporary instrumentation",
+		"nearest relevant suite",
+		"three consecutive",
+	} {
+		if !strings.Contains(loop, phrase) {
+			t.Errorf("bugfix loop missing autonomous evidence %q", phrase)
+		}
+	}
+}
+
+func TestAutonomousBugfixPolicyMaterializesForEveryTarget(t *testing.T) {
+	root := withTempCwd(t)
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,copilot,cursor,claude-code,opencode"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	for _, rel := range []string{
+		"AGENTS.md",
+		"CLAUDE.md",
+		".opencode/AGENTS.md",
+	} {
+		content := normalizeWorkflowText(string(testMustRead(t, filepath.Join(root, rel))))
+		if strings.Contains(content, "stop for approval") || strings.Contains(content, "approval gate") {
+			t.Errorf("%s retains an obsolete bugfix approval pause", rel)
+		}
+		for _, phrase := range []string{
+			"reproduce before production edits",
+			"rank hypotheses",
+			"regression test fails",
+			"temporary instrumentation",
+			"actual cause",
+			"three evidence-driven cycles",
+		} {
+			if !strings.Contains(content, phrase) {
+				t.Errorf("%s missing materialized bugfix invariant %q", rel, phrase)
+			}
+		}
+	}
+
+	canonicalSkill := mustReadEmbeddedWorkflowFile(t, "content/skills/bugfix-loop/SKILL.md")
+	for _, rel := range []string{
+		".agents/skills/bugfix-loop/SKILL.md",
+		".github/skills/bugfix-loop/SKILL.md",
+	} {
+		materialized := string(testMustRead(t, filepath.Join(root, rel)))
+		if materialized != canonicalSkill {
+			t.Errorf("%s differs from the canonical autonomous bugfix loop", rel)
+		}
+	}
+}
+
 func TestScanWorkflowGatesRejectsUnclassifiedMatch(t *testing.T) {
 	testFS := fstest.MapFS{
 		"content/AGENTS.md": {Data: []byte("Ask the user for explicit approval before implementation.\n")},

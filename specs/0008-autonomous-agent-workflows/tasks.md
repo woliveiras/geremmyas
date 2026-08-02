@@ -34,7 +34,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: README lifecycle, guardrails framework, template, and prompt guidance.
   - commit: `feat: make feature delivery autonomous`
 
-- [ ] **Run bugfixes as an autonomous evidence loop** (test-type: both)
+- [x] **Run bugfixes as an autonomous evidence loop** (test-type: both)
   - blocked-by: Make feature delivery autonomous
   - summary: Remove bugfix-proposal approval while preserving reproduction,
     ranked hypotheses, red regression, verified fix, cause, and cleanup.
@@ -45,6 +45,8 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     evidence loop and no pre-fix human approval gate.
   - verification: Focused policy tests, `go test ./internal/cli`, and
     `go run ./cmd/geremmyas lint`.
+  - evidence: Canonical loop and five-target materialization tests, full Go
+    suite, lint, `git diff --check`, and independent review with no findings.
   - docs: Bugfix lifecycle and residual-risk reporting.
   - commit: `feat: automate the bugfix evidence loop`
 

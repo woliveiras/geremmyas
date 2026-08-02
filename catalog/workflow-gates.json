@@ -17,24 +17,24 @@
     },
     {
       "id": "bugfix-gate-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/bugfix-loop/SKILL.md",
       "pattern": "(?i)(approval gate|user.*approv|stop)",
-      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+      "note": "The autonomous bugfix evidence loop no longer pauses for proposal acknowledgement."
     },
     {
       "id": "bugfix-contract-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/AGENTS.md",
       "pattern": "(?i)(approved fix|stop for approval)",
-      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+      "note": "The project contract no longer requires an approved fix proposal."
     },
     {
       "id": "bugfix-docs-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "docs/guardrails-framework.md",
       "pattern": "(?i)(bugfix.*approval|stop for approval)",
-      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+      "note": "Public guardrail documentation no longer pauses before the fix."
     },
     {
       "id": "commit-contract-migration",

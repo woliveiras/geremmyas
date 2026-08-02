@@ -553,8 +553,9 @@ Agents update `specs/README.md` whenever a spec changes lifecycle status.
 Every feature uses a folder with **all three** artifacts (see above). Agents
 advance a package to `Ready` automatically when its acceptance criteria are
 testable, contracts and dependencies are known, verification commands exist,
-and no material product decision remains unresolved. Bugfix proposal and commit
-authority are documented separately while their migration is pending.
+and no material product decision remains unresolved. Bugfixes run as an
+autonomous reproduce-red-fix-green-document loop. Commit authority is documented
+separately while its migration is pending.
 
 `tasks.md` uses checkboxes for progress (`[ ]` pending, `[~]` in progress,
 `[x]` done). Agents must keep checkboxes current while working. Each task
@@ -633,10 +634,15 @@ For existing features:
 
 For bugs:
 
-1. Use `bugfix-loop` to document the bug and build a reproduction loop.
-2. Write a regression test at the correct boundary.
-3. Fix the code and rerun the original reproduction loop.
-4. Write a postmortem only when the bug was an outage.
+1. Use `bugfix-loop` to document the symptom, impact, reproduction, and ranked
+   hypotheses.
+2. Write the regression test at the correct boundary and record its command,
+   output, and expected failing reason before changing production code.
+3. Apply the smallest root-cause fix, then rerun the regression test, original
+   reproduction, and nearest relevant suite.
+4. Record the actual cause, remove temporary instrumentation, and document any
+   residual evidence that automation could not establish.
+5. Write a postmortem only when the bug was an outage.
 
 ### Using the SDD prompt source
 
