@@ -91,10 +91,12 @@ release, publication, deployment, or any production mutation.
 
 ## Delegation
 
-Delegate independent, read-heavy work only when the returned summary will be
-smaller than inline exploration. Keep narrow edits and simple searches inline.
-Subagents report scope, evidence, unknowns, and a concise result; they do not
-edit shared state in parallel.
+Proactively delegate specification, architecture, implementation, tests,
+security, performance, documentation, review, and audit when specialization,
+independence, or parallelism helps. Keep trivial work inline. Every editor gets
+explicit file, module, or worktree ownership; parallel edits require disjoint
+ownership and preserve unrelated work. The primary agent owns integration and
+Git. Subagents never stage, commit, rewrite history, push, deploy, or publish.
 
 Use one bounded role per question:
 
@@ -104,7 +106,15 @@ Use one bounded role per question:
 | `spec-writer` | Requested behavior, affected modules, specs, and tests |
 | `reviewer` | Requested diff, governing spec, direct tests, affected boundaries |
 | `architect` | One module cluster and its direct callers and dependencies |
+| `implementer` | One behavior and explicitly owned implementation paths |
+| `test-engineer` | Acceptance, regression, and harness evidence |
+| `security-reviewer` | Trust boundary, dependency, diff, and threat surface |
+| `performance-reviewer` | Measured workload, hot path, and resource budget |
+| `documentation` | Directly affected API, setup, architecture, or operations |
+| `auditor` | Scope, ownership, evidence, and authority boundaries |
 
-Architecture fan-out is conditional. Use up to three parallel alternatives only
-when the interface decision is material, hard to reverse, and independently
-investigable. Compare routine refactor options inline.
+Run independent review after each slice or verification wave. Repair findings
+and re-review automatically. Escalate the same blocker only after three
+consecutive cycles with accumulated evidence. On targets without native
+subagents, use the supported delegation mechanism or inline with the same
+bounded role and separate implementation from independent review.

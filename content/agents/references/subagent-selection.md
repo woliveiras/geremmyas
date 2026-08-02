@@ -1,115 +1,67 @@
 ---
 name: subagent-selection
-description: "Decision framework for delegate-vs-inline work optimization. Use when: deciding whether to use inline work or spawn specialist agents, cost-benefit analysis needed. Do not use: for simple read-only operations, single-file edits, or direct implementation."
+description: "Autonomous specialist orchestration, ownership partitioning, review loops, and fallback for targets without native delegation."
 ---
-
 
 # Subagent Selection
 
-## When to Use
+Proactively delegate when specialist depth, independent challenge, context
+compression, or parallel work improves the result. Keep trivial work inline.
 
-- Before running a subagent (any agent call)
-- When choosing between inline work vs delegation
-- To optimize context window efficiency
-- When research/exploration will be expensive inline
-- When parallel execution accelerates the overall task
+## Delegation Envelope
 
-## When NOT to Use
+Every assignment states the objective, governing artifacts, evidence expected,
+forbidden areas, commands allowed, and explicit file, module, or worktree
+ownership. Parallel editors require disjoint ownership. If agents need the same
+file or hunk, serialize the work or let the primary create isolated worktrees.
+Preserve user and unrelated agent work.
 
-- For trivial changes (just do it inline)
-- When you have real-time user input needed (agent can't get clarification)
-- For security-sensitive operations (review with user first)
-- When context is already bloated (delegate to compress it, not expand it)
+The primary agent owns integration and Git. Subagents never stage, commit, merge,
+rebase, push, tag, release, publish, or deploy. The primary inspects returned
+changes, resolves overlaps, verifies the integrated diff, and commits coherent
+slices.
 
-## Decision Matrix
+## Specialist Matrix
 
-Examples of when to delegate vs inline work, and which agent to use:
+| Need | Role | Default boundary |
+| --- | --- | --- |
+| Requirements and artifacts | `spec-writer` | Behavior, spec, plan, tasks, index |
+| Architecture | `architect` | Module cluster, alternatives, contracts |
+| Production code | `implementer` | One behavior and owned implementation paths |
+| Tests and harness | `test-engineer` | Acceptance criteria, regression, evidence |
+| Security | `security-reviewer` | Trust boundary, diff, dependency, threat surface |
+| Performance | `performance-reviewer` | Measured hot path, budget, workload |
+| Documentation | `documentation` | Affected API, setup, architecture, operations |
+| Spec conformance | `reviewer` | Diff, spec, direct tests, affected boundaries |
+| Delivery audit | `auditor` | Scope, ownership, evidence, authority boundaries |
+| Codebase mapping | `explorer` | Read-only subsystem map |
 
-| Scenario | Delegate? | Agent | Why |
-|----------|-----------|-------|-----|
-| "Map 14 skill dirs in 3 repos" | YES | Explore | Parallel reads, compressed output |
-| "Find all usages of `makeRequest`" | NO | — | 2min grep-search inline |
-| "Should we refactor module X?" | YES | architect | Explore + ADR proposal = expensive |
-| "Add type hint to 1 var" | NO | — | 30sec edit inline |
-| "Analyze 200-line test failure" | YES | Explore/bugfix-loop | Research + hypothesis isolation |
-| "Fix typo in README" | NO | — | Just fix it |
-| "Design RAG pipeline for new codebase" | YES | Explore → spec-writer | Need pattern inventory first |
-| "Write error message" | NO | — | Inline in 20 seconds |
-| "Integrate LLM service, need guidance" | YES | runSubagent + llm-integration-review | Multi-file, decision-heavy |
+Security and performance work should be delegated early when they are acceptance
+or risk boundaries, not deferred to the user. Reviewers and auditors remain
+independent of the implementation context.
 
-## Cost Analysis
+## Parallel Waves
 
-**Inline Costs**
-- Direct: Token usage for exploration
-- Indirect: Clutters main context
-- Parallelization: Sequential (can't parallelize)
+Use parallel specialists when their ownership or review surfaces are independent.
+Editors may share a worktree only for disjoint files; otherwise isolate or
+serialize them. Never run concurrent Git operations. Do not redo a subagent's
+completed investigation without a concrete evidence gap.
 
-**Delegate Costs**
-- Direct: Subagent startup + output injection
-- Indirect: Less context pollution
-- Parallelization: Can run multiple agents in parallel
-- Benefit: Compressed output (subagent summarizes findings)
+Run independent review after each slice or verification wave. Repair findings
+and re-review automatically. Escalate only when the same blocker survives three
+consecutive cycles; include attempts, evidence, remaining hypothesis, and the
+specific decision or authority needed. A new blocker resets the counter.
 
-**Delegate if**:
-- Total tokens (delegation + compressed output) < (inline exploration tokens)
-- Exploration is substantial (>100 lines of research)
-- Multiple parallel queries would help
-- Main context is already >80% of limit
+## Target Fallback
 
-**Inline if**:
-- Work is <5 min
-- Single, simple query
-- No need for context compression
-- User needs interactive back-and-forth
+When native subagents exist, invoke roles proactively. When they do not, use the
+target's supported delegation mechanism or inline, applying the same role,
+ownership, evidence, and independence contract in separate phases.
 
-## Agent Selection Quick Ref
+## Avoid
 
-| Need | Agent | Output | Notes |
-|------|-------|--------|-------|
-| "Map codebase" | Explore | Structured summary | Quick/medium/thorough modes |
-| "Find code patterns" | Explore | Code snippets + locations | Better than grep for semantics |
-| "Spec from requirements" | spec-writer | spec.md + plan.md + tasks.md | Wraps interview + generate |
-| "Review impl vs spec" | reviewer | Checklist + gaps | Spec-driven only |
-| "Architecture options" | architect | ADR + proposals | Deep module analysis |
-| "Location of file X" | — | Use vscode_listCodeUsages | Don't delegate, use tool |
-
-## Parallel Execution
-
-**Safe to parallelize** (independent):
-- Multiple Explore agents on different repos
-- grep-search + file-read + semantic-search (all read-only)
-- Multiple agents reviewing different specs
-
-**NOT safe to parallelize**:
-- Git operations on same branch
-- File edits to same target
-- Anything with shared state
-
-## Context Recovery Pattern
-
-If main context is bloated after delegation:
-1. Subagent delivers compressed result
-2. You read result (low token cost)
-3. If need details, ask subagent to expand ONE section
-4. Do NOT re-run full exploration
-
-## Anti-Patterns
-
-**Over-Delegating**
-- Every 2-line change → subagent
-- Exploration that takes 30 seconds → delegated
-- Binary decisions → agent analysis (just decide)
-
-**Under-Delegating**
-- 200 files to search → manual grep loop
-- "Should we refactor this?" → inline pondering (use architect)
-- "Map the RTK pattern" → manual file exploration
-
-**Delegation Waste**
-- Delegate, ignore output, delegate again
-- Delegate for output already in current context
-- Delegate then inline re-do the work
-
----
-
-**Key Principle**: Delegation is not laziness—it's force multiplying. Use it for expensive exploration and parallelization. Inline for quick fixes. Stay honest about token cost vs benefit.
+- Delegating a two-line mechanical edit with no specialist value.
+- Giving two editors overlapping ownership.
+- Letting a subagent mutate Git history or production.
+- Treating disagreement as a user gate before comparing spec and evidence.
+- Ignoring a completed specialist result and repeating the same exploration.

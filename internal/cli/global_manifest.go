@@ -205,10 +205,13 @@ func isManagedGlobalPath(path string) bool {
 	roots := []string{
 		filepath.Join(home, ".agents", "skills"),
 		filepath.Join(home, ".copilot", "instructions"),
+		filepath.Join(home, ".cursor", "agents"),
 		filepath.Join(home, ".cursor", "rules"),
 		filepath.Join(home, ".cursor", "hooks"),
 		filepath.Join(home, ".cursor", "hooks.json"),
+		filepath.Join(home, ".claude", "agents"),
 		filepath.Join(home, ".claude", "CLAUDE.md"),
+		filepath.Join(home, ".config", "opencode", "agents"),
 		filepath.Join(home, ".config", "opencode", "AGENTS.md"),
 		filepath.Join(home, ".codex", "AGENTS.md"),
 		filepath.Join(home, ".codex", "instructions"),
@@ -271,13 +274,7 @@ func globalDesiredPaths(packs []Pack, targets []string) ([]string, error) {
 			}
 			paths[filepath.Join(home, ".cursor", "rules", "skill-"+name+".mdc")] = true
 		}
-		for _, source := range artifacts.agents {
-			name := strings.TrimSuffix(filepath.Base(source), ".agent.md")
-			paths[filepath.Join(home, ".cursor", "rules", "agent-"+name+".mdc")] = true
-		}
-		if len(artifacts.agents) > 0 {
-			paths[filepath.Join(home, ".cursor", "rules", "geremmyas-agents.mdc")] = true
-		}
+		addNativeAgentPaths(paths, scopeGlobal, TargetCursor, artifacts.agents, home)
 		if artifacts.hasHooks {
 			paths[filepath.Join(home, ".cursor", "hooks", "guardrails.sh")] = true
 			paths[filepath.Join(home, ".cursor", "hooks", "guardrails-rules.txt")] = true
@@ -286,9 +283,11 @@ func globalDesiredPaths(packs []Pack, targets []string) ([]string, error) {
 	}
 	if hasTarget(targets, TargetClaudeCode) {
 		paths[filepath.Join(home, ".claude", "CLAUDE.md")] = true
+		addNativeAgentPaths(paths, scopeGlobal, TargetClaudeCode, artifacts.agents, home)
 	}
 	if hasTarget(targets, TargetOpenCode) {
 		paths[filepath.Join(home, ".config", "opencode", "AGENTS.md")] = true
+		addNativeAgentPaths(paths, scopeGlobal, TargetOpenCode, artifacts.agents, home)
 	}
 	if hasTarget(targets, TargetCodex) {
 		paths[filepath.Join(home, ".codex", "AGENTS.md")] = true

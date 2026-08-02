@@ -114,6 +114,19 @@ Copilot uses the `applyTo` metadata in `.github/instructions`. Codex receives
 the same source in `.codex/instructions`, with its generated instruction index
 describing when each file applies.
 
+## Add an agent role
+
+1. Create `content/agents/<name>.agent.md` with a trigger-focused `description`
+   and the minimum `tools` needed by the role.
+2. Add a `Delegation Contract` covering scope, evidence, unknowns, and output.
+   Editing roles also declare explicit ownership and forbid staging or commits.
+3. Keep review roles read-only and keep Git, release, publication, deployment,
+   and production mutation outside every subagent role.
+4. Add the role to the specialist matrix and verify exact Copilot plus portable
+   materialization plus native Cursor, Claude Code, and OpenCode translations.
+   Targets without native delegation apply the same role proactively through
+   their supported fallback or inline contract.
+
 ## Add a target-specific adapter
 
 Use `targets/<assistant>/` when a portable kind cannot express the integration.

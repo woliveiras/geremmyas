@@ -23,7 +23,7 @@ assistant, install once and materialize it for the selected targets.
 - **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
 - **AGENTS.md** project contract for agent workflows, artifact locations, and operating rules
 - **Guardrails Framework** — 8-skill error-prevention system (hard gates, decision frameworks, anti-pattern detection, quality workflows)
-- **4 agents** for spec-driven development: write specs → generate tests → implement code → update docs
+- **10 agents** for specification, architecture, implementation, tests, security, performance, documentation, review, audit, and exploration
 - **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
 - **Prompt templates** for code review, refactoring, test generation, and SDD workflow
@@ -370,9 +370,9 @@ project root; assistant-specific content is emitted only for that target.
 | Shared | `AGENTS.md`, `mise.toml`, project templates |
 | Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
 | Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
-| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/rules`, `.cursor/hooks.json` |
-| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/instructions`, `CLAUDE.md` |
-| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/instructions`, `.opencode/AGENTS.md` |
+| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/agents`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/agents`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/agents`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
 `AGENTS.md` is the source of truth for agent behavior in a repository. It should
 reference skills instead of duplicating their full procedures.
@@ -448,12 +448,20 @@ skills for reusable workflows instead of duplicating skill procedures.
 | `explorer` | Read-only codebase mapper with a structured project summary. |
 | `reviewer` | Spec-driven reviewer that checks specs, tests, and code alignment. |
 | `architect` | Explores architecture candidates and uses parallel alternatives only for material interface decisions. |
+| `implementer` | Implements one behavior inside explicitly owned code boundaries. |
+| `test-engineer` | Builds acceptance, regression, and harness evidence. |
+| `security-reviewer` | Audits a bounded trust boundary, dependency, or change. |
+| `performance-reviewer` | Measures a bounded workload and diagnoses supported bottlenecks. |
+| `documentation` | Reconciles affected API, setup, architecture, and operational docs. |
+| `auditor` | Independently checks scope, evidence, ownership, and authority boundaries. |
 
 Every agent return is bounded by an explicit scope and separates repository
-evidence from unknowns. Delegate broad, read-heavy investigation when its
-summary will be smaller than doing the exploration inline. The `architect`
-fans out alternatives only for material, hard-to-reverse decisions; routine
-refactors compare options inline.
+evidence from unknowns. Agents may be invoked proactively and editors can run in
+parallel with disjoint file, module, or worktree ownership. The primary agent
+integrates, verifies, and owns Git. Independent review follows each slice or
+verification wave; findings are repaired and reviewed again automatically.
+Claude Code, Cursor, and OpenCode receive native subagent definitions; Codex
+uses portable roles or its supported delegation mechanism.
 
 Agents reference design heuristics in `content/agents/references/` (deep
 modules, interface design, complexity signals, dependency categories,

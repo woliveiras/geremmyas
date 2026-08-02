@@ -88,10 +88,8 @@ func generateCursorAt(scope installScope, root string, artifacts packArtifacts, 
 		}
 	}
 
-	for _, source := range artifacts.agents {
-		if err := generateCursorAgentRule(scope, root, source, opts, &summary); err != nil {
-			return summary, err
-		}
+	if err := generateNativeAgents(scope, root, TargetCursor, artifacts, opts, &summary); err != nil {
+		return summary, err
 	}
 
 	if artifacts.hasHooks {
@@ -118,13 +116,6 @@ func generateCursorAt(scope installScope, root string, artifacts packArtifacts, 
 			return summary, err
 		}
 		_ = osChmod(filepath.Join(root, ".cursor", "hooks", "guardrails.sh"), 0o755)
-	}
-
-	agentsRule := formatCursorAgentsIndexRule(scope, artifacts.agents)
-	if agentsRule != "" {
-		if err := writeGeneratedFile(root, ".cursor/rules/geremmyas-agents.mdc", []byte(agentsRule), opts, &summary); err != nil {
-			return summary, err
-		}
 	}
 
 	return summary, nil
@@ -195,77 +186,6 @@ func generateCursorSkillRule(scope installScope, root, source string, opts gener
 	rule := formatCursorRule(description, "", ruleBody)
 	rulePath := ".cursor/rules/skill-" + name + ".mdc"
 	return writeGeneratedFile(root, rulePath, []byte(rule), opts, summary)
-}
-
-func generateCursorAgentRule(scope installScope, root, source string, opts generatorOptions, summary *generatorSummary) error {
-	content, err := readEmbeddedSource(source)
-	if err != nil {
-		return err
-	}
-	fm, body, err := parseMarkdownFrontmatter(content)
-	if err != nil {
-		return err
-	}
-	name := strings.TrimSuffix(filepath.Base(source), ".agent.md")
-	description := fm.get("description")
-	if description == "" {
-		description = "geremmyas agent " + name
-	}
-	var ruleBody string
-	if scope == scopeGlobal {
-		ruleBody = fmt.Sprintf(
-			"Manual role (no @agent in Cursor).\n\n%s",
-			strings.TrimSpace(body),
-		)
-	} else {
-		projectPath := ".agents/roles/" + filepath.Base(source)
-		ruleBody = fmt.Sprintf(
-			"Manual role (no @agent in Cursor). Read `%s` when user asks for this role.\n\n%s",
-			projectPath,
-			strings.TrimSpace(body),
-		)
-	}
-	rule := formatCursorRule(description, "", ruleBody)
-	rulePath := ".cursor/rules/agent-" + name + ".mdc"
-	return writeGeneratedFile(root, rulePath, []byte(rule), opts, summary)
-}
-
-func formatCursorAgentsIndexRule(scope installScope, agentSources []string) string {
-	if len(agentSources) == 0 {
-		return ""
-	}
-	var b strings.Builder
-	b.WriteString("---\n")
-	b.WriteString("description: \"geremmyas agent roles — read matching agent file on demand\"\n")
-	b.WriteString("alwaysApply: false\n")
-	b.WriteString("---\n\n")
-	b.WriteString("<!-- ")
-	b.WriteString(generatedMarker)
-	b.WriteString(":cursor -->\n\n")
-	b.WriteString("# Agent roles\n\n")
-	if scope == scopeGlobal {
-		b.WriteString("Cursor has no @agent picker. When the user names a role, read the matching `agent-<name>.mdc` rule in this directory:\n\n")
-	} else {
-		b.WriteString("Cursor has no @agent picker. When the user names a role, read the file:\n\n")
-	}
-	for _, source := range agentSources {
-		name := strings.TrimSuffix(filepath.Base(source), ".agent.md")
-		b.WriteString("- `")
-		b.WriteString(name)
-		b.WriteString("` → ")
-		if scope == scopeGlobal {
-			b.WriteString("`.cursor/rules/agent-")
-			b.WriteString(name)
-			b.WriteString(".mdc`")
-		} else {
-			b.WriteString("`.agents/roles/")
-			b.WriteString(filepath.Base(source))
-			b.WriteString("`")
-		}
-		b.WriteByte('\n')
-	}
-	b.WriteByte('\n')
-	return b.String()
 }
 
 func findSkillMarkdown(source string) (string, error) {

@@ -185,13 +185,7 @@ func projectGeneratedPaths(packs []Pack, targets []string) []string {
 			}
 			paths[".cursor/rules/skill-"+name+".mdc"] = true
 		}
-		for _, source := range artifacts.agents {
-			name := strings.TrimSuffix(filepath.Base(source), ".agent.md")
-			paths[".cursor/rules/agent-"+name+".mdc"] = true
-		}
-		if len(artifacts.agents) > 0 {
-			paths[".cursor/rules/geremmyas-agents.mdc"] = true
-		}
+		addNativeAgentPaths(paths, scopeProject, TargetCursor, artifacts.agents, "")
 		if artifacts.hasHooks {
 			paths[".cursor/hooks/guardrails.sh"] = true
 			paths[".cursor/hooks/guardrails-rules.txt"] = true
@@ -200,9 +194,11 @@ func projectGeneratedPaths(packs []Pack, targets []string) []string {
 	}
 	if hasTarget(targets, TargetClaudeCode) {
 		paths["CLAUDE.md"] = true
+		addNativeAgentPaths(paths, scopeProject, TargetClaudeCode, artifacts.agents, "")
 	}
 	if hasTarget(targets, TargetOpenCode) {
 		paths[".opencode/AGENTS.md"] = true
+		addNativeAgentPaths(paths, scopeProject, TargetOpenCode, artifacts.agents, "")
 	}
 	if hasTarget(targets, TargetCodex) {
 		paths[".codex/AGENTS.md"] = true
@@ -214,6 +210,17 @@ func projectGeneratedPaths(packs []Pack, targets []string) []string {
 	}
 	sort.Strings(out)
 	return out
+}
+
+func addNativeAgentPaths(paths map[string]bool, scope installScope, target string, sources []string, prefix string) {
+	base, ok := nativeAgentDestination(scope, target)
+	if !ok {
+		return
+	}
+	for _, source := range sources {
+		name := strings.TrimSuffix(filepath.Base(source), ".agent.md")
+		paths[filepath.Join(prefix, base, name+".md")] = true
+	}
 }
 
 func adoptKnownLegacyProjectFiles(root string, manifest projectManifest, catalog Catalog) (projectManifest, error) {

@@ -63,7 +63,8 @@ Fix C → Back to Error A or new Error D
   - Escalate to senior
   - Revert to last known good, try different approach
 
-**Red flag**: More than 2 cycles = underlying issue, not surface fix
+**Red flag**: The same blocker surviving three consecutive cycles indicates an
+underlying issue. A different blocker resets the counter.
 
 ---
 

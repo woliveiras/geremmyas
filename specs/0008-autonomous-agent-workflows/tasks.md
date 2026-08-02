@@ -68,7 +68,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Commit authority, atomicity checklist, and override examples.
   - commit: `feat: commit verified slices by default`
 
-- [ ] **Orchestrate specialist subagents autonomously** (test-type: both)
+- [x] **Orchestrate specialist subagents autonomously** (test-type: both)
   - blocked-by: Make feature delivery autonomous
   - summary: Permit proactive specialist exploration, implementation, testing,
     security, performance, documentation, review, and audit with isolated edit

@@ -51,6 +51,7 @@ func TestWorkflowGateInventoryCoversEveryCataloguedSurface(t *testing.T) {
 }
 
 func TestAutonomousFeaturePolicyMaterializesForEveryTarget(t *testing.T) {
+	repositoryRoot := workflowRepositoryRoot(t)
 	root := withTempCwd(t)
 	var out strings.Builder
 	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,copilot,cursor,claude-code,opencode"}, &out, &out); code != 0 {
@@ -86,6 +87,113 @@ func TestAutonomousFeaturePolicyMaterializesForEveryTarget(t *testing.T) {
 	cursor := string(testMustRead(t, filepath.Join(root, ".cursor/rules/skill-generate-spec.mdc")))
 	if !strings.Contains(cursor, ".agents/skills/generate-spec/SKILL.md") {
 		t.Errorf("Cursor adapter does not route to the canonical generate-spec skill")
+	}
+
+	for _, agent := range []string{
+		"architect", "auditor", "documentation", "explorer", "implementer",
+		"performance-reviewer", "reviewer", "security-reviewer", "spec-writer", "test-engineer",
+	} {
+		source := testMustRead(t, filepath.Join(repositoryRoot, "content", "agents", agent+".agent.md"))
+		for _, rel := range []string{
+			filepath.Join(".agents", "roles", agent+".agent.md"),
+			filepath.Join(".github", "agents", agent+".agent.md"),
+		} {
+			installed := testMustRead(t, filepath.Join(root, rel))
+			if string(installed) != string(source) {
+				t.Errorf("%s does not exactly materialize %s", rel, agent)
+			}
+		}
+		for _, rel := range []string{
+			filepath.Join(".cursor", "agents", agent+".md"),
+			filepath.Join(".claude", "agents", agent+".md"),
+			filepath.Join(".opencode", "agents", agent+".md"),
+		} {
+			content := strings.ToLower(string(testMustRead(t, filepath.Join(root, rel))))
+			needsName := strings.Contains(rel, ".claude") || strings.Contains(rel, ".cursor")
+			if needsName && !strings.Contains(content, "name: "+agent) ||
+				!strings.Contains(content, "description:") || !strings.Contains(content, "delegation contract") {
+				t.Errorf("%s is not a native specialist definition", rel)
+			}
+		}
+		if strings.Contains(strings.ToLower(string(source)), "execute") {
+			opencode := strings.ToLower(string(testMustRead(t, filepath.Join(root, ".opencode", "agents", agent+".md"))))
+			for _, policy := range []string{"\"git\": deny", "\"git *\": deny"} {
+				if !strings.Contains(opencode, policy) {
+					t.Errorf("OpenCode native agent %s missing shell policy %q", agent, policy)
+				}
+			}
+		}
+	}
+	for _, rel := range []string{"CLAUDE.md", ".opencode/AGENTS.md"} {
+		content := strings.ToLower(string(testMustRead(t, filepath.Join(root, rel))))
+		if !strings.Contains(content, "native subagents") || !strings.Contains(content, "proactively") {
+			t.Errorf("%s does not expose proactive native specialists", rel)
+		}
+	}
+
+	manifest, exists, err := loadProjectManifest(root)
+	if err != nil || !exists {
+		t.Fatalf("load native-agent project manifest: exists=%v err=%v", exists, err)
+	}
+	for _, rel := range []string{
+		".cursor/agents/implementer.md",
+		".claude/agents/implementer.md",
+		".opencode/agents/implementer.md",
+	} {
+		if _, ok := manifest.Files[rel]; !ok {
+			t.Errorf("project manifest does not own native agent %s", rel)
+		}
+	}
+
+	config := Config{Version: 1, Packs: []string{"core", "sdd"}, Targets: []string{TargetCodex}}
+	if err := os.WriteFile(filepath.Join(root, configFileName), []byte(formatConfig(config)), 0o644); err != nil {
+		t.Fatalf("write target-change config: %v", err)
+	}
+	out.Reset()
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync after native target removal exit code = %d, output: %s", code, out.String())
+	}
+	for _, rel := range []string{
+		".cursor/agents/implementer.md",
+		".claude/agents/implementer.md",
+		".opencode/agents/implementer.md",
+	} {
+		mustNotExist(t, filepath.Join(root, rel))
+	}
+}
+
+func TestNativeSubagentsAreOwnedByGlobalManifest(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", filepath.Join(home, ".state"))
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog: %v", err)
+	}
+	packs, err := catalog.Resolve([]string{"core", "sdd"})
+	if err != nil {
+		t.Fatalf("resolve packs: %v", err)
+	}
+	paths, err := globalDesiredPaths(packs, []string{TargetCursor, TargetClaudeCode, TargetOpenCode})
+	if err != nil {
+		t.Fatalf("globalDesiredPaths: %v", err)
+	}
+	want := []string{
+		filepath.Join(home, ".cursor", "agents", "implementer.md"),
+		filepath.Join(home, ".claude", "agents", "implementer.md"),
+		filepath.Join(home, ".config", "opencode", "agents", "implementer.md"),
+	}
+	got := map[string]bool{}
+	for _, path := range paths {
+		got[filepath.Clean(path)] = true
+	}
+	for _, path := range want {
+		if !got[filepath.Clean(path)] {
+			t.Errorf("global manifest paths missing native agent %s", path)
+		}
+		if !isManagedGlobalPath(path) {
+			t.Errorf("native global agent is outside managed roots: %s", path)
+		}
 	}
 }
 
@@ -454,6 +562,65 @@ func TestFeatureWorkflowUsesMachineReadyLifecycle(t *testing.T) {
 			if !strings.Contains(content, phrase) {
 				t.Errorf("%s missing Verified predicate %q", path, phrase)
 			}
+		}
+	}
+}
+
+func TestSpecialistSubagentsAreOrchestratedAutonomously(t *testing.T) {
+	for _, path := range []string{
+		"content/AGENTS.md",
+		"content/agents/references/subagent-selection.md",
+	} {
+		content := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, path))
+		for _, phrase := range []string{
+			"proactively delegate",
+			"explicit file, module, or worktree ownership",
+			"primary agent owns integration and git",
+			"independent review after each slice or verification wave",
+			"repair findings and re-review automatically",
+			"three consecutive cycles",
+			"supported delegation mechanism or inline",
+		} {
+			if !strings.Contains(content, phrase) {
+				t.Errorf("%s missing autonomous delegation policy %q", path, phrase)
+			}
+		}
+	}
+	docsData, err := os.ReadFile(filepath.Join(workflowRepositoryRoot(t), "docs/guardrails-framework.md"))
+	if err != nil {
+		t.Fatalf("read guardrails documentation: %v", err)
+	}
+	docs := normalizeWorkflowText(string(docsData))
+	for _, phrase := range []string{
+		"proactively delegate",
+		"explicit file, module, or worktree ownership",
+		"primary agent owns integration and git",
+		"independent review after each slice or verification wave",
+		"repair findings and re-review automatically",
+		"three consecutive cycles",
+		"supported delegation mechanism or inline",
+	} {
+		if !strings.Contains(docs, phrase) {
+			t.Errorf("docs/guardrails-framework.md missing autonomous delegation policy %q", phrase)
+		}
+	}
+
+	selection := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, "content/agents/references/subagent-selection.md"))
+	for _, role := range []string{
+		"spec-writer", "architect", "implementer", "test-engineer",
+		"security-reviewer", "performance-reviewer", "documentation", "reviewer", "auditor",
+	} {
+		if !strings.Contains(selection, "`"+role+"`") {
+			t.Errorf("subagent selection reference missing specialist %q", role)
+		}
+	}
+	for _, obsolete := range []string{
+		"delegate independent, read-heavy work only",
+		"security-sensitive operations (review with user first)",
+		"anything with shared state",
+	} {
+		if strings.Contains(selection, obsolete) {
+			t.Errorf("subagent selection retains obsolete restriction %q", obsolete)
 		}
 	}
 }

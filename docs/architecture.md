@@ -83,9 +83,9 @@ Portable sources can appear at different destinations:
 | --- | --- |
 | Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
 | Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
-| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/rules`, `.cursor/hooks.json` |
-| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/instructions`, `CLAUDE.md` |
-| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/instructions`, `.opencode/AGENTS.md` |
+| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/agents`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/agents`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/agents`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
 `AGENTS.md`, `mise.toml`, and selected templates are shared project outputs.
 Mixed target selection produces the union, so Copilot paths appear only when

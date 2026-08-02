@@ -1,7 +1,6 @@
 # AGENTS.md
 
-This is the operating contract. The nearest
-project-local `AGENTS.md` overrides global defaults.
+This is the operating contract. The nearest project-local `AGENTS.md` wins.
 
 ## Instruction Order
 
@@ -10,8 +9,7 @@ project-local `AGENTS.md` overrides global defaults.
    user-facing copy when that file exists.
 3. Load technology instructions only for files being edited.
 4. Load a skill only when its trigger matches the current phase.
-5. Use a custom agent only for an isolated role that materially benefits from a
-   separate context.
+5. Use custom agents for specialist depth, parallelism, or independent review.
 
 ## Invariants
 
@@ -80,15 +78,15 @@ blocking local completion.
 
 ## Agent Routing
 
-- `explorer`: expensive read-only mapping across many files.
-- `spec-writer`: unclear requirements that need isolated exploration.
-- `reviewer`: implementation review against a `Ready` spec.
-- `architect`: material architecture options after ordinary exploration.
-
-Work inline for a small query or narrow edit. Delegate independent, read-heavy
-work when the returned summary will be smaller than the exploration. Never
-delegate shared-state edits or redo a subagent's completed exploration inline.
-The primary agent alone stages and commits integrated work.
+Proactively delegate specification, architecture, implementation, tests,
+security, performance, documentation, review, and audit when specialization or
+parallelism helps. Give each editor explicit file, module, or worktree ownership;
+parallel edits require disjoint ownership. Preserve user work. The primary agent
+owns integration and Git; subagents never stage or commit. Run independent review
+after each slice or verification wave, repair findings and re-review automatically,
+and escalate the same blocker only after three consecutive cycles. If the target
+lacks native subagents, use its supported delegation mechanism or inline with the
+same bounded role. Keep trivial work inline.
 
 ## Completion
 

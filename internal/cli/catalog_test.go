@@ -265,7 +265,11 @@ func TestCatalogSDDCoversEveryAgent(t *testing.T) {
 }
 
 func TestAgentContractsBoundDelegatedWork(t *testing.T) {
-	agents := []string{"architect", "explorer", "reviewer", "spec-writer"}
+	agents := []string{
+		"architect", "auditor", "documentation", "explorer", "implementer",
+		"performance-reviewer", "reviewer", "security-reviewer", "spec-writer",
+		"test-engineer",
+	}
 	required := []string{
 		"## Delegation Contract",
 		"**Scope:**",
@@ -291,6 +295,52 @@ func TestAgentContractsBoundDelegatedWork(t *testing.T) {
 	}
 }
 
+func TestSpecialistAgentsRespectIntegrationBoundary(t *testing.T) {
+	editors := []string{"documentation", "implementer", "spec-writer", "test-engineer"}
+	for _, agent := range editors {
+		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
+		for _, clause := range []string{"explicit ownership", "do not stage", "do not commit"} {
+			if !strings.Contains(content, clause) {
+				t.Errorf("%s missing integration boundary %q", agent, clause)
+			}
+		}
+	}
+
+	readers := []string{"architect", "auditor", "explorer", "performance-reviewer", "reviewer", "security-reviewer"}
+	for _, agent := range readers {
+		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
+		if !strings.Contains(content, "read-only") {
+			t.Errorf("%s must remain read-only", agent)
+		}
+	}
+}
+
+func TestSpecialistAgentToolCapabilities(t *testing.T) {
+	want := map[string]string{
+		"auditor":              "tools: [read, search, execute]",
+		"documentation":        "tools: [read, search, edit, web]",
+		"implementer":          "tools: [read, search, edit, execute]",
+		"performance-reviewer": "tools: [read, search, execute]",
+		"reviewer":             "tools: [read, search, execute]",
+		"security-reviewer":    "tools: [read, search, execute, web]",
+		"spec-writer":          "tools: [read, search, edit, web]",
+		"test-engineer":        "tools: [read, search, edit, execute]",
+	}
+	for agent, tools := range want {
+		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
+		if !strings.Contains(content, tools) {
+			t.Errorf("%s tools do not expose required specialist capabilities %q", agent, tools)
+		}
+		if strings.Contains(tools, "execute") {
+			for _, clause := range []string{"do not run git commands", "git status"} {
+				if !strings.Contains(content, clause) {
+					t.Errorf("%s execute capability lacks Git boundary %q", agent, clause)
+				}
+			}
+		}
+	}
+}
+
 func TestArchitectFanOutIsConditional(t *testing.T) {
 	path := "content/agents/architect.agent.md"
 	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
@@ -298,13 +348,22 @@ func TestArchitectFanOutIsConditional(t *testing.T) {
 		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
 	}
 	content := strings.ToLower(string(data))
-	if !strings.Contains(content, "fan out only when") {
-		t.Fatal("architect contract must make fan-out conditional")
+	if !strings.Contains(content, "delegate alternatives when") {
+		t.Fatal("architect contract must allow autonomous alternative delegation")
 	}
 	if strings.Contains(content, "always generate at least 3 alternatives") ||
 		strings.Contains(content, "always generate at least three alternatives") {
 		t.Fatal("architect contract still mandates routine three-way fan-out")
 	}
+}
+
+func mustReadEmbeddedFile(t *testing.T, path string) []byte {
+	t.Helper()
+	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
+	if err != nil {
+		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
+	}
+	return data
 }
 
 func TestCatalogSDDHasFocusedDiscoverableSkills(t *testing.T) {

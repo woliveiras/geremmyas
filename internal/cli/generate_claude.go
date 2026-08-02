@@ -19,6 +19,9 @@ func generateClaudeCodeAt(scope installScope, root string, artifacts packArtifac
 	if err := writeGeneratedFile(root, relPath, []byte(content), opts, &summary); err != nil {
 		return summary, err
 	}
+	if err := generateNativeAgents(scope, root, TargetClaudeCode, artifacts, opts, &summary); err != nil {
+		return summary, err
+	}
 	return summary, nil
 }
 
@@ -33,6 +36,9 @@ func generateOpenCodeAt(scope installScope, root string, artifacts packArtifacts
 		relPath = ".config/opencode/AGENTS.md"
 	}
 	if err := writeGeneratedFile(root, relPath, []byte(content), opts, &summary); err != nil {
+		return summary, err
+	}
+	if err := generateNativeAgents(scope, root, TargetOpenCode, artifacts, opts, &summary); err != nil {
 		return summary, err
 	}
 	return summary, nil
@@ -209,11 +215,14 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 
 	if len(artifacts.agents) > 0 {
 		b.WriteString("## Agent roles\n\n")
+		base, _ := nativeAgentDestination(scope, target)
+		displayBase := base
 		if scope == scopeGlobal {
-			b.WriteString("No native @agent picker. With the `cursor` global target, roles live in `~/.cursor/rules/agent-*.mdc`.\n\n")
-		} else {
-			b.WriteString("No native @agent picker in this IDE. Read `.agents/roles/<file>` when the user names the role:\n\n")
+			displayBase = "~/" + base
 		}
+		b.WriteString("Native subagents live in `")
+		b.WriteString(displayBase)
+		b.WriteString("/`; invoke them proactively when their specialist boundary matches:\n\n")
 		for _, source := range artifacts.agents {
 			content, err := readEmbeddedSource(source)
 			if err != nil {
@@ -229,11 +238,11 @@ func buildIDEAgentsDoc(scope installScope, root string, artifacts packArtifacts,
 			b.WriteString(name)
 			b.WriteString("**: ")
 			b.WriteString(desc)
-			if scope != scopeGlobal {
-				b.WriteString(" → `.agents/roles/")
-				b.WriteString(filepath.Base(source))
-				b.WriteString("`")
-			}
+			b.WriteString(" → `")
+			b.WriteString(displayBase)
+			b.WriteString("/")
+			b.WriteString(name)
+			b.WriteString(".md`")
 			b.WriteString("\n")
 		}
 		b.WriteByte('\n')

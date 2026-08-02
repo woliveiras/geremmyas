@@ -157,7 +157,7 @@
     },
     {
       "id": "architecture-choice-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/agents/architect.agent.md",
       "pattern": "(?i)ask the user",
       "note": "Routine architecture choices move to specialist comparison and evidence."

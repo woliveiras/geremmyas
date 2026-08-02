@@ -160,8 +160,9 @@ See verification checklist in #comments
 3. **Accept review decision**
    - A passing review means the change is spec-compliant at the reviewed scope
    - Findings mean fix, re-verify, and re-request review
-   - After 3 failed repair/re-review cycles on the same blocker, escalate to an
-     architect or specialist reviewer with the accumulated evidence
+   - Repair findings and re-review automatically. After three consecutive failed
+     cycles on the same blocker, escalate with the attempts, evidence, remaining
+     hypothesis, and exact decision or authority needed
 
 Review completion does not authorize merge, push, publication, or deployment.
 Those remain separate authority dimensions defined by `AGENTS.md`.
