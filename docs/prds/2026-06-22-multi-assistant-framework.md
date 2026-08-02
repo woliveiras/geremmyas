@@ -6,10 +6,10 @@
 
 ## Summary
 
-geremmyas today distributes AI-assistant configuration (instructions, skills,
-agents, hooks, templates) from a single canonical source under `project/`, with
-per-IDE generation. It treats GitHub Copilot as the native target and generates
-derived artifacts for Cursor, Claude Code, and OpenCode.
+geremmyas distributes AI-assistant configuration (instructions, skills, agents,
+hooks, templates) from assistant-neutral canonical sources under `content/`,
+with assistant-specific adapters under `targets/`. Target generators materialize
+the appropriate project and global artifacts for each supported assistant.
 
 This PRD frames the evolution of geremmyas from a Copilot-focused config
 distributor into a **personal multi-assistant working framework** that supports
@@ -39,6 +39,11 @@ The author uses multiple AI assistants but the framework only treats one of them
    the project contract, while guardrails and orchestration steps are advertised
    again as independently discoverable skills. This consumes context and creates
    conflicting trigger timing.
+5. **Workflow approval gates interrupt routine delivery.** Feature, bugfix,
+   architecture, commit, and tool-selection workflows repeatedly stop for human
+   confirmation even when repository evidence, automated tests, and specialist
+   review can resolve the decision. Subagents are restricted to read-heavy work,
+   so the primary agent cannot use them as an autonomous engineering team.
 
 ## Goals
 
@@ -60,7 +65,16 @@ The author uses multiple AI assistants but the framework only treats one of them
   visible before release.
 - Preserve the existing strengths: single canonical source with per-IDE
   generation, portable `AGENTS.md` contract, pack model with dependencies, shell
-  guardrails, and SDD approval gates.
+  safety guardrails, test-first delivery, and fresh verification evidence.
+- Make local engineering autonomous by default. Agents create and maintain the
+  durable work artifacts, implement, test, review, document, and create atomic
+  Conventional Commits unless the user explicitly disables commits.
+- Allow specialist subagents to explore, design, implement, test, audit, and
+  review independently when ownership is partitioned and Git integration remains
+  centralized.
+- Reserve human escalation for material product ambiguity, unmitigated risk to
+  production compatibility, new uncatalogued dependencies, persistent blockers,
+  push, and production mutations or publication.
 
 ## Non-Goals (this PRD)
 
@@ -77,6 +91,9 @@ The author uses multiple AI assistants but the framework only treats one of them
   keep the single Go binary plus packs.
 - **Broadening to many assistants beyond those actually used.** Map only Codex,
   Copilot, Cursor, Claude, plus the existing OpenCode target.
+- **Release workflow redesign.** Environment protection and automatic release
+  behavior in `.github/workflows/` will be reviewed after the autonomous local
+  workflow rollout.
 
 ## Scope decisions
 
@@ -92,6 +109,12 @@ The author uses multiple AI assistants but the framework only treats one of them
 | Context diagnostics and budgets | In scope |
 | Assistant-neutral canonical content | In scope |
 | Target-aware project materialization | In scope |
+| Autonomous local engineering workflow | In scope |
+| Atomic local commits by default | In scope; explicit user opt-out |
+| Proactive specialist subagents | In scope with isolated ownership |
+| New uncatalogued dependencies | Require explicit user decision |
+| Push and production mutation/publication | Require explicit user authorization |
+| GitHub release workflow redesign | Deferred to the next rollout |
 | Skill generator | Discarded |
 | Marketplace / cohesive versioning | Discarded |
 
@@ -104,12 +127,27 @@ deliverables of this PRD:
   cover the expected behavior; if absent, it writes them first (red), confirms
   they fail for the right reason, then changes code. Focus on well-designed unit
   and integration tests.
-- **Side-by-side work.** The human follows along; no fire-and-forget autonomous
-  builds. Subagents are used only for read-only investigation and for reviewing a
-  diff against the tests, returning to the main thread.
-- **Single canonical source.** `project/` stays the source of truth; all targets
-  are generated from it. The canonical tree may be renamed and reorganized as
-  part of removing assistant-specific source paths, but remains singular.
+- **Autonomy by default.** Agents continue through specification, implementation,
+  verification, documentation, review, and local commits without conversational
+  approval gates. They escalate only when evidence cannot resolve a material
+  decision or an authority boundary is reached.
+- **Atomic history.** Each verified slice ends in one task-owned Conventional
+  Commit containing its behavior, tests, and required documentation. A user can
+  disable commits explicitly for a session; push is never inferred.
+- **Specialist collaboration.** Subagents may work in parallel when file, module,
+  or worktree ownership is explicit. The primary agent integrates findings,
+  resolves review feedback, and owns Git operations.
+- **Authority boundaries.** Local and disposable test environments are available
+  to the harness. Push and every production mutation or publication require
+  explicit authorization. Dangerous commands outside the task are denied rather
+  than converted into routine confirmation prompts.
+- **Dependency provenance.** Existing project or Geremmyas-catalogued
+  dependencies may be used autonomously. Introducing a new uncatalogued direct
+  dependency requires the user to choose between adopting it and building a
+  local module after provenance, maintenance, security, and license review.
+- **Single canonical source.** `content/` is the shared source of truth and
+  `targets/<assistant>/` contains assistant-specific adapters. Generated consumer
+  paths are outputs, not an alternate source taxonomy.
 - **Platform.** macOS and Linux only.
 
 ## Success criteria
@@ -129,7 +167,18 @@ deliverables of this PRD:
 - `geremmyas context` reports global, project, system, and plugin skill counts,
   nested skill files, ownership state, and approximate context cost.
 - The default SDD catalog stays within explicit skill-count and metadata budgets.
-- No regression in existing targets, packs, guardrails, or SDD gates.
+- Feature and bugfix workflows proceed from durable artifacts to verified local
+  delivery without waiting for routine human approval.
+- Local commits are atomic, use Conventional Commits, match their staged diff,
+  and are created by default unless the user opts out. Push remains separate.
+- Specialist subagents can perform partitioned implementation and independent
+  review; repeated findings are repaired and re-reviewed before completion.
+- Automated gates retain red/green tests, nearby suites, evidence capture,
+  documentation reconciliation, and residual-risk reporting.
+- New uncatalogued dependencies, push, and production mutations or publication
+  stop at an explicit authority boundary.
+- No regression in existing targets, packs, preservation rules, or verification
+  gates.
 - A clean install materializes only shared artifacts and the outputs required by
   the selected targets. Existing modified or unowned files are never removed by
   migration.
@@ -142,3 +191,5 @@ deliverables of this PRD:
   target output, skill consolidation, diagnostics, budgets, and agent contracts.
 - `specs/0007-assistant-neutral-content/` — neutral canonical content, typed
   artifacts, and target-aware project/global materialization.
+- `specs/0008-autonomous-agent-workflows/` — autonomy-by-default workflows,
+  specialist delegation, atomic local commits, and contextual authority gates.
