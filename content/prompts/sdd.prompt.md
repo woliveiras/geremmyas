@@ -5,10 +5,11 @@ description: "Run the full Spec Driven Development cycle for a feature. Orchestr
 Guide me through the Spec Driven Development cycle for this feature.
 Follow each step in order. Advance automatically when each evidence gate passes.
 
-## Step 0 — Commit permission
+## Step 0 — Authority overrides
 
-Ask whether you may create git commits for this work or I handle commits myself.
-Remember the answer for the rest of the cycle.
+Record any explicit read-only, plan-only, no-edits, or no-commits override. Do
+not ask about commit permission; atomic local commits are the default. This does
+not authorize push, production changes, or publication.
 
 ## Step 1 — Spec
 
@@ -55,16 +56,26 @@ Use the `update-docs` skill only if:
 
 Skip this step if the change is internal-only.
 
-After acceptance criteria, tasks, docs, fresh evidence, and independent review
-are reconciled, mark the spec `Verified`. Record failed evidence by keeping or
-returning it to `In Progress`; return it to `Draft` for a newly unresolved
-material decision. Commit, push, merge, and release evidence remain separate.
+After each task-owned slice passes focused tests, docs reconciliation, and
+independent review, continue through Step 6 before starting the next slice. The
+feature remains `In Progress` while more tasks remain.
 
-## Step 6 — Commit (optional)
+## Step 6 — Local commit per slice
 
-Use `git-commit` only if I granted commit permission in Step 0. Otherwise summarize
-changed files and leave committing to me.
+After each task-owned slice passes its evidence gates, have the primary agent use
+`git-commit` to create an atomic Conventional Commit containing implementation,
+tests, required docs, and durable artifacts. Do not wait for the whole feature
+to reach `Verified`. Do not ask for file, hunk, message, or commit confirmation.
+For a Step 0 override, skip the commit and report changed or proposed files.
+Never push. Return to Step 2 for the next slice.
+
+## Final lifecycle reconciliation
+
+After every acceptance criterion, task, doc, and independent review is
+reconciled, mark the spec `Verified`. Failed evidence keeps or returns it to `In
+Progress`; a newly unresolved material decision returns it to `Draft`. Commit,
+push, merge, and release evidence remain separate from lifecycle state.
 
 ---
 
-Start with Step 0 now.
+Start with Step 0, then continue automatically.

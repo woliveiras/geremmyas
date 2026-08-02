@@ -12,11 +12,6 @@ For the full stop conditions, see
 
 ## Process
 
-0. **Commit permission (first):** Before other questions, ask: "Do I have
-   permission to create git commits for this work, or do you handle commits
-   yourself?" Record the answer for the session. If the user does not grant
-   permission, downstream skills must not run `git-commit`; report changed files
-   instead.
 1. Explore the relevant code, docs, specs, PRDs, `GLOSSARY.md`, `CONTEXT.md`,
    and ADRs before asking questions.
 2. Classify the work:
@@ -34,14 +29,18 @@ For the full stop conditions, see
 5. Challenge vague or overloaded terms and propose canonical vocabulary.
 6. Record resolved decisions in the right artifact: PRD, spec, ADR, or
    `tasks.md`.
-7. Record explicit session overrides such as read-only, plan-only, or no-edits.
-   These overrides take precedence over the autonomous feature workflow.
+7. Record explicit session overrides such as read-only, plan-only, no-edits, or
+   no-commits. These overrides take precedence over the autonomous workflow.
 8. When the objective is clear, let `generate-spec` create and validate the
    durable artifacts without adding a conversational approval pause.
 
 ## Rules
 
-- Do not skip the commit permission question at the start.
+- Local atomic commits are the default after a verified slice. Omit
+  conversational permission and file, hunk, or message selection prompts.
+- A read-only, plan-only, no-edits, or no-commits override disables commits for
+  the session. Report changed or proposed files at the commit boundary. Commit
+  authority never implies push or production authority.
 - Do not ask questions that code or existing docs can answer.
 - Do not write a spec until the key branches of the decision tree are resolved.
 - Infer decisions from repository conventions when the choice is reversible and

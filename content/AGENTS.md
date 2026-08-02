@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This is the operating contract for coding agents in this repository. The nearest
+This is the operating contract. The nearest
 project-local `AGENTS.md` overrides global defaults.
 
 ## Instruction Order
@@ -21,13 +21,18 @@ project-local `AGENTS.md` overrides global defaults.
 - Feature artifacts advance through `Draft` -> `Ready` -> `In Progress` ->
   `Verified`. A machine-ready package is established by automatic checks, not
   human approval.
-- Honor explicit session overrides such as read-only, plan-only, or no-edits.
+- Honor explicit session overrides: read-only, plan-only, no-edits, or
+  no-commits.
 - Every bug needs `docs/bugfixes/YYYY-MM-DD-<slug>.md`, a reproduction, an
   evidence-backed fix proposal, and a regression test that fails before the fix.
 - Create postmortems only for production outages and ADRs only for complex,
   hard-to-reverse decisions.
 - Preserve user work and never revert unrelated changes.
-- Do not commit, amend, or push without explicit permission and confirmation.
+- After each coherent task-owned slice passes fresh tests, docs reconciliation,
+  and independent review, the primary agent creates an atomic local Conventional
+  Commit by default, even while the feature remains `In Progress`. Do not push;
+  commit authority excludes history rewrite, merge, tag, release, publication,
+  and production changes.
 - Keep `tasks.md` current: `[~]` while active and `[x]` only after verification.
 
 ## Artifacts
@@ -46,8 +51,8 @@ Maintain `specs/README.md` whenever a spec is created or changes status.
 
 ### Features and expansions
 
-1. Use `requirements-interview` to inspect existing behavior, resolve ambiguity,
-   and record commit permission. Update the PRD first when product flow changes.
+1. Use `requirements-interview` to inspect existing behavior and resolve
+   ambiguity. Update the PRD first when product flow changes.
 2. Use `generate-spec` to create or update the three feature artifacts.
 3. Validate the artifacts and mark them `Ready` when their automatic readiness
    checks pass. Continue with `vertical-tdd` one behavior at a time and set the
@@ -59,6 +64,8 @@ Maintain `specs/README.md` whenever a spec is created or changes status.
    acceptance criteria, tasks, docs, fresh verification, and independent review
    are reconciled with no actionable finding, mark it `Verified`.
 6. Use `update-docs` when API, architecture, setup, or config changed.
+7. Commit each task-owned slice after its evidence passes; do not wait for the
+   whole feature to reach `Verified`.
 
 ### Bugs
 
@@ -71,17 +78,6 @@ authority is required, or the same blocker survives three evidence-driven
 cycles. Record subjective or unavailable checks as residual evidence instead of
 blocking local completion.
 
-### Explicit capabilities
-
-- `generate-glossary`: establish domain vocabulary.
-- `generate-adr`: record an accepted, durable architecture decision.
-- `verification-checklists`: require fresh evidence before completion.
-- `code-review-requesting`: prepare a verified change for review.
-- `git-commit`: inspect and commit only explicitly approved files.
-
-Stack-specific skills are opt-in. Use them only when the repository installs the
-matching pack and the task crosses that technology boundary.
-
 ## Agent Routing
 
 - `explorer`: expensive read-only mapping across many files.
@@ -92,6 +88,7 @@ matching pack and the task crosses that technology boundary.
 Work inline for a small query or narrow edit. Delegate independent, read-heavy
 work when the returned summary will be smaller than the exploration. Never
 delegate shared-state edits or redo a subagent's completed exploration inline.
+The primary agent alone stages and commits integrated work.
 
 ## Completion
 

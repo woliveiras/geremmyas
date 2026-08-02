@@ -50,7 +50,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Bugfix lifecycle and residual-risk reporting.
   - commit: `feat: automate the bugfix evidence loop`
 
-- [ ] **Commit verified slices by default** (test-type: both)
+- [x] **Commit verified slices by default** (test-type: both)
   - blocked-by: Make feature delivery autonomous
   - summary: Remove the initial commit question and per-file/message approval;
     require task-owned atomic staging, diff-derived Conventional Commits, and
@@ -62,6 +62,9 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     tests/docs in the same slice.
   - verification: Focused contract tests, `go test ./internal/cli`, lint, and an
     independent agent review of cached-diff/commit-plan alignment without pushing.
+  - evidence: Canonical and five-target policy tests, mixed-hunk/index safety
+    contract checks, full Go suite, lint, `git diff --check`, and independent
+    review with no findings.
   - docs: Commit authority, atomicity checklist, and override examples.
   - commit: `feat: commit verified slices by default`
 

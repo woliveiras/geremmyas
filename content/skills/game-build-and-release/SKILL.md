@@ -41,4 +41,6 @@ Provide tool versions, commands, artifact paths and hashes, checks run, failures
 - Do not commit credentials or generated secret files.
 - Do not rename Godot web-export companions independently.
 - Do not claim tester installation, store approval, or production deployment without direct evidence.
-- Do not publish, upload, tag, commit, or push without explicit authorization.
+- Commit verified local release-engineering changes through the repository's
+  default atomic-commit workflow. Do not publish, upload, tag, push, release, or
+  deploy without explicit authorization.

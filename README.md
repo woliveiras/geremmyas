@@ -490,7 +490,7 @@ steps, checklists, examples, and policy belong in the owning skill's
 | `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
 | `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
 | `update-docs` | Update `docs/` after implementing a feature |
-| `git-commit` | Review staged changes and create a Conventional Commit with confirmation |
+| `git-commit` | Create task-owned atomic Conventional Commits from verified diffs |
 | `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
 | `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
 | `verification-checklists` | Require fresh execution evidence before completion |
@@ -554,8 +554,9 @@ Every feature uses a folder with **all three** artifacts (see above). Agents
 advance a package to `Ready` automatically when its acceptance criteria are
 testable, contracts and dependencies are known, verification commands exist,
 and no material product decision remains unresolved. Bugfixes run as an
-autonomous reproduce-red-fix-green-document loop. Commit authority is documented
-separately while its migration is pending.
+autonomous reproduce-red-fix-green-document loop. Verified slices create atomic
+local Conventional Commits by default; an explicit no-commits, read-only,
+plan-only, or no-edits instruction overrides that behavior.
 
 `tasks.md` uses checkboxes for progress (`[ ]` pending, `[~]` in progress,
 `[x]` done). Agents must keep checkboxes current while working. Each task
@@ -565,8 +566,8 @@ Use `specs/README.md` for status across specs. When resuming work, read the
 feature folder (`spec.md`, `plan.md`, `tasks.md`) and continue from the
 in-progress or next pending task.
 
-At the start of `requirements-interview`, the agent asks whether it may create git
-commits or the developer handles commits.
+Local commit authority never implies push, amend, rebase, merge, tag, release,
+publication, or production deployment.
 
 Do not create GitHub Issues, labels, or issue-state workflows unless explicitly
 requested.

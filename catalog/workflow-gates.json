@@ -38,45 +38,45 @@
     },
     {
       "id": "commit-contract-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/AGENTS.md",
       "pattern": "(?i)(permission|confirmation|approved files)",
-      "note": "Scheduled for replacement by default atomic local commits."
+      "note": "The contract now creates atomic local commits by default."
     },
     {
       "id": "commit-skill-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/git-commit/SKILL.md",
       "pattern": "(?i)(ask the user|explicitly approved|confirmation|explicit approval|stop and ask)",
-      "note": "Scheduled for replacement by diff-derived atomic commits with an explicit opt-out."
+      "note": "File and message confirmation pauses were replaced by diff-derived atomic commits."
     },
     {
       "id": "commit-intake-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/requirements-interview/SKILL.md",
       "pattern": "(?i)(commit permission|permission to create|ask one question)",
-      "note": "The initial commit question is removed in the default-commit slice."
+      "note": "The initial commit question was removed; narrow session overrides are recorded instead."
     },
     {
       "id": "commit-prompt-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/prompts/sdd.prompt.md",
       "pattern": "(?i)(commit permission|ask whether)",
-      "note": "The prompt commit question is removed in the default-commit slice."
+      "note": "The SDD prompt commits verified slices by default."
     },
     {
       "id": "commit-docs-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "README.md",
       "pattern": "(?i)(commit.*confirmation|asks? whether.*git)",
-      "note": "Public commit guidance is migrated with the default-commit slice."
+      "note": "Public guidance no longer asks who handles local commits."
     },
     {
       "id": "commit-guardrails-docs-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "docs/guardrails-framework.md",
       "pattern": "(?i)(commit permission|approved files|without permission)",
-      "note": "Public commit guidance is migrated with the default-commit slice."
+      "note": "Guardrail guidance now treats local commits as an evidence output."
     },
     {
       "id": "dangerous-command-authority",

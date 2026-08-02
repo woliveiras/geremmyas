@@ -186,6 +186,118 @@ func TestAutonomousBugfixPolicyMaterializesForEveryTarget(t *testing.T) {
 	}
 }
 
+func TestVerifiedSlicesCommitLocallyByDefault(t *testing.T) {
+	surfaces := []string{
+		"content/AGENTS.md",
+		"content/agents/spec-writer.agent.md",
+		"content/prompts/sdd.prompt.md",
+		"content/skills/git-commit/SKILL.md",
+		"content/skills/requirements-interview/SKILL.md",
+	}
+	forbidden := []string{
+		"commit permission (first)",
+		"do not skip the commit permission question",
+		"ask the user which exact files",
+		"files explicitly approved by the user",
+		"ask for explicit confirmation before running `git commit`",
+		"run `git commit` only after confirmation",
+		"only if i granted commit permission",
+		"without explicit permission and confirmation",
+	}
+	for _, path := range surfaces {
+		content := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, path))
+		for _, phrase := range forbidden {
+			if strings.Contains(content, phrase) {
+				t.Errorf("%s retains obsolete commit gate %q", path, phrase)
+			}
+		}
+	}
+
+	commitSkill := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, "content/skills/git-commit/SKILL.md"))
+	for _, phrase := range []string{
+		"local commits are the default",
+		"no-commits",
+		"git status --short",
+		"task-owned files or hunks",
+		"git diff --cached",
+		"conventional commits",
+		"tests",
+		"documentation",
+		"do not push",
+		"amend",
+		"rebase",
+		"merge",
+		"tag",
+		"release",
+		"publication",
+		"inspect staged and unstaged state separately",
+		"pre-existing staged state",
+		"mixed-hunk file",
+		"git apply --cached",
+		"alternate index",
+		"must not advance the current branch",
+		"original index remains unchanged",
+		"never unstage user-owned state",
+		"feature may remain `in progress`",
+		"changed files",
+		"proposed files",
+		"do not wait for the whole feature",
+	} {
+		if !strings.Contains(commitSkill, phrase) {
+			t.Errorf("git-commit skill missing default-commit invariant %q", phrase)
+		}
+	}
+
+	prompt := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, "content/prompts/sdd.prompt.md"))
+	for _, phrase := range []string{
+		"after each task-owned slice",
+		"feature remains `in progress` while more tasks remain",
+		"local commit per slice",
+		"do not wait for the whole feature",
+		"report changed or proposed files",
+		"final lifecycle reconciliation",
+	} {
+		if !strings.Contains(prompt, phrase) {
+			t.Errorf("SDD prompt missing slice/feature separation %q", phrase)
+		}
+	}
+}
+
+func TestDefaultCommitPolicyMaterializesForEveryTarget(t *testing.T) {
+	root := withTempCwd(t)
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,copilot,cursor,claude-code,opencode"}, &out, &out); code != 0 {
+		t.Fatalf("init exit code = %d, output: %s", code, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync exit code = %d, output: %s", code, out.String())
+	}
+
+	for _, rel := range []string{"AGENTS.md", "CLAUDE.md", ".opencode/AGENTS.md"} {
+		content := normalizeWorkflowText(string(testMustRead(t, filepath.Join(root, rel))))
+		for _, phrase := range []string{
+			"atomic local conventional commit by default",
+			"feature remains `in progress`",
+			"no-commits",
+			"do not push",
+		} {
+			if !strings.Contains(content, phrase) {
+				t.Errorf("%s missing materialized commit policy %q", rel, phrase)
+			}
+		}
+	}
+
+	canonicalSkill := mustReadEmbeddedWorkflowFile(t, "content/skills/git-commit/SKILL.md")
+	for _, rel := range []string{
+		".agents/skills/git-commit/SKILL.md",
+		".github/skills/git-commit/SKILL.md",
+	} {
+		if materialized := string(testMustRead(t, filepath.Join(root, rel))); materialized != canonicalSkill {
+			t.Errorf("%s differs from canonical git-commit policy", rel)
+		}
+	}
+}
+
 func TestScanWorkflowGatesRejectsUnclassifiedMatch(t *testing.T) {
 	testFS := fstest.MapFS{
 		"content/AGENTS.md": {Data: []byte("Ask the user for explicit approval before implementation.\n")},
@@ -287,15 +399,15 @@ func TestFeatureWorkflowUsesMachineReadyLifecycle(t *testing.T) {
 		})
 	}
 
-	agents := mustReadEmbeddedWorkflowFile(t, "content/AGENTS.md")
+	agents := normalizeWorkflowText(mustReadEmbeddedWorkflowFile(t, "content/AGENTS.md"))
 	for _, phrase := range []string{
 		"machine-ready",
-		"read-only, plan-only, or no-edits",
+		"read-only, plan-only, no-edits, or no-commits",
 		"blast radius",
 		"rollback",
 		"critical harness evidence",
 	} {
-		if !strings.Contains(strings.ToLower(agents), phrase) {
+		if !strings.Contains(agents, phrase) {
 			t.Errorf("content/AGENTS.md missing autonomous feature policy %q", phrase)
 		}
 	}

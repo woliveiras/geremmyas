@@ -9,13 +9,13 @@ advertised as skills.
 
 | Phase | Public workflow | Guardrail |
 | --- | --- | --- |
-| Requirements | `requirements-interview` | Explore first, record commit permission, classify the change |
+| Requirements | `requirements-interview` | Explore first, record narrow session overrides, classify the change |
 | Specification | `generate-spec` | Create spec, plan, tasks, then prove machine readiness |
 | Implementation | `vertical-tdd` | One observable behavior per red-green-refactor cycle |
 | Bugfix | `bugfix-loop` | Reproduce, rank hypotheses, prove red, fix, prove green, document cause |
 | Completion | `verification-checklists` | Fresh focused and nearby-suite evidence before `[x]` |
 | Review | `code-review-requesting` | Present scope, rationale, tests, risks, and unknowns |
-| Commit | `git-commit` | Stage only approved files; no amend or push without permission |
+| Commit | `git-commit` | Commit verified task-owned slices locally; never infer push or history rewrite |
 
 ## Internal References
 
@@ -77,6 +77,17 @@ blocker after three consecutive evidence cycles.
 A completion claim needs fresh command output. Run the focused test, the nearest
 relevant suite, remove temporary instrumentation, and reconcile task/spec state.
 Confidence, compilation alone, or stale CI output is not evidence.
+
+### Local commit boundary
+
+After verification and independent review, the primary agent creates one local
+Conventional Commit per coherent task-owned slice by default. It stages only
+owned paths or hunks, includes the slice's tests and required docs, rereads the
+cached diff, and derives the message from that diff. Explicit `no-commits`,
+read-only, plan-only, or no-edits instructions override the default.
+
+Local commit authority does not include push, amend, rebase, merge, tag,
+release, publication, deployment, or any production mutation.
 
 ## Delegation
 

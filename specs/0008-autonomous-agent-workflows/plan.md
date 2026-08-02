@@ -24,8 +24,9 @@ production operation is part of this plan.
 2. **Done:** Convert bugfix approval into an autonomous
    reproduce-red-fix-green-document loop while retaining regression and evidence
    requirements.
-3. Make atomic local commits the default, add explicit opt-out behavior, and
-   derive staging and messages from task ownership and the verified diff.
+3. **Done:** Make atomic local commits the default, add explicit opt-out
+   behavior, and derive staging and messages from task ownership and the verified
+   diff.
 4. Expand subagent contracts for proactive specialist implementation, audit,
    review, safe edit partitioning, automatic repair, and bounded escalation.
 5. Make dependency and command authority contextual: catalogued/local/test work
