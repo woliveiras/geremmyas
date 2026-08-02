@@ -17,8 +17,11 @@ Operate Google Cloud with explicit project, account, and permission context.
    output when needed.
 4. For mutating commands, state the exact resource, project, and consequence.
 5. Prefer service account impersonation over downloaded service account keys.
-6. Ask for explicit human approval before delete, deploy, IAM, billing,
-   service enable/disable, or policy-changing commands.
+6. Mutate a verified local, disposable, or test project autonomously when
+   rollback or recreation exists and prefix the command with the matching
+   `GEREMMYAS_TARGET=local`, `test`, or `disposable` marker. Treat an ambiguous project as protected.
+   Production delete, deploy, IAM, billing, service enable/disable, and policy
+   changes require explicit user authorization.
 7. Record the final command, output summary, and verification step.
 
 ## Rules
@@ -29,10 +32,11 @@ Operate Google Cloud with explicit project, account, and permission context.
   explicit.
 - Distinguish gcloud CLI auth from Application Default Credentials.
 - Prefer least-privilege service accounts for automation.
+- Never use a production project as a test target.
 
 ## Output
 
 - Target project/account/region summary
 - Safe command sequence
-- Approval gate for mutations
+- Environment and authority evidence for mutations
 - Verification command or observed result

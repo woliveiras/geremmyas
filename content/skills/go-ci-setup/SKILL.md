@@ -98,7 +98,9 @@ For CLI tools or libraries:
 
 ### 6. Verify Pipeline
 
-- Push a branch with intentional failures (bad format, failing test) to confirm gates work
+- Do not push solely to test CI. Use local validation or an existing branch run;
+  any push requires explicit user authorization.
+- When a separately authorized branch run exists, confirm intentional failures block it
 - Confirm coverage report is generated
 - Confirm `govulncheck` output is visible in CI logs
 

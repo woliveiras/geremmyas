@@ -89,26 +89,26 @@
       "id": "dangerous-command-hook",
       "classification": "retained-authority-boundary",
       "path": "targets/copilot/hooks/scripts/block-dangerous-commands.sh",
-      "pattern": "(?i)requires confirmation",
+      "pattern": "(?i)requires explicit authority",
       "note": "Generated hook enforces the catalogued dangerous-command boundary."
     },
     {
       "id": "production-terraform-authority",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/terraform-change/SKILL.md",
       "pattern": "(?i)(explicit human approval|ask for explicit|explicit approval)",
       "note": "Production and state mutation authority remains explicit."
     },
     {
       "id": "production-terraform-instruction",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/instructions/terraform.instructions.md",
       "pattern": "(?i)explicit human approval",
       "note": "Production and state mutation authority remains explicit."
     },
     {
       "id": "production-gcloud-authority",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/gcloud-operation/SKILL.md",
       "pattern": "(?i)(explicit human approval|approval gate)",
       "note": "Deploy, IAM, billing, and destructive cloud authority remains explicit."
@@ -129,7 +129,7 @@
     },
     {
       "id": "production-database-authority",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/postgres-query-review/SKILL.md",
       "pattern": "(?i)human-approved",
       "note": "Destructive migration authority remains explicit pending contextual environment policy."
@@ -143,7 +143,7 @@
     },
     {
       "id": "public-dangerous-command-policy",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "README.md",
       "pattern": "(?i)(terraform-change.*approval gates|\\*\\*ASK\\*\\*:.*git push)",
       "note": "Public documentation of protected commands."
@@ -154,6 +154,20 @@
       "path": "README.md",
       "pattern": "(?i)(release|publish|deploy).*approval",
       "note": "Release workflow redesign is explicitly deferred until after spec 0008 implementation."
+    },
+    {
+      "id": "release-please-production-follow-up",
+      "classification": "deferred-release-work",
+      "path": ".github/workflows/release.yml",
+      "pattern": "(?i)(release|upload)",
+      "note": "Automatic release creation and asset upload remain unchanged for the dedicated follow-up."
+    },
+    {
+      "id": "release-assets-production-follow-up",
+      "classification": "deferred-release-work",
+      "path": ".github/workflows/geremmyas.yml",
+      "pattern": "(?i)(release|upload)",
+      "note": "Release-triggered asset upload remains unchanged for the dedicated follow-up."
     },
     {
       "id": "architecture-choice-migration",
@@ -185,21 +199,21 @@
     },
     {
       "id": "glossary-choice-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/generate-glossary/SKILL.md",
       "pattern": "(?i)ask before",
       "note": "Repository vocabulary precedence should resolve routine conflicts."
     },
     {
       "id": "validation-pattern-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/validate-with-zod/SKILL.md",
       "pattern": "(?i)ask the user",
       "note": "Repository conventions should select validation patterns."
     },
     {
       "id": "adr-input-migration",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "content/skills/generate-adr/SKILL.md",
       "pattern": "(?i)ask the user",
       "note": "ADR inputs should be inferred from the accepted decision and repository evidence."
@@ -290,10 +304,87 @@
     },
     {
       "id": "vocabulary-conflict-docs",
-      "classification": "retained-authority-boundary",
+      "classification": "removed",
       "path": "README.md",
       "pattern": "(?i)ask before changing",
       "note": "The current vocabulary conflict pause remains active until the contextual-authority slice replaces it with repository precedence."
+    },
+    {
+      "id": "dependency-choice-contract",
+      "classification": "retained-authority-boundary",
+      "path": "content/AGENTS.md",
+      "pattern": "(?i)explicit user choice before installation",
+      "note": "Only a new uncatalogued direct dependency requires a provenance-backed user choice."
+    },
+    {
+      "id": "dependency-choice-readiness",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "pattern": "(?i)explicit user choice before installation",
+      "note": "Readiness preserves the new direct dependency authority boundary."
+    },
+    {
+      "id": "dependency-choice-public-docs",
+      "classification": "retained-authority-boundary",
+      "path": "README.md",
+      "pattern": "(?i)explicit user choice before installation",
+      "note": "Public documentation preserves the new direct dependency authority boundary."
+    },
+    {
+      "id": "dependency-choice-guardrail-docs",
+      "classification": "retained-authority-boundary",
+      "path": "docs/guardrails-framework.md",
+      "pattern": "(?i)explicit user choice",
+      "note": "Guardrail documentation preserves the new direct dependency authority boundary."
+    },
+    {
+      "id": "production-authority-contract",
+      "classification": "retained-authority-boundary",
+      "path": "content/AGENTS.md",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Production mutation and publication remain explicit."
+    },
+    {
+      "id": "production-authority-skills",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/*/SKILL.md",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Skills may prepare locally but require authority for push or production operations."
+    },
+    {
+      "id": "production-authority-references",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/*/references/*",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Skill references preserve production and publication authority."
+    },
+    {
+      "id": "production-authority-instructions",
+      "classification": "retained-authority-boundary",
+      "path": "content/instructions/*",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Technology instructions distinguish local/test from production mutation."
+    },
+    {
+      "id": "production-authority-readiness",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Readiness preserves production authority."
+    },
+    {
+      "id": "production-authority-public-docs",
+      "classification": "retained-authority-boundary",
+      "path": "README.md",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Public documentation preserves production authority."
+    },
+    {
+      "id": "production-authority-guardrail-docs",
+      "classification": "retained-authority-boundary",
+      "path": "docs/guardrails-framework.md",
+      "pattern": "(?i)explicit user authorization",
+      "note": "Guardrail documentation preserves production authority."
     }
   ]
 }

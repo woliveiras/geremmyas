@@ -12,8 +12,9 @@ into the project's vocabulary artifact.
 `GLOSSARY.md` is the default for new projects. `CONTEXT.md` is also supported
 when a repository already uses that convention. If both exist, read both; treat
 `GLOSSARY.md` as the canonical term list and `CONTEXT.md` as broader domain
-context unless the project says otherwise. If they conflict, ask before changing
-either file.
+context unless the project says otherwise. If they conflict, use repository
+evidence and `GLOSSARY.md` precedence, reconcile both, and record the decision.
+Escalate only when materially different domain meanings remain valid.
 
 ## When to Use
 

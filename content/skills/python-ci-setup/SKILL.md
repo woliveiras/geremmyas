@@ -181,7 +181,9 @@ def tests(session):
 
 ### 7. Verify Pipeline
 
-- Push a branch with intentional failures to confirm gates work
+- Do not push or publish solely to test CI. Use local checks or an existing run;
+  push and TestPyPI or PyPI publication require explicit user authorization.
+- When a separately authorized branch run exists, confirm intentional failures block it
 - Confirm coverage threshold is enforced
 - Confirm `bandit` and `pip-audit` output is visible in CI logs
 - Test publish workflow against TestPyPI before production

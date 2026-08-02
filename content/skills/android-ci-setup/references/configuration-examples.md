@@ -31,6 +31,10 @@ updates:
 
 ## Fastlane
 
+These lanes are configuration examples. Running either upload requires explicit
+user authorization for the selected Play track; production promotion is always
+protected.
+
 ```ruby
 platform :android do
   lane :internal do

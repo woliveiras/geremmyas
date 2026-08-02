@@ -1,46 +1,37 @@
 # Guardrails Rules
 #
 # Format: ACTION PATTERN
-#   ACTION = BLOCK | ASK
+#   ACTION = BLOCK | ASK | ALLOW
 #   PATTERN = regex matched against the command string
 #
 # BLOCK: reject immediately, show reason
-# ASK:   prompt user for confirmation before executing
+# ASK:   request authority only at a protected boundary
+# ALLOW: accept a command carrying explicit verified-target context
 #
 # Lines starting with # are comments. Blank lines are ignored.
 
 # --- Destructive version control ---
-BLOCK git push.*--force
-ASK   git push
-ASK   git reset --hard
-ASK   git clean -fd
-BLOCK git checkout -- .
+BLOCK ^[[:space:]]*git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+push.*((--force[^[:space:]]*|-f)([[:space:]]|$)|[[:space:]]+\+[^[:space:]]+)
+ASK   ^[[:space:]]*git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+push
+BLOCK ^[[:space:]]*git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+reset.*[[:space:]]+--hard([[:space:]]|$)
+BLOCK ^[[:space:]]*git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+clean([[:space:]]|$)
+BLOCK ^[[:space:]]*git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+checkout[[:space:]]+--[[:space:]]+\.
 
 # --- Destructive file operations ---
-BLOCK rm -rf /
-BLOCK rm -rf ~
-ASK   rm -rf
-ASK   rm -r
+BLOCK ^[[:space:]]*rm([[:space:]]+--?[[:alpha:]-]+)*[[:space:]]+(--[[:space:]]+)?(/|~|\$HOME)[[:space:]]*$
 
 # --- Infrastructure ---
-BLOCK terraform destroy
-ASK   terraform apply
-ASK   terraform import
-ASK   terraform state rm
+BLOCK ^[[:space:]]*(GEREMMYAS_TARGET=(local|test|disposable)[[:space:]]+)?terraform.*[[:space:]]destroy([[:space:]]|$)
+ALLOW ^[[:space:]]*GEREMMYAS_TARGET=(local|test|disposable)[[:space:]]+terraform([[:space:]]+-chdir=[^[:space:]]+)?[[:space:]]+(apply|import|state[[:space:]]+(rm|mv))([[:space:]]|$)
+ASK   ^[[:space:]]*terraform([[:space:]]+-chdir=[^[:space:]]+)?[[:space:]]+(apply|import|state[[:space:]]+(rm|mv))([[:space:]]|$)
 
-# --- Privilege escalation ---
+# --- Cloud and database mutations ---
+ALLOW ^[[:space:]]*GEREMMYAS_TARGET=(local|test|disposable)[[:space:]]+(gcloud|psql)([[:space:]]|$)
+ASK   ^[[:space:]]*gcloud.*[[:space:]](create|update|delete|deploy|enable|disable|add-iam-policy-binding|remove-iam-policy-binding)([[:space:]]|$)
+ASK   ^[[:space:]]*psql.*(DROP[[:space:]]+(TABLE|DATABASE)|TRUNCATE|DELETE[[:space:]]+FROM)
+
+# --- Privileged system mutation ---
 ASK   sudo
-
-# --- Package install (avoid global/system changes) ---
-ASK   pip install(?!.*-r)
-ASK   npm install -g
-ASK   brew install
-
-# --- Database ---
-ASK   DROP TABLE
-ASK   DROP DATABASE
-ASK   TRUNCATE
-ASK   DELETE FROM(?!.*WHERE)
 
 # --- Secrets ---
 BLOCK curl.*Authorization.*Bearer

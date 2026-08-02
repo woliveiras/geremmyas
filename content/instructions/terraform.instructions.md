@@ -19,5 +19,7 @@ applyTo: "**/*.tf, **/*.tfvars, **/*.tfvars.json"
   blocks for bringing existing resources under management.
 - Review `terraform plan` for deletes, replacements, IAM changes, networking,
   data stores, and drift before apply.
-- Do not run `terraform apply`, `destroy`, `state rm`, or `state mv` without
-  explicit human approval.
+- Apply or mutate state autonomously only in a verified local, disposable, or
+  test environment with rollback or recreation; prefix the guarded command with
+  the matching `GEREMMYAS_TARGET=local`, `test`, or `disposable` marker. Never run `terraform destroy`.
+  Treat ambiguous targets as protected; production mutation requires explicit user authorization.

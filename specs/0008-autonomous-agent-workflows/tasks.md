@@ -83,7 +83,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Delegation matrix, ownership rules, review loop, and escalation model.
   - commit: `feat: orchestrate specialist subagents`
 
-- [ ] **Enforce contextual authority boundaries** (test-type: both)
+- [x] **Enforce contextual authority boundaries** (test-type: both)
   - blocked-by: Make feature delivery autonomous, Commit verified slices by default
   - summary: Allow catalogued dependencies and disposable-environment operations;
     gate new uncatalogued direct dependencies and production mutations; deny
@@ -95,6 +95,9 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     hard denials, commit, push, and publication authority.
   - verification: Focused guardrail tests, ShellCheck, `go test ./internal/cli`,
     lint, and generated Copilot/Cursor hook smokes.
+  - evidence: Full Go suite, build, catalog/lint checks, ShellCheck, executable
+    Copilot/Cursor hook variants, fail-closed parsing tests, and independent
+    re-review with no findings.
   - docs: Dependency provenance and environment authority matrix.
   - commit: `feat: enforce contextual agent authority`
 

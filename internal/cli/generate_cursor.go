@@ -20,16 +20,20 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RULES_FILE="${SCRIPT_DIR}/guardrails-rules.txt"
 
 input=$(cat)
-command=""
 if command -v jq >/dev/null 2>&1; then
-  command=$(echo "$input" | jq -r '.command // empty')
-fi
-if [[ -z "$command" ]]; then
-  command=$(echo "$input" | grep -o '"command"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+  command=$(printf '%s' "$input" | jq -er '.command | select(type == "string")' 2>/dev/null) || command=""
+elif command -v python3 >/dev/null 2>&1; then
+  command=$(printf '%s' "$input" | python3 -c 'import json, sys; value = json.load(sys.stdin).get("command"); assert isinstance(value, str); print(value)' 2>/dev/null) || command=""
+else
+  command=""
 fi
 
-if [[ -z "$command" || ! -f "$RULES_FILE" ]]; then
-  echo '{"permission":"allow"}'
+if [[ -z "$command" ]]; then
+  echo '{"permission":"deny","user_message":"Unable to decode terminal command.","agent_message":"Command policy input invalid; fail closed."}'
+  exit 0
+fi
+if [[ ! -f "$RULES_FILE" ]]; then
+  echo '{"permission":"deny","user_message":"Geremmyas guardrail rules are missing.","agent_message":"Command policy unavailable; fail closed."}'
   exit 0
 fi
 
@@ -47,7 +51,11 @@ while IFS= read -r line; do
         exit 0
         ;;
       ASK)
-        echo '{"permission":"ask","user_message":"Confirm this command (geremmyas guardrail).","agent_message":"Command matched ask pattern."}'
+        echo '{"permission":"ask","user_message":"Explicit authority required for this protected command.","agent_message":"Command matched protected-boundary pattern."}'
+        exit 0
+        ;;
+      ALLOW)
+        echo '{"permission":"allow"}'
         exit 0
         ;;
     esac

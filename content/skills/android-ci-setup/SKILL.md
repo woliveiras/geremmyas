@@ -180,6 +180,7 @@ pull requests to avoid overwhelming maintainers.
 
 Add separate Fastlane lanes for uploading an AAB to the internal track and
 promoting that release to production.
+Do not upload or promote without explicit user authorization for that target.
 
 Use Play App Signing with a separate upload key. Never store signing keys
 in the repository.
@@ -194,8 +195,9 @@ writing the version catalog, Dependabot, Fastlane, or CodeQL files.
 
 ### 11. Verify Pipeline
 
-- Push a branch with a lint violation to confirm `lintDebug` blocks merge
-- Push a branch with a detekt finding to confirm static analysis blocks
+- Do not push or deploy solely to test CI. Use local checks or an existing run;
+  push, track upload, and production promotion require explicit user authorization.
+- When a separately authorized branch run exists, confirm lint and detekt failures block it
 - Verify unit test failure blocks the pipeline
 - Confirm dependency-review catches a vulnerable dependency in a PR
 - Verify release build succeeds with R8 enabled

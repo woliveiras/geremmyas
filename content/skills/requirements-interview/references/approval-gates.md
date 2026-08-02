@@ -82,3 +82,25 @@ record it, and proceed.
 **Key principle:** keep validation strict and executable. Ask the user only at a
 real authority boundary or material objective ambiguity, not as a substitute for
 evidence the harness can produce.
+
+## Dependency and environment authority
+
+Existing project dependencies and catalogued capabilities may be used
+autonomously. Before adding a new uncatalogued direct dependency, provide a
+provenance, maintenance, security, license, and build-versus-buy assessment and
+get explicit user choice before installation. Lockfile-selected transitives are
+recorded evidence; suspicious provenance or security findings reopen the gate.
+A compatible update to an existing direct dependency follows the normal harness
+after changelog and compatibility review. Direct dependencies include npm/pnpm
+packages, Python packages, Go modules or tools, Rust crates or tools, Gradle
+libraries or plugins, GitHub Actions, Terraform providers or modules, CI tools,
+and externally operated services.
+
+Mutations may proceed against a verified local, disposable, or test target when
+rollback or recreation is available. For guarded Terraform, `gcloud`, or `psql`
+mutations, carry that evidence as `GEREMMYAS_TARGET=local`, `test`, or
+`disposable`. Treat an ambiguous target as protected
+until configuration proves otherwise. Every production mutation, deploy,
+release, publication, or policy change requires explicit user authorization.
+Dangerous operations outside the objective are denied or replaced with a safe
+alternative rather than turned into repeated prompts.

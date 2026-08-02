@@ -5,8 +5,7 @@ This is the operating contract. The nearest project-local `AGENTS.md` wins.
 ## Instruction Order
 
 1. Read this contract and the active assistant's project overview.
-2. Read `GLOSSARY.md` before specs, tests, reviews, bugfix documents, ADRs, or
-   user-facing copy when that file exists.
+2. Read `GLOSSARY.md` before domain artifacts or user-facing copy when present.
 3. Load technology instructions only for files being edited.
 4. Load a skill only when its trigger matches the current phase.
 5. Use custom agents for specialist depth, parallelism, or independent review.
@@ -26,11 +25,16 @@ This is the operating contract. The nearest project-local `AGENTS.md` wins.
 - Create postmortems only for production outages and ADRs only for complex,
   hard-to-reverse decisions.
 - Preserve user work and never revert unrelated changes.
-- After each coherent task-owned slice passes fresh tests, docs reconciliation,
-  and independent review, the primary agent creates an atomic local Conventional
-  Commit by default, even while the feature remains `In Progress`. Do not push;
-  commit authority excludes history rewrite, merge, tag, release, publication,
-  and production changes.
+- After a task-owned slice passes tests, docs, and review, the primary creates an
+  atomic local Conventional Commit by default. The feature remains `In Progress`
+  while more tasks remain. Do not push or infer history rewrite,
+  merge, tag, release, publication, or production authority.
+- Existing project dependencies and catalogued capabilities are autonomous. A
+  new uncatalogued direct dependency needs provenance, maintenance, security,
+  license, and build-versus-buy evidence plus explicit user choice before installation.
+- Mutate a verified local, disposable, or test target with rollback or recreation.
+  Treat an ambiguous target as protected. Every production mutation, deploy,
+  release, publication, or policy change needs explicit user authorization.
 - Keep `tasks.md` current: `[~]` while active and `[x]` only after verification.
 
 ## Artifacts
@@ -42,8 +46,8 @@ This is the operating contract. The nearest project-local `AGENTS.md` wins.
 - Postmortem: `docs/postmortems/YYYY-MM-DD-<incident-slug>.md`
 - ADR: `docs/decisions/NNNN-title-with-dashes.md`
 
-Use local dates, lowercase kebab-case slugs, and global four-digit spec numbers.
-Maintain `specs/README.md` whenever a spec is created or changes status.
+Use local dates, kebab-case slugs, and global four-digit spec numbers. Maintain
+`specs/README.md` when a spec is created or changes status.
 
 ## Work Routing
 
@@ -52,11 +56,8 @@ Maintain `specs/README.md` whenever a spec is created or changes status.
 1. Use `requirements-interview` to inspect existing behavior and resolve
    ambiguity. Update the PRD first when product flow changes.
 2. Use `generate-spec` to create or update the three feature artifacts.
-3. Validate the artifacts and mark them `Ready` when their automatic readiness
-   checks pass. Continue with `vertical-tdd` one behavior at a time and set the
-   feature to `In Progress` when implementation starts.
-4. If implementation changes an in-scope assumption, update the artifacts,
-   rerun their readiness checks, and continue while the objective is unchanged.
+3. Mark machine-ready artifacts `Ready`; start `vertical-tdd` and set `In Progress`.
+4. Update and revalidate in-scope assumptions without changing the objective.
 5. Escalate before implementation only when blast radius is high and either
    rollback is unproven or critical harness evidence is missing. After
    acceptance criteria, tasks, docs, fresh verification, and independent review

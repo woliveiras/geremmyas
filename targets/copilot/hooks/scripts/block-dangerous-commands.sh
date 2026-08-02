@@ -21,9 +21,21 @@ RULES_FILE="${SCRIPT_DIR}/../guardrails-rules.txt"
 # Read the hook payload from stdin
 PAYLOAD=$(cat)
 
-# Extract the tool name and command
-TOOL_NAME=$(echo "$PAYLOAD" | grep -o '"toolName"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"toolName"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
-COMMAND=$(echo "$PAYLOAD" | grep -o '"command"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/')
+json_string_field() {
+  local field="$1"
+  if command -v jq >/dev/null 2>&1; then
+    printf '%s' "$PAYLOAD" | jq -er --arg field "$field" '.[$field] | select(type == "string")' 2>/dev/null
+  elif command -v python3 >/dev/null 2>&1; then
+    printf '%s' "$PAYLOAD" | python3 -c 'import json, sys; value = json.load(sys.stdin).get(sys.argv[1]); assert isinstance(value, str); print(value)' "$field" 2>/dev/null
+  else
+    return 1
+  fi
+}
+
+if ! TOOL_NAME=$(json_string_field toolName); then
+  echo '{"permissionDecision": "deny", "reason": "Unable to decode terminal policy input."}'
+  exit 0
+fi
 
 # Only check terminal commands
 if [[ "$TOOL_NAME" != *"terminal"* && "$TOOL_NAME" != *"shell"* && "$TOOL_NAME" != "runInTerminal" ]]; then
@@ -31,15 +43,14 @@ if [[ "$TOOL_NAME" != *"terminal"* && "$TOOL_NAME" != *"shell"* && "$TOOL_NAME" 
   exit 0
 fi
 
-# If no command found, allow
-if [[ -z "$COMMAND" ]]; then
-  echo '{"permissionDecision": "allow"}'
+if ! COMMAND=$(json_string_field command) || [[ -z "$COMMAND" ]]; then
+  echo '{"permissionDecision": "deny", "reason": "Unable to decode terminal command."}'
   exit 0
 fi
 
-# If rules file doesn't exist, allow everything
+# Missing policy is a broken safety harness; fail closed for terminal commands.
 if [[ ! -f "$RULES_FILE" ]]; then
-  echo '{"permissionDecision": "allow"}'
+  echo '{"permissionDecision": "deny", "reason": "Geremmyas guardrail rules are missing."}'
   exit 0
 fi
 
@@ -66,7 +77,11 @@ while IFS= read -r line; do
         exit 0
         ;;
       ASK)
-        echo "{\"permissionDecision\": \"ask\", \"reason\": \"Requires confirmation: pattern '$PATTERN' matched\"}"
+        echo "{\"permissionDecision\": \"ask\", \"reason\": \"Protected boundary requires explicit authority: pattern '$PATTERN' matched\"}"
+        exit 0
+        ;;
+      ALLOW)
+        echo '{"permissionDecision": "allow"}'
         exit 0
         ;;
     esac

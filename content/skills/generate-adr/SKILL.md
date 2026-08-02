@@ -33,11 +33,12 @@ the context should live instead, such as a PRD, spec, or code comment.
 
 ## Procedure
 
-1. Ask the user for:
+1. Infer from the accepted decision and repository evidence:
    - The decision topic (short title)
    - The context / problem being solved
    - The options they considered (at least 2)
    - Which option was chosen and why
+   Escalate only if a material decision remains unresolved after architecture review.
 2. Determine the next ADR number: list existing files in `docs/decisions/` and increment
 3. Fill in the template below — include optional sections only when the user provides enough detail
 4. Save to `docs/decisions/NNNN-title-with-dashes.md`

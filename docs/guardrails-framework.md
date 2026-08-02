@@ -89,6 +89,21 @@ read-only, plan-only, or no-edits instructions override the default.
 Local commit authority does not include push, amend, rebase, merge, tag,
 release, publication, deployment, or any production mutation.
 
+### Contextual authority
+
+Existing project dependencies and catalogued capabilities are autonomous. A new
+uncatalogued direct dependency stops before installation for provenance,
+maintenance, security, license, and build-versus-buy evidence plus explicit user choice.
+Verified local, disposable, or test mutations may proceed when
+rollback or recreation exists. Ambiguous targets remain protected. Production
+mutation, deploy, release, publication, and policy changes always require explicit user authorization.
+After verifying a non-production target, prefix guarded Terraform, `gcloud`, or
+`psql` mutations with `GEREMMYAS_TARGET=local`, `test`, or `disposable`; without
+that evidence marker the hook asks for authority. Privileged `sudo` mutations
+also require explicit user authorization.
+Out-of-scope destructive commands are denied or
+replaced with a safe alternative instead of becoming routine prompts.
+
 ## Delegation
 
 Proactively delegate specification, architecture, implementation, tests,

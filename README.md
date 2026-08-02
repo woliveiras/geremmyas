@@ -522,7 +522,7 @@ steps, checklists, examples, and policy belong in the owning skill's
 | `rust-ci-setup` | Rust CI pipeline (`rust-ci` pack) |
 | `rust-release` | Rust crate/binary release engineering (`rust-release` pack) |
 | `android-ci-setup` | Android CI pipeline (`android-ci` pack) |
-| `terraform-change` | Plan and review Terraform changes with approval gates |
+| `terraform-change` | Plan and execute context-aware Terraform changes |
 | `gcloud-operation` | Prepare safe Google Cloud CLI operations with explicit project/account context |
 | `ci-workflow` | Create, review, or debug GitHub Actions CI/CD workflows |
 | `llm-integration-review` | Design or review production LLM service integrations |
@@ -589,7 +589,8 @@ tests, reviews, bugfix documents, ADRs, or user-facing copy.
 is also supported for repositories that already use that convention. If both
 exist, read both; treat `GLOSSARY.md` as the canonical term list and
 `CONTEXT.md` as broader domain context unless the project says otherwise. If
-they conflict, ask before changing either file.
+they conflict, use repository evidence and `GLOSSARY.md` precedence, reconcile
+both, and record the decision.
 
 Absence of both files should not block work. Create or update vocabulary only
 when real ambiguity, inconsistent naming, or overloaded domain language appears.
@@ -598,8 +599,18 @@ when real ambiguity, inconsistent naming, or overloaded domain language appears.
 
 Command guardrails that intercept dangerous terminal commands:
 
-- **BLOCK**: `git push --force`, `rm -rf /`, `terraform destroy`, secret leaks
-- **ASK**: `git push`, `sudo`, `DROP TABLE`, `pip install`, `npm install -g`
+- **BLOCK**: force-push, destructive Git resets, broad root/home deletion,
+  `terraform destroy`, and secret leaks
+- **ASK**: `git push` and privileged `sudo` commands
+
+Existing or catalogued dependencies and verified local/disposable/test targets
+are autonomous. A new uncatalogued direct dependency needs provenance,
+maintenance, security, and license evidence. It also needs build-versus-buy
+analysis and explicit user choice before installation. Every production mutation, deploy, release,
+publication, or policy change needs explicit user authorization.
+Guarded Terraform, `gcloud`, and `psql` mutations require a verified
+non-production marker such as `GEREMMYAS_TARGET=test`; otherwise the hook treats
+the target as protected.
 
 Rules are configurable in `guardrails-rules.txt`.
 

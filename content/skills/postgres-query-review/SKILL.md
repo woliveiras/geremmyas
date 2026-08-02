@@ -29,8 +29,11 @@ risk.
 - Do not add indexes without a query pattern and expected benefit.
 - Do not use production `EXPLAIN ANALYZE` on dangerous writes.
 - Do not hold transactions open across network calls or user interaction.
-- Treat destructive migrations and large table rewrites as human-approved
-  operations.
+- Run destructive migrations or large rewrites autonomously only on a verified
+  local, disposable, or test database with rollback or recreation, prefixing
+  guarded commands with `GEREMMYAS_TARGET=local`, `test`, or `disposable`. Production
+  execution requires explicit user authorization; an ambiguous database is
+  protected.
 
 ## Output
 

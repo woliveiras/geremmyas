@@ -194,8 +194,9 @@ jobs:
 
 ### 9. Verify Pipeline
 
-- Push a branch with a type error to confirm `tsc --noEmit` blocks merge
-- Push a branch with a lint violation to confirm ESLint blocks
+- Do not push solely to test CI. Use local validation or an existing branch run;
+  any push requires explicit user authorization.
+- When a separately authorized branch run exists, confirm type and lint failures block it
 - Verify coverage threshold fails when dropping below minimum
 - Confirm `npm audit` output appears in CI logs
 - Verify lockfile enforcement catches `package.json` / lockfile drift

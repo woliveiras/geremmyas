@@ -87,7 +87,8 @@ const ResultSchema = z.discriminatedUnion("type", [
 
 ## Procedure
 
-1. Ask the user which pattern they need (or detect from context)
+1. Detect the boundary and pattern from the request, existing schemas, and
+   repository conventions
 2. Read existing schemas in `**/schemas/**` to match naming and style
 3. Generate the validation code following the patterns above
 4. Place schemas in the project's schema directory

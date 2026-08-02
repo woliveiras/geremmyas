@@ -15,7 +15,7 @@ import (
 
 const workflowGateInventoryPath = "catalog/workflow-gates.json"
 
-var conversationalGatePattern = regexp.MustCompile(`(?i)(^ASK\s|approval gate|explicit (human )?(approval|authority)|explicitly approv|user approval|user has approv|\bask (the )?user\b|\bask whether\b|\bagent asks whether\b|\bask before\b|\bask one focused question\b|\bask for (the paper|paper content|the minimum missing input|what's genuinely missing)|stop (and wait|for approval|until)|without (explicit )?(permission|confirmation|approval|authorization)|permission question|requires confirmation|obtain user approval|human-approved|manual approval|human (accessibility review|listening|play|playtesting|review))`)
+var conversationalGatePattern = regexp.MustCompile(`(?i)(^ASK\s|approval gate|explicit (human )?(approval|authority)|explicit user (authorization|choice)|explicitly approv|user approval|user has approv|\bask (the )?user\b|\bask whether\b|\bagent asks whether\b|\bask before\b|\bask one focused question\b|\bask for (the paper|paper content|the minimum missing input|what's genuinely missing)|stop (and wait|for approval|until)|without (explicit )?(permission|confirmation|approval|authorization)|permission question|requires confirmation|obtain user approval|human-approved|manual approval|human (accessibility review|listening|play|playtesting|review))`)
 
 type workflowGateInventory struct {
 	Version int                `json:"version"`
@@ -207,7 +207,7 @@ func collectWorkflowSurfaceFiles(root string, catalog Catalog) ([]string, error)
 			}
 		}
 	}
-	for _, rel := range []string{"content/prompts", "targets", "README.md", "docs/guardrails-framework.md"} {
+	for _, rel := range []string{"content/prompts", "targets", ".github/workflows", "README.md", "docs/guardrails-framework.md"} {
 		if err := addPath(rel); err != nil {
 			return nil, err
 		}

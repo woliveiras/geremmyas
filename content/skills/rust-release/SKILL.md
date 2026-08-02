@@ -7,6 +7,9 @@ description: "Plan and execute Rust release engineering. Use when: publishing a 
 # Rust Release Engineering
 
 Workflow for versioning, publishing, and distributing Rust crates and binaries.
+Local release preparation and dry-runs are autonomous. Tagging, pushing,
+publishing, uploading, or production deployment requires explicit user
+authorization for that operation.
 
 ## When to Use
 

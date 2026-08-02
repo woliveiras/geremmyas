@@ -29,8 +29,8 @@ production operation is part of this plan.
    diff.
 4. **Done:** Expand subagent contracts for proactive specialist implementation, audit,
    review, safe edit partitioning, automatic repair, and bounded escalation.
-5. Make dependency and command authority contextual: catalogued/local/test work
-   proceeds, new uncatalogued dependencies and production operations stop.
+5. **Done:** Make dependency and command authority contextual: catalogued/local/test
+   work proceeds, new uncatalogued dependencies and production operations stop.
 6. Materialize every applicable pack across supported targets, run the full
    verification matrix, reconcile artifacts, and document migration behavior.
 
