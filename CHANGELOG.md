@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [3.6.0](https://github.com/woliveiras/geremmyas/compare/v3.5.0...v3.6.0) (2026-07-31)
+
+
+### Features
+
+* **game-dev:** add complete 2d game skill pack ([5859e65](https://github.com/woliveiras/geremmyas/commit/5859e65de4af33dc553709a5cd385dfba4bc4c1e))
+* materialize project content by target ([0ece869](https://github.com/woliveiras/geremmyas/commit/0ece869c8940e2d8c92d8dd5d80ac67fdb17a884))
+* **skills:** add game design skills ([fc0822a](https://github.com/woliveiras/geremmyas/commit/fc0822aa81756d84ea794310c3323cecc881c1a7))
+
+
+### Bug Fixes
+
+* route global content by target ([84a304b](https://github.com/woliveiras/geremmyas/commit/84a304b61f11dd10e40a37a0d6cc462dffc5397d))
+
+
+### Documentation
+
+* complete assistant-neutral content rollout ([188a6dc](https://github.com/woliveiras/geremmyas/commit/188a6dc06f857434f7d92b4b834a7fc46b7831d0))
+* generalize assistant framework terminology ([4019164](https://github.com/woliveiras/geremmyas/commit/4019164e5320c9c1a82af4feb9f6eb8ba84eb43a))
+* specify assistant-neutral content model ([109fa58](https://github.com/woliveiras/geremmyas/commit/109fa587b1f17e6f80cc5a56b7de71bdc844e7f9))
+
+
+### Refactoring
+
+* move canonical assistant content ([0efa965](https://github.com/woliveiras/geremmyas/commit/0efa9654b449015a9666cef95ab74002477001e0))
+* type assistant content artifacts ([9b69835](https://github.com/woliveiras/geremmyas/commit/9b698352af0ca4e887fe4ef6f7505c499f53b241))
+
 ## [3.5.0](https://github.com/woliveiras/geremmyas/compare/v3.4.0...v3.5.0) (2026-07-23)
 
 
