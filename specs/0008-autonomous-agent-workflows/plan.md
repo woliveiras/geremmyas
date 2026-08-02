@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: Approved
+Status: In Progress
 
 ## Approach
 
@@ -19,8 +19,8 @@ production operation is part of this plan.
 
 ## Sequencing
 
-1. Update feature intake, specification, status, TDD, completion, prompt, and
-   template contracts so machine readiness replaces human approval.
+1. **Done:** Update feature intake, specification, status, TDD, completion,
+   prompt, and template contracts so machine readiness replaces human approval.
 2. Convert bugfix approval into an autonomous reproduce-red-fix-green-document
    loop while retaining regression and evidence requirements.
 3. Make atomic local commits the default, add explicit opt-out behavior, and

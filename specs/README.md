@@ -27,7 +27,7 @@ PRD: [docs/prds/2026-06-22-multi-assistant-framework.md](../docs/prds/2026-06-22
 | [0005](0005-codex-instructions/spec.md) | Codex global instruction distribution | 3 | Implemented | Direct user request (Codex not loading instructions) |
 | [0006](0006-context-efficient-workflows/spec.md) | Context-efficient agent workflows | 4 | Implemented | Audit of global skills, agents, and context usage; depends on 0004 and 0005 |
 | [0007](0007-assistant-neutral-content/spec.md) | Assistant-neutral canonical content | 5 | Implemented | Direct user request after coupling audit; depends on 0001, 0005, and 0006 |
-| [0008](0008-autonomous-agent-workflows/spec.md) | Autonomous agent workflows | 6 | Approved | Direct user request after workflow-gate audit; depends on 0006 and 0007 |
+| [0008](0008-autonomous-agent-workflows/spec.md) | Autonomous agent workflows | 6 | In Progress | Direct user request after workflow-gate audit; depends on 0006 and 0007 |
 
 ## Decisions
 

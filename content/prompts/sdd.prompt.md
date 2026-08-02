@@ -3,7 +3,7 @@ description: "Run the full Spec Driven Development cycle for a feature. Orchestr
 ---
 
 Guide me through the Spec Driven Development cycle for this feature.
-Follow each step in order. **Do not advance to the next step without my explicit approval.**
+Follow each step in order. Advance automatically when each evidence gate passes.
 
 ## Step 0 — Commit permission
 
@@ -17,11 +17,14 @@ Use @spec-writer to interview me and produce a numbered folder under `specs/`
 index (family, status `Draft`).
 If the feature needs product framing, write or update a PRD first, then the spec.
 
-**Gate:** I must approve the spec before proceeding.
+**Gate:** Mark the package `Ready` when acceptance criteria are testable,
+contracts and dependencies are known, verification commands exist, and no
+material product decision remains unresolved. Otherwise update it or ask one
+focused question for the unresolved decision.
 
 ## Step 2 — Tests
 
-Use the `generate-tests-from-spec` skill on the **approved** spec. Choose unit or
+Use the `generate-tests-from-spec` skill on the **Ready** spec. Choose unit or
 integration tests per the spec Test Strategy and each task's `test-type`.
 Each criterion maps to at least one test. Tests must fail initially (red).
 
@@ -31,6 +34,8 @@ Each criterion maps to at least one test. Tests must fail initially (red).
 
 Use `vertical-tdd` to implement one behavior at a time. Update `tasks.md` checkboxes.
 Never modify the tests — they are the source of truth.
+Mark the spec `In Progress` with the first `[~]` task. Revalidate changed
+in-scope assumptions and continue while the objective is unchanged.
 
 **Gate:** All tests pass (green) before proceeding.
 
@@ -49,6 +54,11 @@ Use the `update-docs` skill only if:
 - Setup changed (new dependencies, build steps, env vars)
 
 Skip this step if the change is internal-only.
+
+After acceptance criteria, tasks, docs, fresh evidence, and independent review
+are reconciled, mark the spec `Verified`. Record failed evidence by keeping or
+returning it to `In Progress`; return it to `Draft` for a newly unresolved
+material decision. Commit, push, merge, and release evidence remain separate.
 
 ## Step 6 — Commit (optional)
 

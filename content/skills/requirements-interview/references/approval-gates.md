@@ -1,84 +1,84 @@
 ---
-name: approval-gates-before-implementation
-description: "HARD GATE: Prevents implementation without explicit spec approval and user confirmation. Use when: starting a feature, before any code. Do not use: during implementation, for tiny refactors, or when approval already granted."
+name: feature-readiness-before-implementation
+description: "Automatic readiness and authority boundaries before feature implementation. Use when starting or materially changing a feature."
 ---
 
 
-# Approval Gates Before Implementation
+# Readiness Before Implementation
 
-<HARD-GATE>
-Do NOT write production code, scaffold projects, or implement features
-until the spec has been presented AND user has explicitly approved it.
-No "seems reasonable"—requires explicit approval.
-</HARD-GATE>
+Feature delivery is autonomous by default. Specs remain durable audit evidence,
+but readiness is established by executable checks rather than conversational
+approval.
 
 ## When to Use
 
 - Starting a new feature or significant change
-- Before you've written a single line of implementation code
-- After spec/plan/tasks are ready but spec not yet approved
-- To block agent rationalization patterns
+- After writing or materially changing `spec.md`, `plan.md`, or `tasks.md`
+- When implementation reveals an in-scope assumption that needs revision
+- To distinguish evidence gates from authority boundaries
 
 ## When NOT to Use
 
-- During implementation (too late)
+- During implementation when no artifact or assumption changed
 - For bug fixes with clear root cause (use bugfix-loop)
 - For tiny refactors or obvious syntax fixes
-- When approval has already been granted
+- When the user explicitly limited the session to read-only, plan-only, or
+  no-edits work; honor that boundary instead
 
-## Red Flags — STOP and Present to User
+## Automatic readiness gate
 
-| Excuse | Reality | Fix |
-|--------|---------|-----|
-| "This is simple, doesn't need a spec" | Simple ≠ obvious design | Write the spec anyway |
-| "I'll approve it for myself" | You're not the user | Stop and wait for user sign-off |
-| "Probably works" | Confidence ≠ evidence | Show the spec, get explicit "approved" |
-| "Just going to scaffold" | Scaffolding is implementation | Present plan first |
-| "Obviously the right approach" | Obvious to whom? | Challenge the assumption |
-| "This is a refactor, not a feature" | Still changes behavior → still needs approval | Verify with user first |
+A feature moves from `Draft` to `Ready` only when all checks pass:
+
+- `spec.md`, `plan.md`, and `tasks.md` exist and contain no placeholders.
+- Acceptance criteria are testable and map to the test strategy and tasks.
+- Contracts, dependencies, assumptions, and error paths are explicit.
+- Tasks form verifiable vertical slices with fresh verification commands.
+- The requested objective and repository conventions resolve material product
+  and technical choices.
+- No explicit session override forbids implementation.
 
 ## Procedure
 
-1. **Build the spec, plan, tasks** (see `generate-spec` skill)
-   - Problem statement clear
-   - Acceptance criteria written
-   - Test strategy documented
+1. Build `spec.md`, `plan.md`, and `tasks.md` with status `Draft`.
+2. Run the readiness checks and record their evidence in the artifacts.
+3. Correct failures and rerun the checks until they pass.
+4. Set the spec and index status to `Ready`, then start the first task and set
+   the feature to `In Progress`.
+5. If an in-scope assumption changes, update the affected artifacts and rerun
+   readiness automatically. Continue while the objective remains unchanged.
+6. Set the feature to `Verified` only after every acceptance criterion has fresh
+   evidence, every finished task is `[x]`, no stale `[~]` remains, required docs
+   and plan items are reconciled, and independent review has no actionable
+   finding.
 
-2. **Present the complete spec to the user**
-   - Include spec.md, plan.md, tasks.md summary
-   - Ask: "Does this solve the right problem?"
-   - Ask: "Any blockers or unknowns?"
+## When to escalate
 
-3. **Collect explicit approval**
-   - User says: "approved", "looks good", "go ahead", etc.
-   - Document: capture the approval in task history or commit context
+Do not turn ordinary uncertainty into a conversational gate. Escalate before
+implementation only when blast radius is high and at least one evidence gap is
+present:
 
-4. **Only then begin implementation**
-   - Execute `vertical-tdd` or equivalent per task
-   - No deviations from approved spec without re-approval
+1. The plausible production blast radius is high.
+2. Rollback is weak, unavailable, or unproven; or
+3. the critical harness cannot provide adequate pre-production evidence.
 
-5. **If spec changes during implementation**
-   - Stop implementation
-   - Update spec, plan, tasks
-   - Re-present to user and get re-approval
-   - Resume implementation
+Also ask when unresolved product ambiguity would materially change the stated
+objective. Otherwise infer the reversible choice from repository conventions,
+record it, and proceed.
 
 ## Anti-Patterns
 
-**Agent Rationalization**
-- Skipping spec → "it's just X, obvious"
-- Approving for itself → "I've reviewed it, ready to code"
-- Self-validating → "This is correct per the code I haven't written yet"
+**Evidence shortcuts**
+- Marking `Ready` because the design "looks right" without running checks.
+- Marking `Verified` from stale, partial, or second-hand evidence.
+- Treating a reviewer opinion as a substitute for acceptance tests.
 
-**User Bypass**
-- "User didn't object, so it's approved" → Wrong. Silence ≠ approval
-- "I inferred what they want" → Present spec, don't infer
-- "Similar feature existed once" → That doesn't transfer to this context
-
-**Scope Creep**
-- "While we're in here, let's also..." → Only if user approves expanded scope
-- "Small polish changes" → Polishing behavior is still a change; document it
+**Authority drift**
+- Ignoring a read-only, plan-only, or no-edits override.
+- Expanding the objective because an adjacent improvement is convenient.
+- Treating autonomous local implementation as production authorization.
 
 ---
 
-**Key Principle**: Approval gates prevent wasted work, misaligned solutions, and agent rationalization. The gate is not bureaucracy—it's insurance against building the wrong thing well.
+**Key principle:** keep validation strict and executable. Ask the user only at a
+real authority boundary or material objective ambiguity, not as a substitute for
+evidence the harness can produce.

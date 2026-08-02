@@ -11,14 +11,14 @@ description: "Structured code review workflow ensuring context and clarity. Use 
 - After implementation complete and verified
 - Before submitting PR or sharing code
 - To prepare context for effective review
-- When you need sign-off before merge
+- When an executable independent review gate is required
 
 ## When NOT to Use
 
 - During development (use inline feedback)
-- Before spec approval (review spec first, not code)
-- For trivial changes (self-review may be enough)
-- When reviewer is not the decision maker
+- Before the feature is `Ready` (review and validate the spec first)
+- When no behavior or risk surface changed and repository policy permits a
+  proportionate self-review
 
 ## Pre-Review Checklist
 
@@ -158,9 +158,13 @@ See verification checklist in #comments
    - Summarize fixes applied
 
 3. **Accept review decision**
-   - Approval means code is good AND spec-compliant
-   - Rejection means fix, don't rationalize
-   - Only override on explicit escalation
+   - A passing review means the change is spec-compliant at the reviewed scope
+   - Findings mean fix, re-verify, and re-request review
+   - After 3 failed repair/re-review cycles on the same blocker, escalate to an
+     architect or specialist reviewer with the accumulated evidence
+
+Review completion does not authorize merge, push, publication, or deployment.
+Those remain separate authority dimensions defined by `AGENTS.md`.
 
 ---
 

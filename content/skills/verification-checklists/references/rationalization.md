@@ -16,7 +16,7 @@ Rationalization looks like confidence. It is not.
 ## When to Use
 
 - Before claiming a task complete
-- Before skipping spec review or approval
+- Before skipping machine readiness or independent spec review
 - Before declaring "no test needed"
 - When you feel certain a change is safe
 - Before proceeding without verification
@@ -39,7 +39,7 @@ Rationalization looks like confidence. It is not.
 - "Simple" hides assumptions
 
 **How to block it**:
-- Every change needs spec approval, even 1-liners
+- Every change needs proportionate durable intent and verification
 - "Simple to implement" ≠ "simple to understand impact"
 - Run tests anyway. Review anyway.
 
@@ -47,21 +47,22 @@ Rationalization looks like confidence. It is not.
 
 ---
 
-### "I Approved It For Myself" Rationalization
+### "I Declared It Ready Without Evidence" Rationalization
 
-**What agent says**: "I reviewed the spec and it's good"
+**What agent says**: "I reviewed the spec, so it must be ready"
 
 **Why it's dangerous**:
-- Agent is not the user
-- Agent cannot represent user intent
-- Agent can rationalize away conflicts
+- Author review is not independent evidence
+- Missing acceptance criteria or test strategy can hide ambiguity
+- A lifecycle label without checks is only an assertion
 
 **How to block it**:
-- STOP. Present spec to actual user.
-- Collect explicit "approved" from user.
-- Document user approval in commit message or task comment.
+- Run the repository's machine-readable readiness checks.
+- Request an independent spec review and repair findings.
+- Move `Draft` -> `Ready` only when the durable artifacts pass both.
 
-**Reality check**: Would I accept this approval if a different agent said it? If no → don't accept from self.
+**Reality check**: Can another agent reproduce the readiness decision from the
+artifacts and executable checks? If no → it is not `Ready`.
 
 ---
 
@@ -96,7 +97,7 @@ Rationalization looks like confidence. It is not.
 **How to block it**:
 - Write it fresh per this context
 - Tests prove it works here, not in memory
-- Don't copy-paste old solutions without spec review
+- Don't copy-paste old solutions without contextual review
 
 **Reality check**: Is this project identical to the one where I used this pattern? (Spoiler: no.)
 
@@ -197,14 +198,16 @@ Rationalization looks like confidence. It is not.
 **What agent says**: "I decided the approach was wrong, here's a complete rewrite"
 
 **Why it's dangerous**:
-- Spec approval was for old approach
-- New approach needs spec approval too
+- Readiness evidence covered the old approach
+- A materially different approach needs updated artifacts and revalidation
 - Reviewers don't know what changed
 
 **How to block it**:
-- Stop and re-present spec
-- New approach = new spec approval gate
-- Don't rewrite without telling user
+- Update spec, plan, and tasks
+- Re-run machine readiness and independent review
+- Escalate only if the new approach exposes unresolved material product
+  ambiguity, or blast radius is high and at least one evidence gap remains:
+  rollback is unproven, or critical harness evidence is missing
 
 **Reality check**: Is this still solving the same problem per the same spec? If no → gate.
 
@@ -214,7 +217,7 @@ Rationalization looks like confidence. It is not.
 
 Before marking task complete:
 
-- [ ] Did I get explicit approval for the spec? (not self-approval)
+- [ ] Did the feature pass machine readiness and independent spec review?
 - [ ] Did I run the verification and capture output?
 - [ ] Can I defend this approach on technical merit, not confidence?
 - [ ] Have I tested the edge cases, not just happy path?

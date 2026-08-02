@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "feature-material-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "pattern": "(?i)ask the user only at a",
+      "note": "One focused question remains for a real authority boundary or material objective ambiguity."
+    },
+    {
+      "id": "removed-feature-contract-gate",
+      "classification": "removed",
+      "path": "content/AGENTS.md",
+      "pattern": "(?i)(explicitly approves the spec|stop at the approval gate|until the user explicitly approves)",
+      "note": "A human acknowledgement no longer controls feature implementation."
+    },
+    {
+      "id": "bugfix-gate-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/bugfix-loop/SKILL.md",
+      "pattern": "(?i)(approval gate|user.*approv|stop)",
+      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+    },
+    {
+      "id": "bugfix-contract-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/AGENTS.md",
+      "pattern": "(?i)(approved fix|stop for approval)",
+      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+    },
+    {
+      "id": "bugfix-docs-migration",
+      "classification": "retained-authority-boundary",
+      "path": "docs/guardrails-framework.md",
+      "pattern": "(?i)(bugfix.*approval|stop for approval)",
+      "note": "Scheduled for removal by the autonomous bugfix evidence-loop slice."
+    },
+    {
+      "id": "commit-contract-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/AGENTS.md",
+      "pattern": "(?i)(permission|confirmation|approved files)",
+      "note": "Scheduled for replacement by default atomic local commits."
+    },
+    {
+      "id": "commit-skill-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/git-commit/SKILL.md",
+      "pattern": "(?i)(ask the user|explicitly approved|confirmation|explicit approval|stop and ask)",
+      "note": "Scheduled for replacement by diff-derived atomic commits with an explicit opt-out."
+    },
+    {
+      "id": "commit-intake-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/requirements-interview/SKILL.md",
+      "pattern": "(?i)(commit permission|permission to create|ask one question)",
+      "note": "The initial commit question is removed in the default-commit slice."
+    },
+    {
+      "id": "commit-prompt-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/prompts/sdd.prompt.md",
+      "pattern": "(?i)(commit permission|ask whether)",
+      "note": "The prompt commit question is removed in the default-commit slice."
+    },
+    {
+      "id": "commit-docs-migration",
+      "classification": "retained-authority-boundary",
+      "path": "README.md",
+      "pattern": "(?i)(commit.*confirmation|asks? whether.*git)",
+      "note": "Public commit guidance is migrated with the default-commit slice."
+    },
+    {
+      "id": "commit-guardrails-docs-migration",
+      "classification": "retained-authority-boundary",
+      "path": "docs/guardrails-framework.md",
+      "pattern": "(?i)(commit permission|approved files|without permission)",
+      "note": "Public commit guidance is migrated with the default-commit slice."
+    },
+    {
+      "id": "dangerous-command-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/guardrails/guardrails-rules.txt",
+      "pattern": "(?i)(requires confirmation|^ASK)",
+      "note": "Dangerous command policy remains protected until contextual authority replaces broad asks."
+    },
+    {
+      "id": "dangerous-command-hook",
+      "classification": "retained-authority-boundary",
+      "path": "targets/copilot/hooks/scripts/block-dangerous-commands.sh",
+      "pattern": "(?i)requires confirmation",
+      "note": "Generated hook enforces the catalogued dangerous-command boundary."
+    },
+    {
+      "id": "production-terraform-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/terraform-change/SKILL.md",
+      "pattern": "(?i)(explicit human approval|ask for explicit|explicit approval)",
+      "note": "Production and state mutation authority remains explicit."
+    },
+    {
+      "id": "production-terraform-instruction",
+      "classification": "retained-authority-boundary",
+      "path": "content/instructions/terraform.instructions.md",
+      "pattern": "(?i)explicit human approval",
+      "note": "Production and state mutation authority remains explicit."
+    },
+    {
+      "id": "production-gcloud-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/gcloud-operation/SKILL.md",
+      "pattern": "(?i)(explicit human approval|approval gate)",
+      "note": "Deploy, IAM, billing, and destructive cloud authority remains explicit."
+    },
+    {
+      "id": "production-release-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/game-build-and-release/SKILL.md",
+      "pattern": "(?i)(explicit authorization|store approval|production deployment)",
+      "note": "Publication and production release authority remains explicit."
+    },
+    {
+      "id": "production-release-pipeline-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/game-build-and-release/references/release-pipeline.md",
+      "pattern": "(?i)explicit authority",
+      "note": "Publication authority remains explicit."
+    },
+    {
+      "id": "production-database-authority",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/postgres-query-review/SKILL.md",
+      "pattern": "(?i)human-approved",
+      "note": "Destructive migration authority remains explicit pending contextual environment policy."
+    },
+    {
+      "id": "production-package-publication",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/python-ci-setup/SKILL.md",
+      "pattern": "(?i)manual approval",
+      "note": "Package publication protection is a production authority boundary."
+    },
+    {
+      "id": "public-dangerous-command-policy",
+      "classification": "retained-authority-boundary",
+      "path": "README.md",
+      "pattern": "(?i)(terraform-change.*approval gates|\\*\\*ASK\\*\\*:.*git push)",
+      "note": "Public documentation of protected commands."
+    },
+    {
+      "id": "release-workflow-follow-up",
+      "classification": "deferred-release-work",
+      "path": "README.md",
+      "pattern": "(?i)(release|publish|deploy).*approval",
+      "note": "Release workflow redesign is explicitly deferred until after spec 0008 implementation."
+    },
+    {
+      "id": "architecture-choice-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/agents/architect.agent.md",
+      "pattern": "(?i)ask the user",
+      "note": "Routine architecture choices move to specialist comparison and evidence."
+    },
+    {
+      "id": "spec-material-question",
+      "classification": "retained-authority-boundary",
+      "path": "content/agents/spec-writer.agent.md",
+      "pattern": "(?i)(ask one focused question|user questions)",
+      "note": "One focused question remains only for an unresolved material product decision."
+    },
+    {
+      "id": "tool-choice-migration",
+      "classification": "removed",
+      "path": "content/skills/vertical-tdd/references/generate-tests-from-spec.md",
+      "pattern": "(?i)ask the user",
+      "note": "Framework selection is inferred from repository conventions."
+    },
+    {
+      "id": "abort-escalation-migration",
+      "classification": "removed",
+      "path": "content/skills/vertical-tdd/references/abort-criteria.md",
+      "pattern": "(?i)(ask (team|user|who|senior|architect|spec owner)|approval)",
+      "note": "Routine escalation is replaced by evidence-based replan and three-cycle blocker handling."
+    },
+    {
+      "id": "glossary-choice-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/generate-glossary/SKILL.md",
+      "pattern": "(?i)ask before",
+      "note": "Repository vocabulary precedence should resolve routine conflicts."
+    },
+    {
+      "id": "validation-pattern-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/validate-with-zod/SKILL.md",
+      "pattern": "(?i)ask the user",
+      "note": "Repository conventions should select validation patterns."
+    },
+    {
+      "id": "adr-input-migration",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/generate-adr/SKILL.md",
+      "pattern": "(?i)ask the user",
+      "note": "ADR inputs should be inferred from the accepted decision and repository evidence."
+    },
+    {
+      "id": "material-spec-escalation",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/vertical-tdd/references/abort-criteria.md",
+      "pattern": "(?i)ask the user only if material ambiguity remains",
+      "note": "One focused question remains for material product ambiguity."
+    },
+    {
+      "id": "research-input-boundary",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/scientific-paper/SKILL.md",
+      "pattern": "(?i)ask for",
+      "note": "Missing source material cannot be inferred and requires user input."
+    },
+    {
+      "id": "case-study-input-boundary",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/scientific-case-study-research/SKILL.md",
+      "pattern": "(?i)ask for",
+      "note": "Missing empirical input cannot be fabricated."
+    },
+    {
+      "id": "premortem-input-boundary",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/premortem/SKILL.md",
+      "pattern": "(?i)ask for",
+      "note": "A minimum missing consequential input may require one question."
+    },
+    {
+      "id": "game-art-expensive-direction",
+      "classification": "retained-authority-boundary",
+      "path": "content/skills/game-art-2d/SKILL.md",
+      "pattern": "(?i)(ask about|obtain user approval)",
+      "note": "Expensive-to-propagate art direction remains a material product choice."
+    },
+    {
+      "id": "residual-game-feel",
+      "classification": "residual-evidence",
+      "path": "content/skills/game-feel-2d/SKILL.md",
+      "pattern": "(?i)human playtesting",
+      "note": "Final feel judgment is reported as residual evidence and does not block automatable work."
+    },
+    {
+      "id": "residual-game-accessibility",
+      "classification": "residual-evidence",
+      "path": "content/skills/game-ui-accessibility/SKILL.md",
+      "pattern": "(?i)human accessibility review",
+      "note": "Claims automation cannot establish remain explicit residual evidence."
+    },
+    {
+      "id": "residual-game-audio",
+      "classification": "residual-evidence",
+      "path": "content/skills/game-audio-2d/references/audio-system.md",
+      "pattern": "(?i)human listening",
+      "note": "Balance and fatigue judgments remain explicit residual evidence."
+    },
+    {
+      "id": "residual-procedural-review",
+      "classification": "residual-evidence",
+      "path": "content/skills/procedural-generation-2d/references/generation-and-validation.md",
+      "pattern": "(?i)human review",
+      "note": "Metrics flag subjective review without blocking automated validation."
+    },
+    {
+      "id": "residual-game-testing",
+      "classification": "residual-evidence",
+      "path": "content/skills/game-testing-2d/SKILL.md",
+      "pattern": "(?i)human play",
+      "note": "Human play is separated from deterministic and engine evidence."
+    },
+    {
+      "id": "residual-game-testing-strategy",
+      "classification": "residual-evidence",
+      "path": "content/skills/game-testing-2d/references/testing-strategy.md",
+      "pattern": "(?i)human play",
+      "note": "Subjective review is a separate evidence class."
+    },
+    {
+      "id": "global-project-selection",
+      "classification": "retained-authority-boundary",
+      "path": "targets/copilot/global-instructions.md",
+      "pattern": "(?i)ask",
+      "note": "A missing project contract requires the user to identify the target repository."
+    },
+    {
+      "id": "vocabulary-conflict-docs",
+      "classification": "retained-authority-boundary",
+      "path": "README.md",
+      "pattern": "(?i)ask before changing",
+      "note": "The current vocabulary conflict pause remains active until the contextual-authority slice replaces it with repository precedence."
+    }
+  ]
+}

@@ -1,20 +1,22 @@
 ---
 name: generate-tests-from-spec
-description: "Generate tests from a spec's acceptance criteria. Use when: you have an approved spec and need tests, TDD from spec. Do not use: before spec approval, for test planning without specs."
+description: "Generate tests from a spec's acceptance criteria. Use when: a spec is Ready and needs tests, TDD from spec. Do not use: before machine readiness, for test planning without specs."
 ---
 
 
 # Generate Tests from Spec
 
-Generate tests that cover every acceptance criterion in an **approved** spec.
+Generate tests that cover every acceptance criterion in a **Ready** spec.
 
 ## When to Use
 
-- The spec is written and the user has explicitly approved it
+- The spec, plan, tasks, acceptance criteria, and test strategy pass the
+  repository's machine-readable readiness checks
 - You're starting the TDD cycle (tests before code)
 - You want to verify spec coverage with tests
 
-Do not run this skill before spec approval (see `AGENTS.md`).
+Do not run this skill while the feature is `Draft` (see `AGENTS.md`). Human
+approval is not a feature gate.
 
 ## Test-Type Decision
 
@@ -46,7 +48,9 @@ Signals for **unit**: pure logic, single function/module, no I/O.
    - Edge cases from the spec
    - Error cases from the spec
 5. Follow **existing test patterns** in the project (framework, naming, fixtures).
-6. If no existing tests are found, ask the user which framework to use.
+6. If no existing tests are found, use a framework already catalogued by the
+   repository or its active technology instructions. If none applies, compare
+   viable options and escalate before installing an uncatalogued dependency.
 7. Colocate test files with the code they exercise when that is the project norm.
 
 ## Rules
@@ -56,7 +60,8 @@ Signals for **unit**: pure logic, single function/module, no I/O.
 - Tests must be self-contained — no shared mutable state between tests
 - Do NOT implement production code — only tests (red phase)
 - Tests should fail initially for the expected reason
-- Do not generate tests before spec approval
+- Do not generate tests before the feature passes machine readiness and becomes
+  `Ready`
 
 ## Output
 

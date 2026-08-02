@@ -26,6 +26,7 @@ const (
 	lintViolationNestedSkillFile    = "nested-skill-md"
 	lintViolationSDDSkillBudget     = "sdd-skill-budget"
 	lintViolationAgentsWordBudget   = "agents-word-budget"
+	lintViolationWorkflowGate       = "unclassified-workflow-gate"
 	maxSkillDescriptionLength       = 240
 	maxSkillBodyLines               = 250
 	maxSDDPublicSkills              = 10
@@ -242,6 +243,33 @@ func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFindin
 				}},
 			})
 		}
+	}
+
+	if _, err := os.Stat(filepath.Join(root, "catalog/packs.json")); err == nil {
+		rootFS := os.DirFS(root)
+		inventory, err := loadWorkflowGateInventory(rootFS, workflowGateInventoryPath)
+		if err != nil {
+			return nil, err
+		}
+		surfaces, err := collectWorkflowSurfaceFiles(root, catalog)
+		if err != nil {
+			return nil, err
+		}
+		_, gateViolations, err := scanWorkflowGates(rootFS, surfaces, inventory)
+		if err != nil {
+			return nil, err
+		}
+		for _, violation := range gateViolations {
+			findings = append(findings, lintFinding{
+				Path: fmt.Sprintf("%s:%d", violation.Path, violation.Line),
+				Violations: []lintViolation{{
+					Code:    lintViolationWorkflowGate,
+					Message: violation.Message,
+				}},
+			})
+		}
+	} else if !os.IsNotExist(err) {
+		return nil, err
 	}
 	return findings, nil
 }

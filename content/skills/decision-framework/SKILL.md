@@ -48,7 +48,7 @@ description: "Structure consequential decisions with explicit trade-offs. Use wh
 
 **Documentation**
 - Where: docs/decisions/NNNN-title.md (ADR format)
-- Who approved: [decision maker]
+- Evidence and reviewers: [checks, specialist agents, residual uncertainty]
 - When revisit: [quarterly / after X metric / if condition]
 
 ---
@@ -86,10 +86,14 @@ description: "Structure consequential decisions with explicit trade-offs. Use wh
 - Recovery: expensive, unclear
 
 **For low-reversibility decisions**:
-- Require explicit approval through the project `AGENTS.md` gate
 - Run premortem (see premortem skill)
 - Have rollback plan documented in advance
 - Consider pilot/canary before full commit
+- Use an architect and independent reviewer to challenge the decision. Proceed
+  autonomously when rollback is proven and the critical harness exists.
+- Escalate to the user only when material product ambiguity remains, or blast
+  radius is high and at least one evidence gap remains: rollback is unproven,
+  or critical harness evidence is missing.
 
 ## Decision Bias Traps
 

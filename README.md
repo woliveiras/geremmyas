@@ -346,9 +346,11 @@ the project needs) versions without manual setup.
 
 ### Prompts and target templates
 
-Portable prompt templates live in `content/prompts/`. Assistant-specific
-bootstrap and instruction templates live under `targets/<assistant>/`.
-Repository setup is driven by `geremmyas.yml` and `geremmyas sync`.
+Portable prompt source templates live in `content/prompts/`. They are canonical
+examples, not catalog artifacts: `geremmyas sync` and `geremmyas global` do not
+install them. Copy one into an assistant's native prompt location deliberately
+when that target supports custom prompts. Assistant-specific bootstrap and
+instruction templates live under `targets/<assistant>/`.
 
 | File | Purpose |
 |------|---------|
@@ -532,8 +534,8 @@ steps, checklists, examples, and policy belong in the owning skill's
 #### Specs index (`specs/README.md`)
 
 The `sdd` pack installs `specs/README.md` as the repository index: **families**,
-reserved number blocks, **status** lifecycle (`Draft` → `Approved` →
-`Implemented`), and per-family tables (Spec, Title, Status, Depends on).
+reserved number blocks, **status** lifecycle (`Draft` → `Ready` → `In Progress`
+→ `Verified`), and per-family tables (Spec, Title, Status, Depends on).
 
 Each spec folder uses a global number:
 
@@ -544,13 +546,15 @@ specs/NNNN-<feature-slug>/plan.md
 specs/NNNN-<feature-slug>/tasks.md
 ```
 
-Agents update `specs/README.md` when creating, approving, or completing a spec.
+Agents update `specs/README.md` whenever a spec changes lifecycle status.
 
-#### Interactive workflow and progress
+#### Autonomous workflow and progress
 
-Work is interactive: the human approves specs and bugfix proposals before
-implementation. Every feature uses a folder with **all three** artifacts (see
-above).
+Every feature uses a folder with **all three** artifacts (see above). Agents
+advance a package to `Ready` automatically when its acceptance criteria are
+testable, contracts and dependencies are known, verification commands exist,
+and no material product decision remains unresolved. Bugfix proposal and commit
+authority are documented separately while their migration is pending.
 
 `tasks.md` uses checkboxes for progress (`[ ]` pending, `[~]` in progress,
 `[x]` done). Agents must keep checkboxes current while working. Each task
@@ -560,8 +564,8 @@ Use `specs/README.md` for status across specs. When resuming work, read the
 feature folder (`spec.md`, `plan.md`, `tasks.md`) and continue from the
 in-progress or next pending task.
 
-At the start of `requirements-interview`, the agent asks whether it may create
-git commits or the developer handles commits.
+At the start of `requirements-interview`, the agent asks whether it may create git
+commits or the developer handles commits.
 
 Do not create GitHub Issues, labels, or issue-state workflows unless explicitly
 requested.
@@ -634,15 +638,22 @@ For bugs:
 3. Fix the code and rerun the original reproduction loop.
 4. Write a postmortem only when the bug was an outage.
 
-### Quick Start — `/sdd` Prompt
+### Using the SDD prompt source
 
-The fastest way to run the full cycle is the `/sdd` global prompt. In Copilot Chat:
+After deliberately installing `content/prompts/sdd.prompt.md` as a Copilot
+custom prompt, invoke it in Copilot Chat:
 
 ```
 /sdd Add user authentication with JWT
 ```
 
-The prompt orchestrates each step in order with explicit gates — it won't advance without your approval.
+The prompt advances through machine-readiness, red, green, review, documentation,
+and verification gates without routine approval pauses. It asks only when a
+material product decision remains unresolved or an authority boundary applies.
+
+The migration inventory lives in `catalog/workflow-gates.json`. Repository lint
+scans catalogued workflow content, prompts, target adapters, and public workflow
+docs, and fails when it finds an unclassified conversational pause.
 
 ### Step by Step (Manual)
 

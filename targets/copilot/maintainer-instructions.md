@@ -5,7 +5,7 @@
 > repository (root `.github/copilot-instructions.md` symlinks here).
 
 Follow [`AGENTS.md`](../../AGENTS.md) for agent workflows, artifact paths,
-approval gates, and skill routing.
+authority boundaries, and skill routing.
 
 ## What this repository is
 

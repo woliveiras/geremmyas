@@ -8,7 +8,7 @@ description: "Explore code and resolve product or technical ambiguity before spe
 
 Reach shared understanding before writing PRDs, specs, plans, or tasks.
 For the full stop conditions, see
-[approval gates](./references/approval-gates.md).
+[readiness and authority boundaries](./references/approval-gates.md).
 
 ## Process
 
@@ -34,11 +34,21 @@ For the full stop conditions, see
 5. Challenge vague or overloaded terms and propose canonical vocabulary.
 6. Record resolved decisions in the right artifact: PRD, spec, ADR, or
    `tasks.md`.
+7. Record explicit session overrides such as read-only, plan-only, or no-edits.
+   These overrides take precedence over the autonomous feature workflow.
+8. When the objective is clear, let `generate-spec` create and validate the
+   durable artifacts without adding a conversational approval pause.
 
 ## Rules
 
 - Do not skip the commit permission question at the start.
 - Do not ask questions that code or existing docs can answer.
 - Do not write a spec until the key branches of the decision tree are resolved.
+- Infer decisions from repository conventions when the choice is reversible and
+  record the inference in the relevant artifact.
+- Escalate a feature before implementation only when blast radius is high and
+  at least one of these is true: rollback is unproven, or critical harness
+  evidence is missing. Product ambiguity that materially changes the objective
+  still requires clarification.
 - Do not create an ADR unless the decision is complex, hard to reverse,
   surprising without context, and based on a real trade-off.

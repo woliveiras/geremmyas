@@ -43,9 +43,9 @@ the structure documented in `AGENTS.md`.
 
 ## Procedure
 
-1. Ask the user for the feature name, brief description, family (if any), phase,
-   and whether this is a new feature, expansion, or documenting an existing
-   decision.
+1. Infer the feature name, brief description, family (if any), phase, and change
+   type from the request and repository. Escalate one focused question only for
+   a missing material choice that would change the outcome.
 2. Read `specs/README.md` and list existing `specs/NNNN-*` folders.
 3. Allocate the next spec number and create or update the feature folder.
 4. Fill in [spec template](./assets/spec-template.md) with correct frontmatter
@@ -57,11 +57,18 @@ the structure documented in `AGENTS.md`.
 7. **Update `specs/README.md`:** add or update the row in the correct family/
    phase table (Spec link, Title, Status `Draft`, Depends on / Origin).
    Reserve or extend family blocks in the numbering table when needed.
-8. **Approval gate:** Present a summary of `spec.md`, `plan.md`, `tasks.md`, and
-   the index row to the user and **stop**. Do not generate tests or production
-   code until the user explicitly approves the spec.
-9. After user approval, set `status: Approved` in `spec.md` frontmatter and
-   update the Status column in `specs/README.md` to `Approved`.
+8. Run the automatic readiness checks from
+   [readiness and authority boundaries](../requirements-interview/references/approval-gates.md).
+   Correct failures and record relevant decisions or evidence in the artifacts.
+9. Set `status: Ready` in `spec.md` frontmatter and update the index to `Ready`.
+   Summarize the artifacts for auditability, then continue to implementation
+   unless an explicit read-only, plan-only, or no-edits override applies.
+10. Set the feature to `In Progress` when implementation starts. If an in-scope
+    assumption changes, update the artifacts and rerun readiness automatically.
+    Set it to `Verified` only after every acceptance criterion has fresh
+    evidence, every finished task is `[x]`, no stale `[~]` remains, required
+    docs and plan items are reconciled, and independent review has no actionable
+    finding.
 
 ## Output
 
@@ -78,9 +85,16 @@ Define test strategy in the spec (unit vs integration vs both).
 - Put task list and progress in `tasks.md`, not only in the spec.
 - Put accepted architectural decisions in an ADR when the bar is met (complex and
   hard to reverse), not only in the spec.
-- Do not implement or write feature tests before spec approval.
-- When a spec reaches **Implemented**, update frontmatter and `specs/README.md`
-  (status + links to PRs/commits in `spec.md`).
+- Do not implement or write feature tests before the spec reaches **Ready**.
+- Use only `Draft`, `Ready`, `In Progress`, and `Verified` for a new or actively
+  migrated feature lifecycle. Existing historical states remain valid without a
+  bulk migration. Update frontmatter and `specs/README.md` together at each
+  transition.
+- Before escalating a feature, confirm that blast radius is high and at least
+  one of these is true: rollback is unproven, or critical harness evidence is
+  missing.
+- When a spec reaches **Verified**, record the fresh verification evidence and
+  links to any commits that delivered the work.
 
 ## Write like a human
 

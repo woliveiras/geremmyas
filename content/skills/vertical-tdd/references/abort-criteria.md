@@ -29,9 +29,9 @@ description: "Decision gates for when to STOP a task and escalate. Use when: tim
 **Threshold**: Task estimated 2 hours, now at 4 hours
 
 **What to do**:
-- STOP
+- Pause the current approach
 - Summarize findings so far
-- Present options to user:
+- Compare options with a specialist agent when useful:
   - Option A: Continue (why you think you're close)
   - Option B: Reframe (the problem is smaller/different)
   - Option C: Escalate (need senior/specialist)
@@ -53,7 +53,7 @@ Fix C → Back to Error A or new Error D
 ```
 
 **What to do**:
-- STOP the fix loop
+- Stop the current fix loop
 - Step back and document:
   - What's the real problem?
   - Are fixes symptoms, not causes?
@@ -78,11 +78,12 @@ Fix C → Back to Error A or new Error D
 - Now: "Rewrite entire module for clarity"
 
 **What to do**:
-- STOP
+- Pause the expanded scope
 - Document what changed
-- Get re-approval from user for new scope
 - Split into separate tasks
-- Resume original task or start new one, not both
+- If the objective and acceptance criteria still determine the choice, update
+  the durable artifacts and continue. Escalate only unresolved material product
+  ambiguity.
 
 **Red flag**: "While we're in here..." = scope creep, not progress
 
@@ -98,11 +99,12 @@ Fix C → Back to Error A or new Error D
 - "What's the expected behavior?" (spec is ambiguous)
 
 **What to do**:
-- STOP pushing
-- Escalate:
-  - Ask team/user for clarification (not internet search)
-  - For library questions: read source, ask in chat (don't spend >1 hour)
-  - For config: ask who set it up (don't guess)
+- Stop guessing and gather evidence:
+  - For product ambiguity, inspect specs and existing behavior, then use a
+    spec/product specialist before escalating to the user
+  - For library questions, read installed documentation/source and delegate to
+    a framework specialist (don't spend >1 hour on the same approach)
+  - For config, trace repository history and existing examples
 - Gather answer, resume
 
 **Red flag**: >1 hour investigation without progress = escalate
@@ -123,7 +125,7 @@ Fix: Add more null checks
 ```
 
 **What to do**:
-- STOP trying to patch
+- Stop trying to patch the symptom
 - Examine the test itself:
   - Is the test wrong?
   - Is the setup wrong?
@@ -145,13 +147,14 @@ Fix: Add more null checks
 - Spec says: "Free tier" but implementation costs $10k/month
 
 **What to do**:
-- STOP implementation
+- Pause implementation
 - Document the conflict with evidence
-- Present to user/spec-owner:
+- Ask an independent spec reviewer to reconcile the evidence first:
   - "Spec says X, but this implementation is impossible because Y"
   - "These two requirements contradict"
   - "Cost is 10x the budget"
-- Get clarification or spec update before resuming
+- Update the durable spec automatically when intent is still unambiguous.
+  Escalate only if the contradiction leaves a material product choice.
 
 **Red flag**: Trying to force contradictory requirements = waste
 
@@ -167,14 +170,17 @@ Fix: Add more null checks
 - Feature needs horizontal scaling but system is monolithic
 
 **What to do**:
-- STOP feature implementation
+- Pause feature implementation
 - Document the architectural gap
 - Options:
   - Option A: Redesign architecture (big effort)
   - Option B: Simplify feature to fit architecture (spec change)
   - Option C: Use workaround (debt, temporary)
   - Option D: Defer feature until architecture ready
-- Decide with leadership, then resume
+- Record the trade-off and use an architect/reviewer to challenge the choice.
+  Continue when rollback is proven and the critical harness exists. Escalate
+  only when blast radius is high and at least one evidence gap remains:
+  rollback is unproven, or critical harness evidence is missing.
 
 **Red flag**: Trying to force feature into incompatible architecture = technical debt debt
 
@@ -190,7 +196,7 @@ Fix: Add more null checks
 - Task requires domain knowledge you lack
 
 **What to do**:
-- STOP and be honest
+- Pause and recruit the missing expertise
 - Options:
   - Option A: Get help from expert (pair program)
   - Option B: Learn (if time allows and task not critical)
@@ -207,43 +213,44 @@ Before continuing past a signal, verify:
 
 - [ ] Is this in the spec or a scope change?
 - [ ] Have I searched for prior art / similar solution in codebase?
-- [ ] Have I asked for help or escalated?
+- [ ] Have I used the relevant specialist agent or escalation path?
 - [ ] Is the time spent proportional to problem size?
 - [ ] Have I documented my findings so far?
 - [ ] Is there a clear next step or am I guessing?
 
-If you answer "no" to any → ABORT or ESCALATE
+If you answer "no" to any → pause, gather evidence, and choose a new approach.
 
 ## Escalation Path
 
-**For clarification questions**:
+**For material product ambiguity**:
 ```
-Ask: user, product owner, spec author
-Get: written answer (not interpretation)
-Time: <15 min response expectation
+First: inspect durable artifacts and ask a product/spec specialist
+Escalate to user: only when materially different valid outcomes remain
+Get: written decision recorded in the spec
 ```
 
 **For technical blocks**:
 ```
-Ask: senior engineer, codebase expert, framework expert
+Ask: specialist subagent, codebase expert, framework expert
 Present: what you tried, what failed, error messages
 Get: guidance or hands-on help
-Time: <1 hour for advice, schedule deep dive if needed
+After 3 failed cycles on the same blocker: escalate with evidence
 ```
 
 **For architectural decisions**:
 ```
-Ask: architect, tech lead, team lead
+Ask: architect and independent reviewer agents
 Present: the problem, options, tradeoffs
-Get: decision + approval
-Time: decision should be same day
+Get: challenged decision, proven rollback, and executable harness evidence
+Escalate to user only when blast radius is high and at least one evidence gap
+remains: rollback is unproven, or critical harness evidence is missing
 ```
 
 **For conflicts**:
 ```
-Ask: spec owner, product, user
+Ask: spec/product specialist first
 Present: the conflict with evidence (not opinion)
-Get: clarification or spec change
+Get: evidence-backed spec update; ask the user only if material ambiguity remains
 Time: before resuming implementation
 ```
 
@@ -256,7 +263,8 @@ Time: before resuming implementation
 - Stubbornness: "I'll figure it out"
 - Pride: "I don't want to ask for help"
 
-**Fix**: Abort is not failure. It's knowing when to escalate. Smart > persistent.
+**Fix**: Abort is not failure. It means changing approach, recruiting expertise,
+or escalating at the defined authority boundary. Smart > persistent.
 
 **"Ignore the Signal"**
 - Keep trying after time budget exceeded

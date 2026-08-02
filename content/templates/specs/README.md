@@ -5,7 +5,7 @@ and the **acceptance criteria** before any production code. Proposals and audits
 may live under `docs/proposals/`; specs are the implementation contracts.
 
 Maintain this file by hand as the **index** of every spec in the repository.
-Agents must update it when creating, approving, or completing a spec.
+Agents must update it whenever a spec changes lifecycle status.
 
 After the first `geremmyas sync`, this file is **preserved** on later syncs
 unless you pass `--force` (same policy as `AGENTS.md`).
@@ -109,31 +109,52 @@ Update `status` in frontmatter and the index tables together.
 
 | Status | Meaning |
 | --- | --- |
-| **Draft** | Spec being written; not ready for review |
-| **In Review** | Ready for human review; criteria may still change |
-| **Approved** | Human approved; implementation may start |
-| **Implemented** | Acceptance criteria met; code merged; spec links PRs/commits |
-| **Deprecated** | Superseded or cancelled; folder and number kept for history |
+| **Draft** | Artifacts are being written or revised |
+| **Ready** | Automatic readiness checks pass; implementation may start |
+| **In Progress** | At least one implementation task is active |
+| **Verified** | Acceptance criteria and fresh verification pass |
 
-### Approved
+Historical specs may retain `In Review`, `Approved`, `Implemented`, `Completed`,
+or `Deprecated`. These legacy statuses remain valid audit history; do not bulk
+migrate them. Use the four-state lifecycle above for new specs and specs that
+are deliberately migrated during active work.
 
-A spec is **Approved** when:
+### Ready
+
+A spec is **Ready** when:
 
 1. Acceptance criteria are testable (not vague).
 2. Contracts (API, schema, UI, CLI) are concrete enough to test.
 3. Dependencies are identified.
-4. Owner agrees on an approximate timeline (if applicable).
+4. Tasks are vertical, sequenced, and have verification commands.
+5. Material assumptions and error paths are documented.
+6. No explicit read-only, plan-only, or no-edits session override applies.
 
-Implementation and feature tests start **only after Approved**.
+Readiness is automatic. Implementation and feature tests start after these
+checks pass, without a conversational approval pause.
 
-### Implemented
+### In Progress
 
-A spec is **Implemented** when:
+A spec is **In Progress** when the first implementation task is marked `[~]`.
+If an in-scope assumption changes, update and revalidate the artifacts, then
+continue while the objective remains unchanged.
 
-1. All acceptance criteria pass (automated tests or documented manual check).
-2. Code is merged to the default branch.
-3. Operational docs are updated when applicable.
-4. `spec.md` links to PRs or commits that delivered the work.
+### Verified
+
+A spec is **Verified** when:
+
+1. All acceptance criteria pass with fresh automated evidence where available.
+2. Every finished task is `[x]` and no stale `[~]` remains.
+3. Residual manual checks are documented without blocking local completion.
+4. Operational docs and planned work are reconciled when applicable.
+5. Independent review has no actionable finding.
+6. `spec.md` records verification evidence and links available commits.
+
+Failed evidence keeps or returns the spec to **In Progress**. An unresolved material decision that appears later returns it to **Draft**.
+
+Escalate before implementation only when blast radius is high and either
+rollback is unproven or critical harness evidence is missing. Explicit session
+overrides and production authority boundaries always remain in force.
 
 ---
 

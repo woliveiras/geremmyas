@@ -53,5 +53,8 @@ Use checkbox lines in `tasks.md` plus detail under each task when needed:
   (`spec.md`, `plan.md`, `tasks.md`).
 - Use the project's domain vocabulary from `GLOSSARY.md` or `CONTEXT.md` when
   either exists.
-- Do not start implementation until the user has approved the spec (see
-  `AGENTS.md` approval gates).
+- Do not start implementation until the spec is `Ready` under the automatic
+  readiness checks in `AGENTS.md`. Honor explicit read-only, plan-only, or
+  no-edits session overrides.
+- When task execution reveals an in-scope assumption change, update the feature
+  artifacts, revalidate them, and continue while the objective is unchanged.

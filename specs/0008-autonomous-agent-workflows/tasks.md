@@ -15,7 +15,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - verification: Independent artifact review and `git diff --check`.
   - commit: `docs: specify autonomous agent workflows`
 
-- [ ] **Make feature delivery autonomous** (test-type: both)
+- [x] **Make feature delivery autonomous** (test-type: both)
   - blocked-by: Specify autonomous agent workflows
   - summary: Replace human feature approval with machine readiness across the
     contract, requirements, specification, TDD, prompts, templates, docs, and a
@@ -28,6 +28,9 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     consistent target materialization.
   - verification: Focused workflow/generator tests, `go test ./internal/cli`,
     `go run ./cmd/geremmyas lint`, and target materialization smoke tests.
+  - evidence: Contract and scanner regressions, five-target materialization,
+    full Go suite, build, doctor catalog check, context diagnostics, lint,
+    `git diff --check`, and independent review with no remaining finding.
   - docs: README lifecycle, guardrails framework, template, and prompt guidance.
   - commit: `feat: make feature delivery autonomous`
 

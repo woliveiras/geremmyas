@@ -18,8 +18,10 @@ project-local `AGENTS.md` overrides global defaults.
 - Understand the relevant request, spec, task, or bugfix document before code.
 - Never change tests merely to make them pass; reconcile behavior with the spec.
 - Every feature needs `spec.md`, `plan.md`, and `tasks.md` before implementation.
-- After creating or materially changing those artifacts, present them and stop
-  until the user explicitly approves the spec.
+- Feature artifacts advance through `Draft` -> `Ready` -> `In Progress` ->
+  `Verified`. A machine-ready package is established by automatic checks, not
+  human approval.
+- Honor explicit session overrides such as read-only, plan-only, or no-edits.
 - Every bug needs `docs/bugfixes/YYYY-MM-DD-<slug>.md`, a reproduction, an
   approved fix proposal, and a regression test that fails before the fix.
 - Create postmortems only for production outages and ADRs only for complex,
@@ -47,8 +49,16 @@ Maintain `specs/README.md` whenever a spec is created or changes status.
 1. Use `requirements-interview` to inspect existing behavior, resolve ambiguity,
    and record commit permission. Update the PRD first when product flow changes.
 2. Use `generate-spec` to create or update the three feature artifacts.
-3. Stop at the approval gate. After approval, use `vertical-tdd` one behavior at
-   a time, then `update-docs` when API, architecture, setup, or config changed.
+3. Validate the artifacts and mark them `Ready` when their automatic readiness
+   checks pass. Continue with `vertical-tdd` one behavior at a time and set the
+   feature to `In Progress` when implementation starts.
+4. If implementation changes an in-scope assumption, update the artifacts,
+   rerun their readiness checks, and continue while the objective is unchanged.
+5. Escalate before implementation only when blast radius is high and either
+   rollback is unproven or critical harness evidence is missing. After
+   acceptance criteria, tasks, docs, fresh verification, and independent review
+   are reconciled with no actionable finding, mark it `Verified`.
+6. Use `update-docs` when API, architecture, setup, or config changed.
 
 ### Bugs
 
@@ -71,7 +81,7 @@ matching pack and the task crosses that technology boundary.
 
 - `explorer`: expensive read-only mapping across many files.
 - `spec-writer`: unclear requirements that need isolated exploration.
-- `reviewer`: implementation review against an approved spec.
+- `reviewer`: implementation review against a `Ready` spec.
 - `architect`: material architecture options after ordinary exploration.
 
 Work inline for a small query or narrow edit. Delegate independent, read-heavy

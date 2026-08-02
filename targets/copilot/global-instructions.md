@@ -7,7 +7,7 @@ When working inside a repository:
 1. Look for `AGENTS.md` at the workspace root.
 2. If `AGENTS.md` exists, follow it as the project operating contract.
 3. If `AGENTS.md` does not exist, look for `.github/copilot-instructions.md`.
-4. If neither exists and the user is starting meaningful project work, ask
+4. If neither exists and the user is starting meaningful project work, ask the user
    whether to install or create project-level instructions.
 
 Project-level files always override this global default.

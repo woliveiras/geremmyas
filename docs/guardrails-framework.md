@@ -10,7 +10,7 @@ advertised as skills.
 | Phase | Public workflow | Guardrail |
 | --- | --- | --- |
 | Requirements | `requirements-interview` | Explore first, record commit permission, classify the change |
-| Specification | `generate-spec` | Create spec, plan, tasks, then stop for explicit approval |
+| Specification | `generate-spec` | Create spec, plan, tasks, then prove machine readiness |
 | Implementation | `vertical-tdd` | One observable behavior per red-green-refactor cycle |
 | Bugfix | `bugfix-loop` | Reproduce, rank hypotheses, stop for approval, add regression test |
 | Completion | `verification-checklists` | Fresh focused and nearby-suite evidence before `[x]` |
@@ -23,7 +23,7 @@ These former top-level skills are now loaded only by their owning workflow:
 
 | Former skill | Current owner |
 | --- | --- |
-| `approval-gates-before-implementation` | `requirements-interview/references/approval-gates.md` and `AGENTS.md` |
+| Feature readiness | `requirements-interview/references/approval-gates.md` and `AGENTS.md` |
 | `task-breakdown` | `generate-spec/references/task-breakdown.md` |
 | `generate-tests-from-spec` | `vertical-tdd/references/generate-tests-from-spec.md` |
 | `abort-criteria` | `vertical-tdd/references/abort-criteria.md` |
@@ -36,11 +36,30 @@ pack. `skill-authoring` remains available through `skill-maintenance`.
 
 ## Gates
 
-### Feature gate
+`catalog/workflow-gates.json` is the durable migration inventory. It classifies
+each conversational pause as removed, a retained authority boundary, residual
+evidence, or deferred release work. `geremmyas lint` scans every catalogued
+source plus prompts, target adapters, this document, and `README.md`; an
+unclassified match fails lint. Rules marked removed remain visible while their
+matching text must stay absent; a match fails lint. Boundaries scheduled for a
+later spec 0008 slice remain classified as retained until that slice changes
+both the workflow and inventory.
+
+### Feature readiness gate
 
 Production code and feature tests wait until `spec.md`, `plan.md`, and
-`tasks.md` exist and the user explicitly approves them. A material spec change
-reopens the gate.
+`tasks.md` exist and are machine-ready: acceptance criteria are testable,
+contracts and dependencies are known, verification commands exist, and no
+material product decision remains unresolved. In-scope discoveries update and
+revalidate the artifacts automatically. Explicit read-only, plan-only, and
+no-edits instructions remain narrower session overrides.
+
+The lifecycle is `Draft` -> `Ready` -> `In Progress` -> `Verified`. The first
+`[~]` implementation task starts `In Progress`. Failed evidence keeps or returns
+the package there; a newly unresolved material decision returns it to `Draft`.
+`Verified` requires evidenced criteria, completed tasks, reconciled docs, and an
+independent review with no actionable finding. Commit, push, merge, and release
+evidence are recorded separately.
 
 ### Bugfix gate
 

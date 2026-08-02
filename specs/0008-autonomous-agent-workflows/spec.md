@@ -3,7 +3,7 @@ spec: "0008"
 title: Autonomous agent workflows
 family: multi-assistant
 phase: 6
-status: Approved
+status: In Progress
 owner: ""
 depends_on: ["0006", "0007"]
 origin: Workflow-gate audit and user autonomy policy from 2026-08-02

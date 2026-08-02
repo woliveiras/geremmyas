@@ -17,10 +17,10 @@ vertical tasks, and index updates.
   affected modules, tests, existing specs, and durable domain constraints.
 - **Evidence:** Cite the repository paths that support each current-behavior,
   constraint, and test-strategy decision.
-- **Unknowns:** Track unresolved product or technical branches explicitly and
-  ask one focused question at a time before generating artifacts.
+- **Unknowns:** Resolve repository-answerable branches from evidence. Ask one
+  focused question only for a material product decision that remains unresolved.
 - **Output:** Produce only the required PRD when needed, feature artifacts, and
-  index update, followed by a concise approval summary. Omit raw research notes.
+  index update, followed by a concise readiness summary. Omit raw research notes.
 
 ## Process
 
@@ -48,7 +48,7 @@ implementation.
 
 ### 3. Interview
 
-Ask one question at a time. For each question, include a recommended answer
+Ask one focused question at a time. For each question, include a recommended answer
 based on the codebase and documents.
 
 Resolve the key branches of the decision tree before writing artifacts.
@@ -70,12 +70,13 @@ specs/NNNN-<feature-slug>/tasks.md
 - If a durable architecture decision is accepted, route to an ADR instead of
   hiding the decision only in the spec.
 
-### 5. Approval Gate
+### 5. Readiness Handoff
 
-Present the spec (and brief plan/tasks/index summary) to the user and **stop**.
-Do not proceed to test generation or implementation until the user explicitly
-approves. After approval, set status to `Approved` in frontmatter and in
-`specs/README.md`.
+Validate the spec, plan, tasks, and index together. Mark the spec `Ready` when
+acceptance criteria are testable, contracts and dependencies are known,
+verification commands exist, and no material decision remains unresolved. Hand
+the package directly to test generation and implementation without a routine
+approval pause. A later in-scope discovery updates and revalidates the package.
 
 ## Rules
 
@@ -86,4 +87,5 @@ approves. After approval, set status to `Approved` in frontmatter and in
 - Always update `specs/README.md` when adding or changing spec status.
 - Be opinionated in recommendations.
 - Acceptance criteria must map to tests.
-- Stop exploring once the remaining ambiguity is captured as user questions.
+- Stop exploring once evidence resolves the request or one material decision is
+  isolated for the user.

@@ -6,8 +6,9 @@ description: "Implement one behavior at a time with a red-green-refactor loop. U
 
 # Vertical TDD
 
-Use one behavior as the unit of progress. Run only after the user has approved
-the spec.
+Use one behavior as the unit of progress. Run when the feature is `Ready`: its
+spec, plan, tasks, acceptance criteria, and test strategy pass the repository's
+machine-readable readiness checks. Human approval is not a feature gate.
 
 ## Process
 
@@ -24,12 +25,15 @@ the spec.
 7. Run the focused test and the nearest relevant suite.
 8. Repeat for the next behavior or task.
 9. Refactor only when tests are green; rerun tests after each refactor.
-10. When all acceptance criteria are done and code is merged, set `status:
-    Implemented` in `spec.md` frontmatter and update the row in `specs/README.md`.
-11. Before stopping work (task done, session ending, or handing off), reconcile
-    status: mark every finished task `- [x]` in `tasks.md`, clear any stale
-    `- [~]`, and annotate or mark done any `plan.md` item fully delivered. Do
-    not declare work complete with stale checkboxes.
+10. Use the lifecycle `Draft` -> `Ready` -> `In Progress` -> `Verified`. Set
+    `In Progress` when implementation begins.
+11. Before `Verified` or any handoff, mark every finished task `[x]`, clear stale
+    `[~]`, reconcile required docs and plan items, and obtain independent review
+    with no actionable finding.
+12. Set `Verified` in `spec.md` and update `specs/README.md` only when every
+    acceptance criterion has fresh evidence and step 11 is complete. Merge,
+    commit, push, and deployment are separate authority dimensions and do not
+    change feature lifecycle state.
 
 ## Rules
 
@@ -41,6 +45,11 @@ the spec.
   follow [test generation](./references/generate-tests-from-spec.md).
 - When progress becomes circular or scope changes materially, follow
   [abort criteria](./references/abort-criteria.md).
+- Escalate to the user only for unresolved material product ambiguity, or when
+  blast radius is high and at least one evidence gap remains: rollback is
+  unproven, or critical harness evidence is missing. Otherwise document the
+  decision, use specialist review when useful, and continue through the
+  executable gates.
 - Update `tasks.md` checkboxes as each task starts (`[~]`) and finishes (`[x]`).
   Stale checkboxes block reliable resumption from `specs/README.md` and the
   feature folder.

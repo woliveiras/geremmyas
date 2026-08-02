@@ -25,7 +25,7 @@ completion claim depends on confidence instead of fresh evidence.
 
 ## When NOT to Use
 
-- During design phase (use the project approval gate)
+- During design before the feature passes machine readiness
 - For reading code only (verification requires execution)
 - When blocked on external dependencies
 - During planning or speculation
@@ -86,6 +86,10 @@ TASK: [name]
 - [ ] "Compiled successfully"
 - [ ] "Should work in theory"
 - [ ] "Peer said it's fine"
+
+When subjective or physical validation cannot be automated, record it as
+residual evidence with its owner and status. Its absence does not block local
+technical completion unless the spec identifies it as a critical harness.
 
 ## Anti-Patterns
 

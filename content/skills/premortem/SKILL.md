@@ -34,8 +34,7 @@ Before running the premortem, you need three things:
 2. **Who is affected?** — The audience, customer, team, or stakeholders.
 3. **What does success look like?** — The outcome the user hopes for.
 
-Scan the conversation and workspace for existing context first. Only ask for
-what's genuinely missing. One question at a time, conversational, not a form.
+Scan the conversation and workspace for existing context first. Only ask for what's genuinely missing. One question at a time, conversational, not a form.
 
 ## Procedure
 
