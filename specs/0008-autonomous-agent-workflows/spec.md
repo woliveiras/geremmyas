@@ -3,7 +3,7 @@ spec: "0008"
 title: Autonomous agent workflows
 family: multi-assistant
 phase: 6
-status: In Progress
+status: Verified
 owner: ""
 depends_on: ["0006", "0007"]
 origin: Workflow-gate audit and user autonomy policy from 2026-08-02
@@ -29,18 +29,18 @@ mutation or publication remain explicit authority boundaries.
 
 ### Functional
 
-- [ ] Make autonomy the default in the project contract. Agents may specify,
+- [x] Make autonomy the default in the project contract. Agents may specify,
       implement, test, review, document, and locally commit in-scope work without
       conversational approval gates.
-- [ ] Keep `spec.md`, `plan.md`, and `tasks.md` mandatory for features, but allow
+- [x] Keep `spec.md`, `plan.md`, and `tasks.md` mandatory for features, but allow
       implementation to begin when the work package is machine-ready: acceptance
       criteria are testable, contracts and dependencies are known, verification
       commands exist, and no material product decision is unresolved.
-- [ ] Replace human-centered workflow states with `Draft`, `Ready`, `In Progress`,
+- [x] Replace human-centered workflow states with `Draft`, `Ready`, `In Progress`,
       and `Verified`. Commit, push, merge, and release evidence are recorded
       separately and do not redefine technical verification. Existing historical
       spec statuses remain valid without bulk migration.
-- [ ] Enforce lifecycle transitions consistently: `Draft` means artifacts or
+- [x] Enforce lifecycle transitions consistently: `Draft` means artifacts or
       material decisions are incomplete; `Ready` requires testable acceptance
       criteria, concrete contracts, known dependencies, verification commands,
       and no unresolved material decision; `In Progress` begins when the first
@@ -49,72 +49,72 @@ mutation or publication remain explicit authority boundaries.
       docs reconciled, and independent review with no actionable finding. Failed
       evidence keeps or returns the spec to `In Progress`; a newly unresolved
       material decision returns it to `Draft`.
-- [ ] Let agents update and revalidate work artifacts automatically when the
+- [x] Let agents update and revalidate work artifacts automatically when the
       approach changes inside the authorized objective. Escalate only when the
       objective materially changes or requirements become contradictory.
-- [ ] Define material-risk escalation from recorded blast radius, reversibility,
+- [x] Define material-risk escalation from recorded blast radius, reversibility,
       harness coverage, and rollback evidence. Always include incompatible public
       contracts, irreversible data or state migration, authentication or
       authorization boundary redesign, and changes to core runtime, toolchain,
       build, or deployment architecture. Escalate only when blast radius is high
       and rollback is unproven or critical harness evidence is missing, so normal
       in-scope changes do not become conversational gates.
-- [ ] Remove the mandatory commit-permission question from requirements and SDD
+- [x] Remove the mandatory commit-permission question from requirements and SDD
       entrypoints. Explicit instructions such as read-only, plan-only, or no
       commits override the default for that session.
-- [ ] Make bugfixes autonomous while preserving the bugfix document,
+- [x] Make bugfixes autonomous while preserving the bugfix document,
       reproduction, ranked hypotheses, regression test that fails before the fix,
       verified correction, actual cause, cleanup, and nearby-suite evidence.
-- [ ] Preserve red, green, review, documentation, and completion gates as
+- [x] Preserve red, green, review, documentation, and completion gates as
       executable evidence gates. They must not require routine human approval.
-- [ ] Create atomic local commits by default. Each commit contains one coherent
+- [x] Create atomic local commits by default. Each commit contains one coherent
       task-owned slice, its tests, and required documentation; uses Conventional
       Commits; derives its message from the staged diff; and excludes unrelated
       user changes.
-- [ ] Keep push, history rewriting, and production release or publication outside
+- [x] Keep push, history rewriting, and production release or publication outside
       local commit authority. No workflow may infer push from commit permission.
-- [ ] Permit proactive specialist subagents for specification, architecture,
+- [x] Permit proactive specialist subagents for specification, architecture,
       implementation, tests, security, performance, documentation, review, and
       audit. Parallel edits require explicit file, module, or worktree ownership;
       the primary agent owns integration and Git operations.
-- [ ] Run independent review after a slice or verification wave, repair findings,
+- [x] Run independent review after a slice or verification wave, repair findings,
       and re-review automatically. Escalate after three consecutive review or
       debugging cycles fail to converge on the same blocker.
-- [ ] Infer tools and patterns from the repository and installed catalog. Existing
+- [x] Infer tools and patterns from the repository and installed catalog. Existing
       project dependencies and catalogued capabilities may be used autonomously.
       A new uncatalogued direct dependency requires explicit user choice after a
       provenance, maintenance, security, license, and build-versus-buy assessment.
-- [ ] Allow mutations in local, disposable, and test environments when the target
+- [x] Allow mutations in local, disposable, and test environments when the target
       is verified and rollback or recreation is available. Require explicit user
       authorization for every production mutation, deploy, release, publication,
       or policy change.
-- [ ] Replace unnecessary command confirmations with contextual allowance or a
+- [x] Replace unnecessary command confirmations with contextual allowance or a
       safe alternative. Continue to deny force-push, broad destructive deletion,
       secret exposure, and dangerous operations outside the authorized scope.
-- [ ] Treat human play, accessibility, audio, visual, and feel judgments as
+- [x] Treat human play, accessibility, audio, visual, and feel judgments as
       residual evidence when automation cannot establish the claim. Their absence
       does not block other autonomous work or erase the documented limitation.
-- [ ] Maintain a durable migration inventory of every conversational gate in
+- [x] Maintain a durable migration inventory of every conversational gate in
       `content/AGENTS.md`, all skill and reference trees, all agent and reference
       trees, prompts, instructions, guardrails, templates, target adapters,
       catalogued packs, README, and workflow documentation. Classify each gate as
       removed, retained authority boundary, residual evidence, or deferred release
       work. Add an automated scan that fails on any unclassified gate.
-- [ ] Update public documentation and every materialized assistant target so the
+- [x] Update public documentation and every materialized assistant target so the
       autonomy, commit, delegation, dependency, escalation, and production
       boundaries are consistent.
 
 ### Non-Functional
 
-- [ ] Add no new third-party dependencies.
-- [ ] Preserve user-authored, modified, unowned, ignored, secret, and unrelated
+- [x] Add no new third-party dependencies.
+- [x] Preserve user-authored, modified, unowned, ignored, secret, and unrelated
       files throughout autonomous work and commit selection.
-- [ ] Keep existing catalog and contract size budgets enforced by `geremmyas lint`.
-- [ ] Keep canonical workflow content assistant-neutral under `content/`; target
+- [x] Keep existing catalog and contract size budgets enforced by `geremmyas lint`.
+- [x] Keep canonical workflow content assistant-neutral under `content/`; target
       adapters may translate capabilities but not weaken authority boundaries.
-- [ ] Deliver each implementation slice as a separate Conventional Commit with
+- [x] Deliver each implementation slice as a separate Conventional Commit with
       its tests, documentation, and fresh verification evidence.
-- [ ] Do not push, deploy, publish, mutate production, or change GitHub release
+- [x] Do not push, deploy, publish, mutate production, or change GitHub release
       workflows during this specification.
 
 ## Test Strategy
@@ -132,55 +132,55 @@ the final verification wave.
 
 ## Acceptance Criteria
 
-- [ ] Given an unambiguous feature request, when its spec, plan, and tasks become
+- [x] Given an unambiguous feature request, when its spec, plan, and tasks become
       machine-ready, then implementation begins without asking the user to approve
       the artifacts.
-- [ ] Given a reproduced bug, when the regression test fails for the expected
+- [x] Given a reproduced bug, when the regression test fails for the expected
       reason, then the agent applies and verifies the fix without pausing for a
       bugfix-proposal approval.
-- [ ] Given an approach change inside the original objective, when artifacts and
+- [x] Given an approach change inside the original objective, when artifacts and
       tests are updated, then the workflow revalidates and continues without
       reapproval.
-- [ ] Given a contradictory requirement or material-risk trigger, when repository
+- [x] Given a contradictory requirement or material-risk trigger, when repository
       evidence and specialist review cannot resolve it, then the agent records the
       evidence and asks one focused human decision before continuing.
-- [ ] Given a proposed high-blast-radius change to runtime, toolchain, build,
+- [x] Given a proposed high-blast-radius change to runtime, toolchain, build,
       deployment architecture, public contracts, data, or security boundaries,
       when rollback is unproven or critical harness evidence is missing, then the
       agent escalates once with the risk record; otherwise it continues through
       the autonomous evidence loop.
-- [ ] Given a session without a no-commit instruction, when a verified slice is
+- [x] Given a session without a no-commit instruction, when a verified slice is
       complete, then the agent creates an atomic Conventional Commit without
       asking for file or message approval.
-- [ ] Given an explicit no-commit, read-only, or plan-only instruction, when work
+- [x] Given an explicit no-commit, read-only, or plan-only instruction, when work
       reaches the commit boundary, then no commit is created and the changed or
       proposed files are reported.
-- [ ] Given a dirty worktree, when the agent commits a completed slice, then only
+- [x] Given a dirty worktree, when the agent commits a completed slice, then only
       task-owned files or hunks are staged and unrelated changes remain intact.
-- [ ] Given independent specialist work, when it can be partitioned safely, then
+- [x] Given independent specialist work, when it can be partitioned safely, then
       subagents may edit in parallel and the primary agent integrates their work,
       runs verification, and owns commits.
-- [ ] Given review findings, when they are actionable and in scope, then the agent
+- [x] Given review findings, when they are actionable and in scope, then the agent
       repairs and re-reviews them without human intervention; the same unresolved
       blocker across three cycles is escalated with evidence.
-- [ ] Given an existing or catalogued dependency, when the task needs it, then the
+- [x] Given an existing or catalogued dependency, when the task needs it, then the
       agent may use it autonomously. Given a new uncatalogued direct dependency,
       the agent stops before installation and presents provenance plus a
       build-versus-buy recommendation.
-- [ ] Given a verified local or disposable test target, when an in-scope mutation
+- [x] Given a verified local or disposable test target, when an in-scope mutation
       is needed, then it proceeds autonomously. Given a production target, no
       mutation, deploy, release, publication, or policy change occurs without
       explicit authorization.
-- [ ] Given a request to commit, when no push was explicitly requested, then no
+- [x] Given a request to commit, when no push was explicitly requested, then no
       push, force-push, amend, rebase, release, or publication occurs.
-- [ ] Given a subjective acceptance claim that automation cannot establish, when
+- [x] Given a subjective acceptance claim that automation cannot establish, when
       all automated evidence is complete, then the workflow records the residual
       human validation without blocking unrelated completion.
-- [ ] Given every canonical workflow surface and every catalogued pack, when the
+- [x] Given every canonical workflow surface and every catalogued pack, when the
       gate inventory scan runs, then every conversational approval or confirmation
       is classified and no obsolete feature, bugfix, commit-message, architecture,
       tool-selection, or non-production gate remains unclassified.
-- [ ] Given all applicable packs materialized for every supported target, when the
+- [x] Given all applicable packs materialized for every supported target, when the
       generated artifacts are inspected, then they express the same autonomous
       lifecycle and authority boundaries without broken references.
 

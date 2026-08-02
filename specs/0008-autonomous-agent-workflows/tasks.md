@@ -101,7 +101,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
   - docs: Dependency provenance and environment authority matrix.
   - commit: `feat: enforce contextual agent authority`
 
-- [ ] **Verify and document the autonomous rollout** (test-type: integration)
+- [x] **Verify and document the autonomous rollout** (test-type: integration)
   - blocked-by: Run bugfixes as an autonomous evidence loop, Commit verified
     slices by default, Orchestrate specialist subagents autonomously, Enforce
     contextual authority boundaries
@@ -116,5 +116,9 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     no stale `[~]` remains; release follow-up is recorded separately.
   - verification: Full plan matrix, `git diff --check`, `git status --short`, and
     `git log --oneline` atomic-history review.
+  - evidence: All 44 resolved packs materialized as 614 files across Codex,
+    Copilot, Cursor, Claude Code, and OpenCode; full Go suite, build, lint,
+    doctor, context, ShellCheck, hook smokes, atomic-history review, and final
+    independent audit passed with no findings.
   - docs: Migration note, final evidence, and deferred release follow-up.
   - commit: `docs: complete autonomous workflow rollout`

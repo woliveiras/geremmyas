@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: In Progress
+Status: Verified
 
 ## Approach
 
@@ -31,8 +31,8 @@ production operation is part of this plan.
    review, safe edit partitioning, automatic repair, and bounded escalation.
 5. **Done:** Make dependency and command authority contextual: catalogued/local/test
    work proceeds, new uncatalogued dependencies and production operations stop.
-6. Materialize every applicable pack across supported targets, run the full
-   verification matrix, reconcile artifacts, and document migration behavior.
+6. **Done:** Materialize every applicable pack across supported targets, run the
+   full verification matrix, reconcile artifacts, and document migration behavior.
 
 ## Main Touch Points
 
