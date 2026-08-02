@@ -7,7 +7,7 @@
 Agents, skills, instructions, hooks, prompts, and a pack-based CLI for coding assistants
 
 <p align="center">
-  <img src=".github/assets/geremmyas-logo.png" alt="Geremmyas Logo" width="200"/>
+  <img src=".github/assets/geremmyas-logo.svg" alt="Geremmyas logo" width="200"/>
 </p>
 
 ## Why?
