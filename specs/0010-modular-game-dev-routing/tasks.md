@@ -28,13 +28,13 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     routing enforcement.
   - verification: `go run ./cmd/geremmyas lint && git diff --check`
 
-- [~] **Reconcile and test Rusted** (test-type: integration)
+- [x] **Reconcile and test Rusted** (test-type: integration)
   - blocked-by: Geremmyas verification
   - summary: Select the routine focused packs, reconcile obsolete managed
     skills, strengthen project routing, and capture a Codex smoke.
   - verification: project context, manifest/file inventory, and saved smoke evidence
 
-- [ ] **Complete verification and evidence** (test-type: both)
+- [x] **Complete verification and evidence** (test-type: both)
   - blocked-by: all previous tasks
   - summary: Run full tests, lint, doctor, diff checks, reconcile spec status,
     and report both repository worktrees.

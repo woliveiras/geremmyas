@@ -3,7 +3,7 @@ spec: "0010"
 title: Modular game-development routing
 family: multi-assistant
 phase: 8
-status: In Progress
+status: Verified
 owner: ""
 depends_on: ["0009"]
 origin: Rusted Codex A/B benchmark and user-approved game-dev pack split
@@ -32,33 +32,33 @@ terminology remains authoritative.
 
 ### Functional
 
-- [ ] Add `game-core` with gameplay programming and game testing.
-- [ ] Add `game-ui` with UI/accessibility and game-feel capabilities.
-- [ ] Add `game-systems` with AI, procedural generation, and save/progression.
-- [ ] Add focused `game-performance`, `game-audio`, `game-art`, and
+- [x] Add `game-core` with gameplay programming and game testing.
+- [x] Add `game-ui` with UI/accessibility and game-feel capabilities.
+- [x] Add `game-systems` with AI, procedural generation, and save/progression.
+- [x] Add focused `game-performance`, `game-audio`, `game-art`, and
       `game-delivery` packs.
-- [ ] Retain `game-dev` as a complete metapack that depends on all focused packs
+- [x] Retain `game-dev` as a complete metapack that depends on all focused packs
       and owns no skill files directly.
-- [ ] Preserve `game-art-2d` as a pack-name compatibility alias without adding
+- [x] Preserve `game-art-2d` as a pack-name compatibility alias without adding
       another discoverable skill or duplicate materialized path.
-- [ ] Give all eleven game skills positive and negative trigger scope that
+- [x] Give all eleven game skills positive and negative trigger scope that
       distinguishes neighboring capabilities.
-- [ ] Add routing conformance cases covering every game skill, including a
+- [x] Add routing conformance cases covering every game skill, including a
       localization and Battle UI case that selects `game-ui-accessibility`.
-- [ ] Update public pack and skill documentation for focused installation.
-- [ ] Reconcile Rusted from `game-dev` to only its routinely relevant focused
+- [x] Update public pack and skill documentation for focused installation.
+- [x] Reconcile Rusted from `game-dev` to only its routinely relevant focused
       packs and prove the obsolete managed skills are removed conservatively.
 
 ### Non-Functional
 
-- [ ] No new third-party dependencies or LLM/runtime integration.
-- [ ] Existing `game-dev` configuration remains valid and resolves all eleven
+- [x] No new third-party dependencies or LLM/runtime integration.
+- [x] Existing `game-dev` configuration remains valid and resolves all eleven
       skills exactly once.
-- [ ] Pack splitting changes discovery scope, not canonical skill behavior.
-- [ ] Routing tests state their lexical limitation and never present their
+- [x] Pack splitting changes discovery scope, not canonical skill behavior.
+- [x] Routing tests state their lexical limitation and never present their
       result as runtime enforcement.
-- [ ] All skill descriptions remain inside existing lint and context budgets.
-- [ ] Rusted benchmark history and unrelated user changes remain intact.
+- [x] All skill descriptions remain inside existing lint and context budgets.
+- [x] Rusted benchmark history and unrelated user changes remain intact.
 
 ## Test Strategy
 
@@ -69,22 +69,22 @@ terminology remains authoritative.
 
 ## Acceptance Criteria
 
-- [ ] Given any focused game pack, when the catalog resolves it, then only its
+- [x] Given any focused game pack, when the catalog resolves it, then only its
       declared domain skills and dependencies become discoverable.
-- [ ] Given `game-dev`, when the catalog resolves it, then all eleven game
+- [x] Given `game-dev`, when the catalog resolves it, then all eleven game
       skills materialize exactly once through focused pack dependencies.
-- [ ] Given `game-art-2d`, when the catalog resolves it, then the canonical
+- [x] Given `game-art-2d`, when the catalog resolves it, then the canonical
       `game-art` pack supplies the same single skill without duplicate output.
-- [ ] Given each routing corpus prompt, when description signals are scored,
+- [x] Given each routing corpus prompt, when description signals are scored,
       then the declared game skill is the unique winner.
-- [ ] Given a request about Battle localization, canvas/DOM labels, responsive
+- [x] Given a request about Battle localization, canvas/DOM labels, responsive
       UI, focus, touch, contrast, or accessible names, then
       `game-ui-accessibility` is the declared routing target and adjacent game
       descriptions exclude that ownership.
-- [ ] Given Rusted's routine needs, when `base`, `typescript-base`, `game-core`,
+- [x] Given Rusted's routine needs, when `base`, `typescript-base`, `game-core`,
       `game-ui`, and `game-systems` are materialized, then art, audio,
       performance, and delivery skills are not advertised until selected.
-- [ ] Given the Rusted routing smoke, when Codex analyzes the concrete Battle UI
+- [x] Given the Rusted routing smoke, when Codex analyzes the concrete Battle UI
       request, then the evidence shows whether it actually reads the expected
       skill; any failure is reported rather than hidden by structural tests.
 

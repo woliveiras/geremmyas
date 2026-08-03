@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: In Progress
+Status: Verified
 
 ## Approach
 
@@ -48,3 +48,20 @@ reconcile Rusted to its focused packs, and record a real Codex routing smoke.
 Mark `Verified` only after structural checks pass, Rusted contains the focused
 skill set, obsolete managed game skills reconcile safely, and the real runtime
 smoke result is recorded honestly.
+
+## Completion evidence
+
+- Delivery commit: `49b2c61`.
+- Geremmyas verification: full Go suite, lint, doctor, and `git diff --check`
+  passed before Rusted materialization and were rerun after evidence updates.
+- Rusted resolved eight packs and 14 project-local skills (approximately 848
+  discovery tokens), down from 18 skills and approximately 1,113 tokens.
+- Project reconciliation removed 33 obsolete manifest-owned files with zero
+  preservation conflicts; art, audio, performance, and delivery skills are no
+  longer advertised by default.
+- The read-only Codex smoke exited successfully and read
+  `game-ui-accessibility/SKILL.md` as its first command, then only its accessible
+  UI and Phaser references before broad exploration.
+- Runtime artifacts live in Rusted under
+  `docs/benchmarks/2026-08-03-game-routing-smoke/`. The continuing 2% discovery
+  warning and cache TTL errors remain external runtime limitations.
