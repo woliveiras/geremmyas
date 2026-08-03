@@ -4,7 +4,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
 
 ## Tasks
 
-- [ ] **Inventory global harness state** (test-type: both)
+- [x] **Inventory global harness state** (test-type: both)
   - blocked-by: none
   - summary: Add a shared ownership-aware inventory and expose `global list` in
     human and JSON forms.
@@ -14,7 +14,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     path/hash/state records, missing/corrupt behavior, and observed plugin roots.
   - verification: `go test ./internal/cli -run 'Global(List|Inventory)' -count=1`
 
-- [ ] **Clear managed global state safely** (test-type: both)
+- [x] **Clear managed global state safely** (test-type: both)
   - blocked-by: Inventory global harness state
   - summary: Add dry-run and target-aware clear on top of manifest reconciliation.
   - desired behavior: Only eligible owned paths are removed; every preserved path
@@ -24,7 +24,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     corrupt, and incompatible manifests.
   - verification: `go test ./internal/cli -run 'Global(Clear|Manifest|Reconcile)' -count=1`
 
-- [ ] **Migrate workflow names and packs** (test-type: both)
+- [~] **Migrate workflow names and packs** (test-type: both)
   - blocked-by: Clear managed global state safely
   - summary: Rename the seven public skills and replace SDD selection with
     `coding`, `quality`, and `base`.

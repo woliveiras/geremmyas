@@ -41,28 +41,33 @@ func globalManifestPath() (string, error) {
 }
 
 func loadGlobalManifest() (globalManifest, bool, error) {
+	manifest, exists, _, err := loadGlobalManifestSnapshot()
+	return manifest, exists, err
+}
+
+func loadGlobalManifestSnapshot() (globalManifest, bool, string, error) {
 	path, err := globalManifestPath()
 	if err != nil {
-		return globalManifest{}, false, err
+		return globalManifest{}, false, "", err
 	}
 	data, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
-		return globalManifest{Version: globalManifestVersion, Files: map[string]string{}}, false, nil
+		return globalManifest{Version: globalManifestVersion, Files: map[string]string{}}, false, "", nil
 	}
 	if err != nil {
-		return globalManifest{}, false, err
+		return globalManifest{}, false, "", err
 	}
 	var manifest globalManifest
 	if err := json.Unmarshal(data, &manifest); err != nil {
-		return globalManifest{}, true, fmt.Errorf("read global manifest %s: %w", path, err)
+		return globalManifest{}, true, "", fmt.Errorf("read global manifest %s: %w", path, err)
 	}
 	if manifest.Version != globalManifestVersion {
-		return globalManifest{}, true, fmt.Errorf("unsupported global manifest version %d", manifest.Version)
+		return globalManifest{}, true, "", fmt.Errorf("unsupported global manifest version %d", manifest.Version)
 	}
 	if manifest.Files == nil {
 		manifest.Files = map[string]string{}
 	}
-	return manifest, true, nil
+	return manifest, true, bytesSHA256(data), nil
 }
 
 func adoptKnownGlobalFiles(manifest globalManifest, catalog Catalog) (globalManifest, error) {

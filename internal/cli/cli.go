@@ -80,6 +80,8 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
 	fmt.Fprintln(w, "  geremmyas project [--force] [--targets ...] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
+	fmt.Fprintln(w, "  geremmyas global list [--targets ...] [--include-adoptable] [--json]")
+	fmt.Fprintln(w, "  geremmyas global clear [--targets ...] [--include-adoptable] [--dry-run] [--force] [--json]")
 	fmt.Fprintln(w, "  geremmyas context")
 	fmt.Fprintln(w, "  geremmyas lint")
 	fmt.Fprintln(w, "  geremmyas doctor")
@@ -434,6 +436,15 @@ func printMiseHint(w io.Writer, root string) {
 }
 
 func runGlobal(args []string, w io.Writer, catalog Catalog) error {
+	if len(args) > 0 {
+		switch args[0] {
+		case "list":
+			return runGlobalList(args[1:], w, catalog)
+		case "clear":
+			return runGlobalClear(args[1:], w, catalog)
+		}
+	}
+
 	fs := flag.NewFlagSet("global", flag.ContinueOnError)
 	fs.SetOutput(io.Discard)
 	targetsFlag := fs.String("targets", "", "comma-separated IDE targets (codex,claude-code,copilot,cursor,opencode)")
@@ -472,6 +483,11 @@ func runGlobal(args []string, w io.Writer, catalog Catalog) error {
 	if err != nil {
 		return err
 	}
+	releaseGlobalLock, err := acquireGlobalMutationLock()
+	if err != nil {
+		return err
+	}
+	defer releaseGlobalLock()
 	previousManifest, manifestExists, err := loadGlobalManifest()
 	if err != nil {
 		return err

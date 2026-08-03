@@ -187,6 +187,8 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 | `remove <pack>...` | Remove packs from config only (**does not** delete synced files) |
 | `project [--force] [--targets ...] <pack>...` | `add` + `sync` in one step; interactive pack picker available |
 | `global [--targets ...] [--force] <pack>...` | Reconcile the complete user-level pack/target state |
+| `global list [--targets ...] [--include-adoptable] [--json]` | Inspect managed and observed global harness state without writing |
+| `global clear [--targets ...] [--include-adoptable] [--dry-run] [--force] [--json]` | Plan or safely remove global state owned by Geremmyas |
 | `context` | Report approximate context cost and skill ownership by source |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
@@ -198,6 +200,19 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 Project sync reconciles files through `.geremmyas/project-manifest.json`.
 Modified, unowned, and symlinked paths are preserved; obsolete files are
 removed only when they remain unchanged and owned.
+
+Global inventory distinguishes current, modified, missing, obsolete, unowned,
+symlinked, non-regular, unreadable, and adoptable files. Adoption requires an
+exact canonical hash or a trusted Geremmyas generated marker; external plugin
+and runtime caches are observations only and never become owned.
+
+`global clear --dry-run` renders the same removal plan without changing files or
+the manifest. A target-scoped clear retains shared skills while another target
+still uses them. Modified owned files require `--force`; symlinks, non-regular
+paths, unowned files, plugins, and runtime caches are never removed. Use
+`--include-adoptable` only for a total clear of exact canonical legacy files.
+Marker-only generated legacy files additionally require `--force`, because the
+marker cannot prove that the generated body was never customized.
 
 **Generated IDE files** (marker `geremmyas:generated`): `.cursor/rules/*.mdc`,
 `.cursor/hooks.json`, `CLAUDE.md`, `.opencode/AGENTS.md`, `.codex/AGENTS.md`. Re-sync
@@ -247,6 +262,28 @@ targets are removed, unchanged owned files are deleted; modified and unowned
 files are preserved. The first managed run adopts only files whose content
 exactly matches the current embedded catalog, so unknown legacy and third-party
 skills are never removed automatically.
+
+Inspect the current state without changing files or the manifest:
+
+```bash
+geremmyas global list
+geremmyas global list --targets codex
+geremmyas global list --include-adoptable
+geremmyas global list --json
+```
+
+The inventory distinguishes current, modified, missing, obsolete, unowned,
+symlinked, non-regular, unreadable, and adoptable paths. System skills and
+plugin caches are reported as external observations, never as Geremmyas-owned
+files. `--targets` filters the report only; it does not change installed state.
+
+Preview or apply conservative cleanup:
+
+```bash
+geremmyas global clear --dry-run
+geremmyas global clear --targets codex --dry-run
+geremmyas global clear
+```
 
 Or use interactive selection:
 

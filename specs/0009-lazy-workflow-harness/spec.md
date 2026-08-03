@@ -3,7 +3,7 @@ spec: "0009"
 title: Lazy workflow harness
 family: multi-assistant
 phase: 7
-status: Ready
+status: In Progress
 owner: ""
 depends_on: ["0006", "0008"]
 origin: Workflow efficiency audit and user-approved capability simplification
@@ -143,6 +143,10 @@ integration tests for every clearing mode and materialization migration.
 - A managed file changes between planning and deletion: recheck its hash at the
   mutation boundary and preserve it unless the explicit proven-ownership force
   rule applies.
+- A historical manifest names a pack removed by this migration: inventory its
+  owned paths, report unresolved catalog state, and do not infer obsolescence
+  from an incomplete desired-state calculation. Clearing still relies on proven
+  manifest ownership rather than the current catalog.
 - A parent directory or destination component becomes a symlink: stop before
   traversal and report the protected path.
 - An adoptable generated file was customized: preserve it unless explicit force
