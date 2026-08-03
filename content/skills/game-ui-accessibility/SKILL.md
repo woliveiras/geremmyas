@@ -1,6 +1,6 @@
 ---
 name: game-ui-accessibility
-description: "Build and audit accessible game UI for Phaser and Godot. Use when creating HUDs, menus, focus navigation, touch controls, remapping, localization, text scaling, captions, or reduced motion. Do not use for visual-only interface reviews."
+description: "Use when game HUD, menus, localization presentation, canvas/DOM labels, responsive layout, focus, touch, contrast, accessible names, captions, or reduced motion change. Do not use for combat rules, AI, persistence, audio, or art production."
 ---
 
 # Game UI Accessibility

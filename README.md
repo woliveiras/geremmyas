@@ -392,7 +392,7 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 | **Baseline** | `core`, `coding`, `quality`, `base` | Default: `core` + `coding` with compact closing fallbacks; `base` adds detailed quality workflows |
 | **Workflow helpers** | `decision-support`, `skill-maintenance` | Optional decision and catalog-maintainer skills |
 | **Writing & research** | `blog`, `research`, `premortem` | Optional content workflows |
-| **Games** | `game-art-2d`, `game-dev` | 2D art pack or complete Phaser/Godot development family |
+| **Games** | `game-core`, `game-ui`, `game-systems`, `game-performance`, `game-audio`, `game-art`, `game-delivery`, `game-dev` | Select routine 2D domains independently; `game-dev` is the explicit complete metapack |
 | **TypeScript / Node** | `typescript-base`, `typescript-ci`, `node-api`, `nestjs`, `fastify` | `nestjs` / `fastify` need `node-api` |
 | **React** | `react-web`, `react-router`, `react-state`, `react-data`, `tailwind` | Most depend on `react-web` → `typescript-base` |
 | **Python** | `python-base`, `python-api`, `python-ai`, `python-ci`, `python-sqlite` | `python-ci` needs `infra-ci` |
@@ -405,6 +405,25 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 
 Packs only install what you list in `geremmyas.yml` (plus transitive `depends`).
 There is no automatic detection of `package.json` or `go.mod` in the target repo.
+
+For a game project, prefer the smallest stable domain set instead of installing
+`game-dev` automatically. For example, a gameplay-heavy Phaser project can use:
+
+```yaml
+packs:
+  - base
+  - typescript-base
+  - game-core
+  - game-ui
+  - game-systems
+```
+
+Add `game-performance`, `game-audio`, `game-art`, or `game-delivery` when those
+domains become active. `game-dev` depends on every focused game pack and remains
+available when advertising all eleven skills is an intentional trade-off.
+`game-art-2d` remains a backward-compatible pack name for `game-art`; it does
+not create a duplicate skill. Smaller packs reduce the discovery surface, but
+actual skill activation still depends on the assistant runtime.
 
 You can also choose project vs global during interactive init:
 
@@ -571,17 +590,17 @@ skill's `references/`.
 | `verify` | Require fresh execution evidence and expose the lazy independent-review contract |
 | `decision-framework` | Evaluate material decisions (`decision-support` pack) |
 | `skill-authoring` | Create or revise skills (`skill-maintenance` pack) |
-| `game-art-2d` | Create and integrate 2D game art for Phaser and Godot with Codex (`game-art-2d` pack) |
-| `gameplay-programming-2d` | Build reliable movement, combat, interaction, physics, and scene-flow systems (`game-dev` pack) |
-| `game-testing-2d` | Test deterministic simulation, engine integration, and exported game behavior (`game-dev` pack) |
-| `game-feel-2d` | Tune controls, movement, camera, impact, and accessible feedback (`game-dev` pack) |
-| `game-ai-2d` | Build testable enemy perception, decisions, navigation, and encounters (`game-dev` pack) |
-| `game-performance-2d` | Profile and optimize measured 2D game bottlenecks (`game-dev` pack) |
-| `procedural-generation-2d` | Generate deterministic, validated maps and content (`game-dev` pack) |
-| `game-save-n-progress` | Implement versioned saves, settings, and progression (`game-dev` pack) |
-| `game-audio-2d` | Integrate routed, bounded, and platform-aware game audio (`game-dev` pack) |
-| `game-ui-accessibility` | Build responsive menus, HUDs, focus flows, and accessibility settings (`game-dev` pack) |
-| `game-build-and-release` | Produce and verify Phaser bundles and Godot exports (`game-dev` pack) |
+| `game-art-2d` | Create and integrate 2D runtime art (`game-art`; legacy pack name `game-art-2d`) |
+| `gameplay-programming-2d` | Build movement, combat, interaction, physics, and scene flow (`game-core`) |
+| `game-testing-2d` | Test deterministic simulation, engine integration, and exported behavior (`game-core`) |
+| `game-feel-2d` | Tune controls, camera, impact, and moment-to-moment feedback (`game-ui`) |
+| `game-ai-2d` | Build enemy perception, decisions, navigation, and encounters (`game-systems`) |
+| `game-performance-2d` | Profile and optimize measured 2D game bottlenecks (`game-performance`) |
+| `procedural-generation-2d` | Generate deterministic, validated maps and content (`game-systems`) |
+| `game-save-n-progress` | Implement versioned saves, settings, and progression (`game-systems`) |
+| `game-audio-2d` | Integrate routed, bounded, and platform-aware game audio (`game-audio`) |
+| `game-ui-accessibility` | Build responsive UI, localization presentation, focus, touch, and accessibility (`game-ui`) |
+| `game-build-and-release` | Produce and verify Phaser bundles and Godot exports (`game-delivery`) |
 | `typescript-ci-setup` | TypeScript CI pipeline (`typescript-ci` pack) |
 | `python-ci-setup` | Python CI pipeline (`python-ci` pack) |
 | `go-ci-setup` | Go CI pipeline (`go-ci` pack) |

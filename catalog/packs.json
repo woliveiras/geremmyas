@@ -176,24 +176,9 @@
       ]
     },
     {
-      "name": "game-art-2d",
+      "name": "game-core",
       "tier": "stack",
-      "description": "Codex-only workflow for producing and integrating 2D game art in Phaser and Godot.",
-      "files": [
-        {
-          "kind": "skill",
-          "source": "content/skills/game-art-2d",
-          "path": "game-art-2d"
-        }
-      ]
-    },
-    {
-      "name": "game-dev",
-      "tier": "stack",
-      "description": "Complete 2D game-development workflows for Phaser and Godot.",
-      "depends": [
-        "game-art-2d"
-      ],
+      "description": "Core gameplay programming and deterministic testing for 2D Phaser and Godot projects.",
       "files": [
         {
           "kind": "skill",
@@ -204,21 +189,35 @@
           "kind": "skill",
           "source": "content/skills/game-testing-2d",
           "path": "game-testing-2d"
+        }
+      ]
+    },
+    {
+      "name": "game-ui",
+      "tier": "stack",
+      "description": "Game UI, accessibility, responsive feedback, and moment-to-moment feel for 2D projects.",
+      "files": [
+        {
+          "kind": "skill",
+          "source": "content/skills/game-ui-accessibility",
+          "path": "game-ui-accessibility"
         },
         {
           "kind": "skill",
           "source": "content/skills/game-feel-2d",
           "path": "game-feel-2d"
-        },
+        }
+      ]
+    },
+    {
+      "name": "game-systems",
+      "tier": "stack",
+      "description": "AI, procedural content, saves, and progression systems for 2D Phaser and Godot projects.",
+      "files": [
         {
           "kind": "skill",
           "source": "content/skills/game-ai-2d",
           "path": "game-ai-2d"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/game-performance-2d",
-          "path": "game-performance-2d"
         },
         {
           "kind": "skill",
@@ -229,23 +228,80 @@
           "kind": "skill",
           "source": "content/skills/game-save-n-progress",
           "path": "game-save-n-progress"
-        },
+        }
+      ]
+    },
+    {
+      "name": "game-performance",
+      "tier": "stack",
+      "description": "Measured runtime performance diagnosis and optimization for 2D Phaser and Godot projects.",
+      "files": [
+        {
+          "kind": "skill",
+          "source": "content/skills/game-performance-2d",
+          "path": "game-performance-2d"
+        }
+      ]
+    },
+    {
+      "name": "game-audio",
+      "tier": "stack",
+      "description": "Music, ambience, effects, routing, and Web Audio integration for 2D projects.",
+      "files": [
         {
           "kind": "skill",
           "source": "content/skills/game-audio-2d",
           "path": "game-audio-2d"
-        },
+        }
+      ]
+    },
+    {
+      "name": "game-art",
+      "tier": "stack",
+      "description": "Production-ready 2D runtime art for Phaser and Godot projects.",
+      "files": [
         {
           "kind": "skill",
-          "source": "content/skills/game-ui-accessibility",
-          "path": "game-ui-accessibility"
-        },
+          "source": "content/skills/game-art-2d",
+          "path": "game-art-2d"
+        }
+      ]
+    },
+    {
+      "name": "game-art-2d",
+      "tier": "stack",
+      "description": "Backward-compatible pack name for game-art; it adds no duplicate skill artifact.",
+      "depends": [
+        "game-art"
+      ],
+      "files": []
+    },
+    {
+      "name": "game-delivery",
+      "tier": "stack",
+      "description": "Build, export, package, and release verification for Phaser and Godot projects.",
+      "files": [
         {
           "kind": "skill",
           "source": "content/skills/game-build-and-release",
           "path": "game-build-and-release"
         }
       ]
+    },
+    {
+      "name": "game-dev",
+      "tier": "stack",
+      "description": "Complete 2D game-development metapack for Phaser and Godot; prefer focused game packs for routine project use.",
+      "depends": [
+        "game-core",
+        "game-ui",
+        "game-systems",
+        "game-performance",
+        "game-audio",
+        "game-art",
+        "game-delivery"
+      ],
+      "files": []
     },
     {
       "name": "typescript-base",

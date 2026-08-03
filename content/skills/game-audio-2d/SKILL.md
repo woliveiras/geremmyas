@@ -1,6 +1,6 @@
 ---
 name: game-audio-2d
-description: "Integrate and validate audio for 2D Phaser and Godot games. Use when working on music, ambience, effects, buses, volume, crossfades, spatial sound, voice limits, or web audio. Do not use for audio-only essential cues."
+description: "Use when 2D game music, ambience, sound effects, Web Audio, buses, volume, crossfades, spatial sound, or voice limits change. Do not use for visual feedback, accessibility-only cues, art, or release packaging."
 ---
 
 # Game Audio 2D

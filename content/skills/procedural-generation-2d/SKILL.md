@@ -1,6 +1,6 @@
 ---
 name: procedural-generation-2d
-description: "Build deterministic procedural content for Phaser and Godot. Use when generating seeded maps, rooms, terrain, encounters, loot, spawns, or validated layouts. Do not use global randomness or treat structural validity as proof of fun."
+description: "Use when generating deterministic seeded maps, rooms, terrain, encounters, loot, spawns, or validated layouts in Phaser or Godot. Do not use for authored level content, enemy decisions, save migrations, UI, or global randomness."
 ---
 
 # Procedural Generation 2D

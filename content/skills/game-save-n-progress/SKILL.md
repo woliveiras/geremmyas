@@ -1,6 +1,6 @@
 ---
 name: game-save-n-progress
-description: "Implement durable saves and progression for Phaser and Godot. Use when building slots, settings, checkpoints, migrations, recovery, autosave, or storage adapters. Do not use for engine-object serialization or client tamper resistance."
+description: "Use when 2D game saves, slots, settings persistence, checkpoints, progression, schema migrations, recovery, autosave, or storage adapters change. Do not use for transient gameplay state, engine-object serialization, maps, or UI."
 ---
 
 # Game Save N Progress

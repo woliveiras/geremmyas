@@ -139,36 +139,65 @@ func TestResearchPackIncludesPaperReview(t *testing.T) {
 	}
 }
 
-func TestGameDevPackIncludesCompleteSkillFamily(t *testing.T) {
+func TestGameDevFocusedPacksAndCompleteMetapack(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
+
+	wantByPack := map[string][]string{
+		"game-core":        {"game-testing-2d", "gameplay-programming-2d"},
+		"game-ui":          {"game-feel-2d", "game-ui-accessibility"},
+		"game-systems":     {"game-ai-2d", "game-save-n-progress", "procedural-generation-2d"},
+		"game-performance": {"game-performance-2d"},
+		"game-audio":       {"game-audio-2d"},
+		"game-art":         {"game-art-2d"},
+		"game-delivery":    {"game-build-and-release"},
+	}
+	for packName, want := range wantByPack {
+		t.Run(packName, func(t *testing.T) {
+			pack, ok := catalog.Pack(packName)
+			if !ok {
+				t.Fatalf("catalog missing %s pack", packName)
+			}
+			got := packSourceBasenames(pack, "content/skills/", "")
+			if strings.Join(sortedKeys(got), ",") != strings.Join(want, ",") {
+				t.Fatalf("%s discoverable skills = %v, want %v", packName, sortedKeys(got), want)
+			}
+		})
+	}
+
 	gameDev, ok := catalog.Pack("game-dev")
 	if !ok {
 		t.Fatal("catalog missing game-dev pack")
 	}
-
-	got := packSourceBasenames(gameDev, "content/skills/", "")
-	want := map[string]bool{
-		"game-ai-2d":               true,
-		"game-audio-2d":            true,
-		"game-build-and-release":   true,
-		"game-feel-2d":             true,
-		"game-performance-2d":      true,
-		"game-save-n-progress":     true,
-		"game-testing-2d":          true,
-		"game-ui-accessibility":    true,
-		"gameplay-programming-2d":  true,
-		"procedural-generation-2d": true,
+	if len(gameDev.Files) != 0 {
+		t.Fatalf("game-dev directly owns %d files, want dependency-only metapack", len(gameDev.Files))
 	}
-	if len(got) != len(want) {
-		t.Fatalf("game-dev discoverable skills = %v, want %v", got, want)
+	resolved, err := catalog.Resolve([]string{"game-dev"})
+	if err != nil {
+		t.Fatalf("Resolve(game-dev) returned error: %v", err)
 	}
-	for name := range want {
-		if !got[name] {
-			t.Errorf("game-dev missing discoverable skill %q", name)
+	got := map[string]bool{}
+	for _, pack := range resolved {
+		for name := range packSourceBasenames(pack, "content/skills/", "") {
+			if got[name] {
+				t.Errorf("game-dev resolves duplicate skill %q", name)
+			}
+			got[name] = true
 		}
+	}
+	want := []string{"game-ai-2d", "game-art-2d", "game-audio-2d", "game-build-and-release", "game-feel-2d", "game-performance-2d", "game-save-n-progress", "game-testing-2d", "game-ui-accessibility", "gameplay-programming-2d", "procedural-generation-2d"}
+	if strings.Join(sortedKeys(got), ",") != strings.Join(want, ",") {
+		t.Fatalf("game-dev discoverable skills = %v, want %v", sortedKeys(got), want)
+	}
+
+	legacy, err := catalog.Resolve([]string{"game-art-2d"})
+	if err != nil {
+		t.Fatalf("Resolve(game-art-2d) returned error: %v", err)
+	}
+	if got := packNames(legacy); strings.Join(got, ",") != "game-art,game-art-2d" {
+		t.Fatalf("Resolve(game-art-2d) = %v, want compatibility alias over game-art", got)
 	}
 }
 
@@ -349,7 +378,7 @@ func TestCatalogCompositePackDependencyClosure(t *testing.T) {
 	}
 
 	tests := map[string][]string{
-		"game-dev":      {"game-art-2d", "game-dev"},
+		"game-dev":      {"game-core", "game-ui", "game-systems", "game-performance", "game-audio", "game-art", "game-delivery", "game-dev"},
 		"go-ci":         {"go-base", "infra-ci", "go-ci"},
 		"python-ci":     {"python-base", "infra-ci", "python-ci"},
 		"react-data":    {"typescript-base", "react-web", "react-data"},
@@ -367,6 +396,15 @@ func TestCatalogCompositePackDependencyClosure(t *testing.T) {
 			}
 		})
 	}
+}
+
+func sortedKeys(items map[string]bool) []string {
+	keys := make([]string, 0, len(items))
+	for key := range items {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 func TestResolveRejectsUnknownPack(t *testing.T) {

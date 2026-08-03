@@ -1,6 +1,6 @@
 ---
 name: game-performance-2d
-description: "Profile and optimize 2D Phaser and Godot games against explicit budgets. Use when diagnosing FPS, stutter, loading, memory, draw calls, tilemaps, particles, or web exports. Do not use for speculative optimization."
+description: "Use when measured FPS, frame time, stutter, loading, memory, draw calls, pooling, tilemaps, particles, or web-export performance needs diagnosis. Do not use for speculative optimization, gameplay design, build delivery, or tests."
 ---
 
 # Game Performance 2D

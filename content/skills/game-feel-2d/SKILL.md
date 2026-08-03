@@ -1,6 +1,6 @@
 ---
 name: game-feel-2d
-description: "Tune responsive game feel for 2D Phaser and Godot games. Use when improving controls, jumps, buffering, hit stop, recoil, camera, particles, telegraphs, or feedback. Do not use to hide incorrect gameplay rules or bypass accessibility needs."
+description: "Use when tuning 2D controls, jumps, input buffering, hit stop, recoil, camera shake, particles, telegraphs, or moment-to-moment feedback. Do not use to change gameplay rules, UI accessibility, performance budgets, or tests."
 ---
 
 # Game Feel 2D

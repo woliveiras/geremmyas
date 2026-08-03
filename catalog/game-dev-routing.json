@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "method": "lexical-description-proxy",
+  "limitation": "These cases detect frontmatter drift. They do not emulate or guarantee an assistant runtime's semantic skill selection.",
+  "cases": [
+    {
+      "name": "battle-localization-and-canvas-labels",
+      "prompt": "Audit Battle localization presentation, canvas labels, and accessible names on narrow touch viewports.",
+      "expected_skill": "game-ui-accessibility",
+      "signals": ["localization", "canvas", "accessible names"]
+    },
+    {
+      "name": "enemy-navigation",
+      "prompt": "Implement enemy perception and navigation for a boss encounter.",
+      "expected_skill": "game-ai-2d",
+      "signals": ["enemy", "perception", "navigation"]
+    },
+    {
+      "name": "runtime-sprite-assets",
+      "prompt": "Create runtime art with sprites and tilesets for a Phaser scene.",
+      "expected_skill": "game-art-2d",
+      "signals": ["runtime art", "sprites", "tilesets"]
+    },
+    {
+      "name": "web-audio-routing",
+      "prompt": "Fix Web Audio buses and sound effects with bounded voice limits.",
+      "expected_skill": "game-audio-2d",
+      "signals": ["web audio", "buses", "sound effects"]
+    },
+    {
+      "name": "release-artifact",
+      "prompt": "Verify Vite bundles, Godot exports, and the release smoke tests.",
+      "expected_skill": "game-build-and-release",
+      "signals": ["vite bundles", "godot exports", "release smoke"]
+    },
+    {
+      "name": "combat-feedback",
+      "prompt": "Tune input buffering, hit stop, and camera shake for combat feedback.",
+      "expected_skill": "game-feel-2d",
+      "signals": ["input buffering", "hit stop", "camera shake"]
+    },
+    {
+      "name": "measured-frame-budget",
+      "prompt": "Diagnose frame time and pooling against explicit performance budgets.",
+      "expected_skill": "game-performance-2d",
+      "signals": ["frame time", "pooling", "performance budgets"]
+    },
+    {
+      "name": "save-schema-migration",
+      "prompt": "Add schema migrations for checkpoints through storage adapters.",
+      "expected_skill": "game-save-n-progress",
+      "signals": ["schema migrations", "checkpoints", "storage adapters"]
+    },
+    {
+      "name": "deterministic-browser-tests",
+      "prompt": "Design deterministic browser game tests for replays and exported builds.",
+      "expected_skill": "game-testing-2d",
+      "signals": ["deterministic", "browser", "replays"]
+    },
+    {
+      "name": "player-combat-flow",
+      "prompt": "Implement player combat rules, inventory, and scene flow.",
+      "expected_skill": "gameplay-programming-2d",
+      "signals": ["combat rules", "inventory", "scene flow"]
+    },
+    {
+      "name": "seeded-map-generation",
+      "prompt": "Generate seeded maps with loot and validated layouts.",
+      "expected_skill": "procedural-generation-2d",
+      "signals": ["seeded maps", "loot", "validated layouts"]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: game-ai-2d
-description: "Design, implement, debug, and test AI for 2D Phaser and Godot games. Use when building state machines, perception, navigation, pathfinding, encounters, groups, or bosses. Do not use for player-authored rules or 3D navigation."
+description: "Use when enemy or NPC behavior needs perception, decision state machines, navigation, pathfinding, groups, encounters, or bosses in 2D Phaser or Godot. Do not use for player controls, procedural maps, UI, saves, or test strategy."
 ---
 
 # Game AI 2D

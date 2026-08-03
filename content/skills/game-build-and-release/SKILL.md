@@ -1,6 +1,6 @@
 ---
 name: game-build-and-release
-description: "Build and verify releases for Phaser and Godot games. Use when configuring Vite bundles, Godot exports, web delivery, CI, versioning, compression, or smoke tests. Do not use to publish, tag, or upload without explicit authorization."
+description: "Use when building or verifying Phaser/Vite bundles, Godot exports, web delivery, CI, versioning, compression, or release smoke tests. Do not use for gameplay implementation or to publish, tag, upload, or deploy without authority."
 ---
 
 # Game Build And Release

@@ -1,6 +1,6 @@
 ---
 name: game-art-2d
-description: "Design, generate, animate, package, and validate production art for 2D games. Use when Codex creates or audits sprites, tilesets, maps, backgrounds, VFX, or UI assets for Phaser or Godot. Do not use for 3D or marketing art."
+description: "Use when creating or auditing 2D runtime art such as sprites, tilesets, backgrounds, animation, VFX, maps, or UI assets for Phaser or Godot. Do not use for UI behavior, audio, build delivery, 3D, or marketing art."
 ---
 
 # 2D Game Art Studio

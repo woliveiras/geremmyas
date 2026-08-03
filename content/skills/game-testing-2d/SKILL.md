@@ -1,6 +1,6 @@
 ---
 name: game-testing-2d
-description: "Design and run deterministic tests for 2D Phaser and Godot games. Use when verifying simulation, movement, combat, collisions, maps, replays, scenes, browsers, or exported builds. Do not use as a substitute for required human playtesting."
+description: "Use when designing deterministic 2D game tests for simulation, combat, collisions, seeded maps, replays, browser behavior, or exported builds. Do not use to implement gameplay, optimize performance, or replace human playtesting."
 ---
 
 # Game Testing 2D

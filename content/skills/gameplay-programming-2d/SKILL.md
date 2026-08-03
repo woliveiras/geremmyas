@@ -1,6 +1,6 @@
 ---
 name: gameplay-programming-2d
-description: "Implement and review reliable gameplay systems for 2D Phaser and Godot games. Use when working on movement, combat, abilities, interactions, state machines, physics, input, or scene flow. Do not use for art-only or 3D work."
+description: "Use when implementing 2D player movement, combat rules, abilities, interactions, physics, inventory, or scene flow in Phaser or Godot. Do not use for enemy AI, procedural generation, UI, persistence, art, audio, or release work."
 ---
 
 # Gameplay Programming 2D
