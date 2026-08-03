@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 This changelog is automatically maintained by [release-please](https://github.com/googleapis/release-please).
 
+## [4.0.0](https://github.com/woliveiras/geremmyas/compare/v3.6.0...v4.0.0) (2026-08-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* the sdd pack and legacy workflow skill names are removed. Use coding or base and the refine, spec, tdd, bugfix, verify, and docs capabilities.
+
+### Features
+
+* automate the bugfix evidence loop ([c2b272e](https://github.com/woliveiras/geremmyas/commit/c2b272efc6a1ff91c58a542078d3336e68b34f0f))
+* commit verified slices by default ([d545a59](https://github.com/woliveiras/geremmyas/commit/d545a593cd5434df0eba2bc4db7dc8b271150fff))
+* enforce contextual agent authority ([4bd39ce](https://github.com/woliveiras/geremmyas/commit/4bd39ced4fff19601ee3947464afdc628ac8b36f))
+* make feature delivery autonomous ([239fd0d](https://github.com/woliveiras/geremmyas/commit/239fd0d69e8c9b2666963da3f9469c4ee225d63b))
+* manage global harness state ([0559d2b](https://github.com/woliveiras/geremmyas/commit/0559d2bd5aa922caac194a63a3879b7de855178a))
+* orchestrate specialist subagents ([13bd47b](https://github.com/woliveiras/geremmyas/commit/13bd47bb5b336e44823e5aff197ef646855d41db))
+* split game development packs ([49b2c61](https://github.com/woliveiras/geremmyas/commit/49b2c615b08c31cb74199d0ea54b7535910719eb))
+* streamline workflow harness ([b278cb1](https://github.com/woliveiras/geremmyas/commit/b278cb1a8c75c185701af36a0a8a65250f5e7e9c))
+
+
+### Bug Fixes
+
+* align CI with removed bundled agents ([d06907d](https://github.com/woliveiras/geremmyas/commit/d06907d2086138c7529d18438ab875d79c3300ab))
+* preserve cursor reviewer execution ([ebee60a](https://github.com/woliveiras/geremmyas/commit/ebee60ab0f0e9aa856ac5d3e82575ec065ee5030))
+* update logo format in README from PNG to SVG for better scalability ([2111f92](https://github.com/woliveiras/geremmyas/commit/2111f92275b75c7f66aefacb42c9fa5cd7f5b82d))
+
+
+### Documentation
+
+* complete autonomous workflow rollout ([3c9d29c](https://github.com/woliveiras/geremmyas/commit/3c9d29c1fe545821f5bd6b76c43d36c50d9dfd02))
+* record lazy harness evidence ([7427b05](https://github.com/woliveiras/geremmyas/commit/7427b0561091c06dc30a6df6ccba5bf4ed57a57f))
+* record modular game routing evidence ([08abff5](https://github.com/woliveiras/geremmyas/commit/08abff55899b22acca73d25aa0bf48629b0ab2b1))
+* specify autonomous agent workflows ([7b87230](https://github.com/woliveiras/geremmyas/commit/7b8723016d51437ecd188b87f11b3d21586883f8))
+* specify lazy workflow harness ([c1e1048](https://github.com/woliveiras/geremmyas/commit/c1e10483e30204a1a19674b126adc54b0141a538))
+
 ## [3.6.0](https://github.com/woliveiras/geremmyas/compare/v3.5.0...v3.6.0) (2026-07-31)
 
 
