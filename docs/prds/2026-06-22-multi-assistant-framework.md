@@ -44,6 +44,15 @@ The author uses multiple AI assistants but the framework only treats one of them
    confirmation even when repository evidence, automated tests, and specialist
    review can resolve the decision. Subagents are restricted to read-heavy work,
    so the primary agent cannot use them as an autonomous engineering team.
+6. **Workflow discovery is still broader than the active phase.** The default
+   SDD pack advertises planning, implementation, verification, documentation,
+   architecture, Git, and custom-agent roles at the same time. Short requests
+   therefore pay discovery and routing costs for capabilities that are not yet
+   relevant.
+7. **Global state is safe to reconcile but hard to inspect or empty.** The
+   ownership manifest supports desired-state updates, but users lack explicit
+   inventory and clear operations that distinguish managed, modified,
+   adoptable, unowned, symlinked, and external artifacts.
 
 ## Goals
 
@@ -75,6 +84,18 @@ The author uses multiple AI assistants but the framework only treats one of them
 - Reserve human escalation for material product ambiguity, unmitigated risk to
   production compatibility, new uncatalogued dependencies, persistent blockers,
   push, and production mutations or publication.
+- Make the technology-neutral workflow available as a `base` pack composed from
+  phase-focused `coding` and `quality` packs. Keep stack-specific capabilities
+  opt-in and project-local.
+- Keep the public workflow vocabulary short and phase-specific: `refine`,
+  `spec`, `tdd`, `bugfix`, `verify`, `docs`, and `git-commit`.
+- Consolidate project documentation, glossary, ADR/MADR, and RFC procedures
+  behind the single `docs` skill with support files loaded on demand.
+- Prefer runtime-created subagents with bounded delegation contracts. Do not
+  distribute custom agents by default when they add only a persona rather than
+  enforceable tools, permissions, models, or isolated context.
+- Provide explicit global inventory and safe clearing commands without taking
+  ownership of plugins, caches, symlinks, or third-party files.
 
 ## Non-Goals (this PRD)
 
@@ -117,6 +138,11 @@ The author uses multiple AI assistants but the framework only treats one of them
 | GitHub release workflow redesign | Deferred to the next rollout |
 | Skill generator | Discarded |
 | Marketplace / cohesive versioning | Discarded |
+| Global inventory and clear | In scope with manifest and hash safety |
+| Technology-neutral workflow pack | `base`, composed from `coding` and `quality` |
+| Documentation capabilities | One `docs` skill with lazy references |
+| Bundled custom agents | Remove from distribution; retain generic adapter support |
+| Plugins and runtime caches | Observe only; never clear as Geremmyas-owned state |
 
 ## Working principles (invariants)
 
@@ -173,6 +199,18 @@ deliverables of this PRD:
   and are created by default unless the user opts out. Push remains separate.
 - Specialist subagents can perform partitioned implementation and independent
   review; repeated findings are repaired and re-reviewed before completion.
+- A simple request begins with no workflow skill, and an ambiguous request begins
+  with at most `refine`; closing skills are not selected before their phase.
+- `geremmyas global list` reports owned and observed global state in stable human
+  and JSON formats, and `geremmyas global clear --dry-run` reports the exact safe
+  removal plan without writing.
+- `geremmyas global clear` removes only eligible Geremmyas-owned artifacts for
+  the selected targets and preserves modified, unowned, external, and symlinked
+  files unless a narrower explicit safe mode applies.
+- The `base` pack resolves the complete technology-neutral workflow without
+  including stack packs, plugins, MCP servers, or custom agents.
+- The public workflow surface contains seven skills and no bundled custom-agent
+  profiles. Review and other isolated work use concise delegation contracts.
 - Automated gates retain red/green tests, nearby suites, evidence capture,
   documentation reconciliation, and residual-risk reporting.
 - New uncatalogued dependencies, push, and production mutations or publication
@@ -193,3 +231,6 @@ deliverables of this PRD:
   artifacts, and target-aware project/global materialization.
 - `specs/0008-autonomous-agent-workflows/` — autonomy-by-default workflows,
   specialist delegation, atomic local commits, and contextual authority gates.
+- `specs/0009-lazy-workflow-harness/` — global inventory and clearing,
+  phase-focused workflow packs, lazy documentation references, and dynamic
+  subagent contracts.
