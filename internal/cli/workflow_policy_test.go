@@ -160,6 +160,14 @@ func TestGlobalBasePlansNoNativeSubagents(t *testing.T) {
 	}
 }
 
+func TestCIWorkflowDoesNotRequireRemovedBundledAgentsDirectory(t *testing.T) {
+	root := workflowRepositoryRoot(t)
+	workflow := normalizeWorkflowText(string(testMustRead(t, filepath.Join(root, ".github/workflows/ci.yml"))))
+	if strings.Contains(workflow, "test -d content/agents") {
+		t.Fatal("CI structure check still requires the intentionally removed bundled agents directory")
+	}
+}
+
 func TestCanonicalPromptsAreDocumentedAsSourceOnly(t *testing.T) {
 	root := workflowRepositoryRoot(t)
 	readme := normalizeWorkflowText(string(testMustRead(t, filepath.Join(root, "README.md"))))

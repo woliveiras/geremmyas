@@ -43,7 +43,6 @@ jobs:
           test -d internal/cli
           test -d content/prompts
           test -d content/instructions
-          test -d content/agents
           test -d content/skills
           test -d targets/copilot/hooks
 
