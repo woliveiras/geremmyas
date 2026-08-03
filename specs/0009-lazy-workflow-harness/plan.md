@@ -80,3 +80,24 @@ Set the spec to `Verified` only after all tasks and acceptance criteria have
 fresh evidence, old managed names reconcile safely, the no-agent target matrix
 passes, context baselines are recorded, and independent review has no actionable
 finding.
+
+## Completion evidence
+
+- Delivery commits: `0559d2b` (global inventory/clear) and `b278cb1`
+  (workflow, migration safety, context diagnostics, and documentation).
+- Fresh verification: `go test ./... -count=1`, `geremmyas lint`, `geremmyas
+  doctor`, `git diff --check`, Windows amd64 test cross-build, and Windows/Linux
+  CLI cross-builds passed.
+- Temporary five-target matrix: Copilot, Codex, Cursor, Claude Code, and
+  OpenCode each materialized seven `base` skills, zero bundled agents, and one
+  project manifest.
+- Isolated global round trip: 26 managed Codex files were listed, dry-run kept
+  the manifest byte-identical, and clear removed all 26 without preservation.
+- Approximate context upper bounds: `coding` has 4 skills / 214 discovery
+  tokens; `quality` has 3 / 166; `base` has 7 / 380. All selected top-level
+  `base` bodies total about 5,161 tokens; lazy support files total about 11,543.
+- Independent review found two high-severity issues (parent-symlink traversal
+  and default closing availability); both were repaired, regression-tested, and
+  re-reviewed with no remaining finding.
+- Runtime activation, compaction, provider token accounting, and latency remain
+  external A/B measurements; the CLI reports installed/discoverable text only.
