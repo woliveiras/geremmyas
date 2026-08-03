@@ -137,17 +137,31 @@ func projectDesiredHashes(root string, planned []FileEntry, packs []Pack, target
 
 	desired := map[string]string{}
 	for path, expectedHash := range expected {
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return nil, err
+		}
+		blocked, err := pathContainsSymlink(root, rel)
+		if err != nil {
+			return nil, err
+		}
+		if blocked {
+			continue
+		}
 		if ownedProjectFileMatches(path, expectedHash) {
-			rel, err := filepath.Rel(root, path)
-			if err != nil {
-				return nil, err
-			}
 			desired[filepath.ToSlash(rel)] = expectedHash
 		}
 	}
 
 	for _, rel := range projectGeneratedPaths(packs, targets) {
 		path := filepath.Join(root, filepath.FromSlash(rel))
+		blocked, err := pathContainsSymlink(root, filepath.FromSlash(rel))
+		if err != nil {
+			return nil, err
+		}
+		if blocked {
+			continue
+		}
 		info, err := os.Lstat(path)
 		if err != nil || !info.Mode().IsRegular() {
 			continue
@@ -234,13 +248,20 @@ func adoptKnownLegacyProjectFiles(root string, manifest projectManifest, catalog
 			return manifest, err
 		}
 	}
+	if err := addLegacyProjectHashes(known, root); err != nil {
+		return manifest, err
+	}
 	for path, expectedHash := range known {
-		if !ownedProjectFileMatches(path, expectedHash) {
-			continue
-		}
 		rel, err := filepath.Rel(root, path)
 		if err != nil {
 			return manifest, err
+		}
+		blocked, err := pathContainsSymlink(root, rel)
+		if err != nil {
+			return manifest, err
+		}
+		if blocked || !ownedProjectFileMatches(path, expectedHash) {
+			continue
 		}
 		manifest.Files[filepath.ToSlash(rel)] = expectedHash
 	}
@@ -269,6 +290,15 @@ func reconcileProjectManifest(root string, previous projectManifest, desired map
 			return summary, fmt.Errorf("project manifest path is outside managed roots: %s", rel)
 		}
 		path := filepath.Join(root, filepath.FromSlash(rel))
+		blocked, err := pathContainsSymlink(root, filepath.FromSlash(rel))
+		if err != nil {
+			return summary, err
+		}
+		if blocked {
+			nextFiles[rel] = installedHash
+			summary.Preserved++
+			continue
+		}
 		info, err := os.Lstat(path)
 		if os.IsNotExist(err) {
 			continue
@@ -286,6 +316,15 @@ func reconcileProjectManifest(root string, previous projectManifest, desired map
 			return summary, err
 		}
 		if hash != installedHash {
+			nextFiles[rel] = installedHash
+			summary.Preserved++
+			continue
+		}
+		blocked, err = pathContainsSymlink(root, filepath.FromSlash(rel))
+		if err != nil {
+			return summary, err
+		}
+		if blocked {
 			nextFiles[rel] = installedHash
 			summary.Preserved++
 			continue

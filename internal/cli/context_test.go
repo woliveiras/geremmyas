@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,7 +17,7 @@ func TestRunContextSeparatesManagedAndExternalSkillRoots(t *testing.T) {
 	chdirForContextTest(t, project)
 
 	var installOut strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &installOut, &installOut); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &installOut, &installOut); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, installOut.String())
 	}
 	writeContextSkill(t, filepath.Join(project, ".github", "skills", "project-skill", "SKILL.md"))
@@ -43,6 +44,81 @@ func TestRunContextSeparatesManagedAndExternalSkillRoots(t *testing.T) {
 	if !strings.Contains(content, "nested=1") {
 		t.Fatalf("context output should report nested skill marker:\n%s", content)
 	}
+}
+
+func TestRunContextJSONDistinguishesNoStateCodingAndBase(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_STATE_HOME", t.TempDir())
+
+	noState := readContextJSON(t, t.TempDir())
+	if noState.Project.Exists {
+		t.Fatalf("no-state project unexpectedly has a manifest: %+v", noState.Project)
+	}
+
+	codingRoot := materializeContextProject(t, "core,coding")
+	coding := readContextJSON(t, codingRoot)
+	if got := contextSourceByName(t, coding, "project-portable").Stats.TopLevel; got != 4 {
+		t.Fatalf("coding top-level skills = %d, want 4", got)
+	}
+
+	baseRoot := materializeContextProject(t, "core,base")
+	base := readContextJSON(t, baseRoot)
+	if got := contextSourceByName(t, base, "project-portable").Stats.TopLevel; got != 7 {
+		t.Fatalf("base top-level skills = %d, want 7", got)
+	}
+	if strings.Join(coding.Project.Packs, ",") == strings.Join(base.Project.Packs, ",") {
+		t.Fatalf("coding and base selections are indistinguishable: coding=%v base=%v", coding.Project.Packs, base.Project.Packs)
+	}
+	if len(base.SkillCosts) != contextSourceByName(t, base, "catalog").Stats.TopLevel || len(base.PackCosts) != 3 {
+		t.Fatalf("context JSON omitted per-skill or pack costs: skills=%d packs=%+v", len(base.SkillCosts), base.PackCosts)
+	}
+	for _, cost := range base.PackCosts {
+		if cost.Name == "base" && (cost.Skills != 7 || cost.DiscoveryTokens == 0 || cost.BodyTokens == 0 || cost.SupportTokens == 0) {
+			t.Fatalf("invalid base cost: %+v", cost)
+		}
+	}
+}
+
+func readContextJSON(t *testing.T, root string) contextReport {
+	t.Helper()
+	var out strings.Builder
+	if code := Run([]string{"context", "--root", root, "--json"}, &out, &out); code != 0 {
+		t.Fatalf("context JSON exit code = %d, output: %s", code, out.String())
+	}
+	var report contextReport
+	if err := json.Unmarshal([]byte(out.String()), &report); err != nil {
+		t.Fatalf("decode context JSON: %v\n%s", err, out.String())
+	}
+	if report.SchemaVersion != 1 || report.Command != "context" {
+		t.Fatalf("unexpected context JSON envelope: version=%d command=%q", report.SchemaVersion, report.Command)
+	}
+	return report
+}
+
+func materializeContextProject(t *testing.T, packs string) string {
+	t.Helper()
+	root := t.TempDir()
+	chdirForContextTest(t, root)
+	var out strings.Builder
+	if code := Run([]string{"init", "--packs", packs, "--targets", "codex"}, &out, &out); code != 0 {
+		t.Fatalf("init %s: %s", packs, out.String())
+	}
+	if code := Run([]string{"sync"}, &out, &out); code != 0 {
+		t.Fatalf("sync %s: %s", packs, out.String())
+	}
+	return root
+}
+
+func contextSourceByName(t *testing.T, report contextReport, name string) contextSource {
+	t.Helper()
+	for _, source := range report.Sources {
+		if source.Name == name {
+			return source
+		}
+	}
+	t.Fatalf("context source %q missing: %+v", name, report.Sources)
+	return contextSource{}
 }
 
 func TestRunContextIgnoresMissingRoots(t *testing.T) {

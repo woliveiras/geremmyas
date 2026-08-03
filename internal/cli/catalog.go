@@ -54,6 +54,9 @@ func loadCatalog() (Catalog, error) {
 		if _, exists := catalog.byName[pack.Name]; exists {
 			return Catalog{}, fmt.Errorf("catalog contains duplicate pack %q", pack.Name)
 		}
+		if pack.Name == "list" || pack.Name == "clear" {
+			return Catalog{}, fmt.Errorf("catalog pack name %q is reserved by global subcommands", pack.Name)
+		}
 		catalog.byName[pack.Name] = pack
 	}
 

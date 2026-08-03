@@ -24,7 +24,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     corrupt, and incompatible manifests.
   - verification: `go test ./internal/cli -run 'Global(Clear|Manifest|Reconcile)' -count=1`
 
-- [~] **Migrate workflow names and packs** (test-type: both)
+- [x] **Migrate workflow names and packs** (test-type: both)
   - blocked-by: Clear managed global state safely
   - summary: Rename the seven public skills and replace SDD selection with
     `coding`, `quality`, and `base`.
@@ -34,7 +34,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     prompts, documentation, and old managed-path reconciliation use the new names.
   - verification: `go test ./internal/cli -run 'Catalog|Pack|Sync|Global|Workflow' -count=1 && go run ./cmd/geremmyas lint`
 
-- [ ] **Consolidate lazy documentation workflows** (test-type: unit)
+- [x] **Consolidate lazy documentation workflows** (test-type: unit)
   - blocked-by: Migrate workflow names and packs
   - summary: Merge update-docs, glossary, ADR/MADR, and RFC guidance into `docs`
     with a compact router, references, and templates.
@@ -44,7 +44,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     resolved local links, template presence, and context budgets.
   - verification: `go test ./internal/cli -run 'Docs|Lint|Workflow' -count=1 && go run ./cmd/geremmyas lint`
 
-- [ ] **Replace bundled agents with dynamic delegation contracts** (test-type: both)
+- [x] **Replace bundled agents with dynamic delegation contracts** (test-type: both)
   - blocked-by: Migrate workflow names and packs, Consolidate lazy documentation workflows
   - summary: Remove the ten canonical agent profiles and catalog selection,
     preserve reusable procedures in skills/references, and keep generic adapters.
@@ -55,7 +55,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     conservatively.
   - verification: `go test ./internal/cli -run 'Agent|Workflow|Sync|Global' -count=1`
 
-- [ ] **Enforce lazy routing and measure the reduced surface** (test-type: both)
+- [x] **Enforce lazy routing and measure the reduced surface** (test-type: both)
   - blocked-by: Migrate workflow names and packs, Replace bundled agents with dynamic delegation contracts
   - summary: Tighten AGENTS/prompt routing, context diagnostics, budgets, and
     isolated baselines for no-state, global, coding, and base scenarios.
@@ -65,7 +65,7 @@ Spec: [spec.md](./spec.md) · Plan: [plan.md](./plan.md)
     produce distinguishable deterministic context reports without real-home access.
   - verification: `go test ./internal/cli -run 'Context|Workflow|Budget' -count=1 && go run ./cmd/geremmyas context`
 
-- [ ] **Complete full verification and migration documentation** (test-type: integration)
+- [x] **Complete full verification and migration documentation** (test-type: integration)
   - blocked-by: all previous tasks
   - summary: Reconcile public docs and feature artifacts, run every supported
     target in temporary roots, and close all acceptance criteria.

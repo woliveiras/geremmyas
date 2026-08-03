@@ -1,12 +1,13 @@
 ---
-description: "Quick code review checklist. Use for fast feedback without specs. For spec-driven review against requirements or acceptance criteria, use the @reviewer agent instead."
+description: "Quick code review checklist for feedback without specs. For spec-driven review, use the independent review contract under verify."
 ---
 
 Review the provided code changes using this quick checklist.
 
 This prompt is for general review when there is no spec-driven workflow in
 scope. If the user asks whether the implementation matches specs, acceptance
-criteria, or tests generated from specs, route them to the `@reviewer` agent.
+criteria, or tests generated from specs, load `verify/references/review-contract.md`
+and create a bounded read-only runtime subagent when supported.
 
 If a `GLOSSARY.md` or `CONTEXT.md` file exists, use that vocabulary when judging
 names, behavior, and user-facing language.

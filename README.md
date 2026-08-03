@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ShellCheck](https://img.shields.io/badge/shell-ShellCheck-brightgreen)](https://www.shellcheck.net/)
 
-Agents, skills, instructions, hooks, prompts, and a pack-based CLI for coding assistants
+Skills, instructions, contracts, hooks, prompts, and a pack-based CLI for coding assistants
 
 <p align="center">
   <img src=".github/assets/geremmyas-logo.svg" alt="Geremmyas logo" width="200"/>
@@ -22,11 +22,11 @@ assistant, install once and materialize it for the selected targets.
 - **Pack-based project installs** with `geremmyas.yml`, so each repository gets only the instructions and skills it needs
 - **Instruction files** auto-applied by file glob for languages, frameworks, testing, and security
 - **AGENTS.md** project contract for agent workflows, artifact locations, and operating rules
-- **Guardrails Framework** — 8-skill error-prevention system (hard gates, decision frameworks, anti-pattern detection, quality workflows)
-- **10 agents** for specification, architecture, implementation, tests, security, performance, documentation, review, audit, and exploration
+- **Guardrails Framework** with phase-local skills, lazy references, authority boundaries, and executable command hooks
+- **Dynamic delegation contracts** for isolated review or specialist work, without permanent agent personas
 - **Workflow and utility skills** for specs, tests, docs, migrations, ADRs, state management patterns, and commit messages
 - **Command guardrails** that block `git push --force`, `rm -rf /`, `terraform destroy`, and other dangerous commands
-- **Prompt templates** for code review, refactoring, test generation, and SDD workflow
+- **Prompt templates** for code review, refactoring, test generation, and the technology-neutral base workflow
 
 ## Documentation
 
@@ -50,10 +50,9 @@ geremmyas/
 ├── content/                           # Assistant-neutral canonical sources
 │   ├── AGENTS.md                      # Project operating contract
 │   ├── instructions/                  # Language and framework guidance
-│   ├── agents/                        # Reusable agent roles
 │   ├── skills/                        # Workflow and utility skills
 │   ├── guardrails/                    # Portable command policy
-│   ├── prompts/                       # Review, refactor, test, and SDD prompts
+│   ├── prompts/                       # Review, refactor, test, and base prompts
 │   └── templates/                     # Project artifact templates
 └── targets/
     └── copilot/                       # Copilot-only instructions and hooks
@@ -124,7 +123,7 @@ Or from a local checkout:
 ### Quick start
 
 ```bash
-geremmyas init              # creates geremmyas.yml (default: core, sdd)
+geremmyas init              # creates geremmyas.yml (default: core, coding)
 geremmyas sync              # install packs from config into cwd
 geremmyas list              # all catalog packs
 geremmyas version           # installed binary version
@@ -137,7 +136,7 @@ Example `geremmyas.yml`:
 version: 1
 packs:
   - core
-  - sdd
+  - coding
   - python-api
   - data-postgres
 targets:
@@ -189,10 +188,16 @@ See [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) for detail
 | `global [--targets ...] [--force] <pack>...` | Reconcile the complete user-level pack/target state |
 | `global list [--targets ...] [--include-adoptable] [--json]` | Inspect managed and observed global harness state without writing |
 | `global clear [--targets ...] [--include-adoptable] [--dry-run] [--force] [--json]` | Plan or safely remove global state owned by Geremmyas |
-| `context` | Report approximate context cost and skill ownership by source |
+| `context [--root path] [--json]` | Report approximate context cost, selected packs, and skill ownership by source |
 | `doctor` | Validate catalog sources and local `geremmyas.yml` |
 
-**Defaults:** non-interactive `init` writes `core` and `sdd`.
+**Defaults:** non-interactive `init` writes `core` and `coding`.
+
+The default remains complete through compact fallbacks in `AGENTS.md`: its
+Completion and Agent Routing sections cover fresh evidence, bounded review,
+minimal docs reconciliation, and local commits without requiring another
+discoverable skill. Add `quality` (or choose `base`) when you want the detailed
+`verify`, review-contract, `docs`, and `git-commit` procedures available lazily.
 
 **Sync output:** `installed`, `updated`, `preserved`, `skipped` — see
 [docs/architecture.md](docs/architecture.md).
@@ -249,10 +254,10 @@ geremmyas project --force core
 Install packs to user-level directories so they apply across all projects:
 
 ```bash
-geremmyas global sdd python-ai infra-terraform blog research
-geremmyas global --targets copilot,cursor core sdd
-geremmyas global --targets claude-code,opencode sdd
-geremmyas global --targets codex sdd python-ai
+geremmyas global base python-ai infra-terraform blog research
+geremmyas global --targets copilot,cursor base
+geremmyas global --targets claude-code,opencode coding
+geremmyas global --targets codex coding python-ai
 ```
 
 Each invocation is the complete desired global state, not an additive install.
@@ -311,12 +316,12 @@ roles.
 Earlier versions wrote `~/.config/codex/AGENTS.md`; delete that stale file once
 after upgrading.
 
-After upgrading from an append-only global install, rerun `geremmyas global`
-with the complete pack and target set you want, then inspect `geremmyas context`.
-The first run adopts exact current-catalog matches but leaves unknown legacy
-skills as `unowned`; review those paths before removing them manually. Former
-top-level SDD policy skills now live under their owning workflows as listed in
-[Guardrails Framework](docs/guardrails-framework.md#internal-references).
+After upgrading from an append-only global install, run `geremmyas global list
+--include-adoptable` first, then reconcile with the complete pack and target set
+you want. The migration catalog recognizes exact hashes of the renamed workflow
+skills and removed agent profiles; modified legacy files remain unowned or
+preserved. Former top-level policy skills now live under their owning workflows
+as listed in [Guardrails Framework](docs/guardrails-framework.md#internal-references).
 
 Generated global files preserve user edits unless you pass `--force`. A corrupt
 or unsupported manifest blocks the run before any global files are written;
@@ -324,17 +329,58 @@ move the manifest aside only after reviewing the installed global directories.
 
 ### Context report
 
-Run `geremmyas context` to compare the embedded catalog, current project,
-`~/.agents/skills`, Codex system skills, and Codex plugin cache. The report
-separates top-level and nested `SKILL.md` files, frontmatter bytes, approximate
-tokens, and global manifest ownership. Token counts use `(bytes + 3) / 4`; they
-are a stable comparison metric, not an exact model tokenizer result.
+Run `geremmyas context` to compare the embedded catalog, Copilot and portable
+project roots, `~/.agents/skills`, Codex system skills, and Codex plugin cache.
+The report shows the project/global manifest selections and separates top-level
+and nested `SKILL.md` files, frontmatter bytes, approximate tokens, and
+ownership. Use `--root` to inspect another project without changing directory
+and `--json` for repeatable baseline comparisons, including per-skill body and
+support-file costs. Human output shows `coding`, `quality`, and `base` upper
+bounds: discovery metadata, all selected top-level bodies, and support content
+that should load only on demand. Token counts use `(bytes + 3) / 4`; they are a
+stable comparison metric, not an exact model tokenizer result.
+
+`context` measures installed/discoverable text, not what a host actually loaded,
+when it compacted, model token billing, or wall-clock latency. Measure those
+runtime effects with an external controlled A/B: same assistant/version/model,
+repository snapshot, prompt suite, cache state, and repetitions; compare an
+isolated empty home with project `coding`, project `base`, and an explicit
+global installation. Record median and tail latency plus runtime-reported input,
+cache, tool, and compaction events. Geremmyas deliberately does not call an LLM.
 
 External system and plugin roots are observed only. `unowned` means Geremmyas
 has no authority to remove that skill; `modified` means a manifest-owned global
 skill no longer matches the hash Geremmyas installed. Plugin-cache counts are an
 upper bound that can include inactive or older versions; the Codex host decides
 which cached plugins are active in a session.
+
+### Migration from the former SDD pack
+
+This release intentionally makes a clean break instead of installing aliases:
+
+| Previous capability | Replacement |
+| --- | --- |
+| `sdd` pack | `coding` for the efficient default, or `base` for coding + closing workflows |
+| `requirements-interview` | `refine` |
+| `generate-spec` | `spec` |
+| `vertical-tdd` | `tdd` |
+| `bugfix-loop` | `bugfix` |
+| `verification-checklists` | `verify` |
+| `update-docs`, `generate-glossary`, `generate-adr` | `docs`, selecting one lazy mode reference |
+| `code-review-requesting` | `verify/references/review-contract.md`, used by a runtime-created subagent |
+| bundled custom agents | bounded dynamic subagents created only when useful |
+
+There are no compatibility skill directories because they would restore
+discovery cost and ambiguous triggers. Project/global reconciliation removes
+manifest-owned old paths that still match their installed hash. The embedded
+migration hash catalog also recognizes intact pre-manifest portable skills and
+agents; modified or unknown files remain untouched. Inspect global state before
+cleanup:
+
+```bash
+geremmyas global list --include-adoptable
+geremmyas global clear --dry-run --include-adoptable
+```
 
 ### Pack catalog
 
@@ -343,7 +389,7 @@ Run `geremmyas list` for the live list. Dependencies are resolved automatically
 
 | Group | Packs | Notes |
 | --- | --- | --- |
-| **Baseline** | `core`, `sdd` | Default init; `sdd` depends on `core` |
+| **Baseline** | `core`, `coding`, `quality`, `base` | Default: `core` + `coding` with compact closing fallbacks; `base` adds detailed quality workflows |
 | **Workflow helpers** | `decision-support`, `skill-maintenance` | Optional decision and catalog-maintainer skills |
 | **Writing & research** | `blog`, `research`, `premortem` | Optional content workflows |
 | **Games** | `game-art-2d`, `game-dev` | 2D art pack or complete Phaser/Godot development family |
@@ -395,7 +441,7 @@ instruction templates live under `targets/<assistant>/`.
 | `content/prompts/review.prompt.md` | Structured code review checklist |
 | `content/prompts/refactor.prompt.md` | Refactor preserving behavior |
 | `content/prompts/test.prompt.md` | Generate unit tests matching project patterns |
-| `content/prompts/sdd.prompt.md` | Full SDD cycle: spec -> test -> implement -> review -> docs |
+| `content/prompts/base.prompt.md` | Full technology-neutral cycle: refine -> spec -> test -> implement -> verify -> review -> docs |
 
 ### Project outputs
 
@@ -405,11 +451,11 @@ project root; assistant-specific content is emitted only for that target.
 | Target | Principal outputs |
 |------|---------|
 | Shared | `AGENTS.md`, `mise.toml`, project templates |
-| Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
-| Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
-| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/agents`, `.cursor/rules`, `.cursor/hooks.json` |
-| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/agents`, `.claude/instructions`, `CLAUDE.md` |
-| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/agents`, `.opencode/instructions`, `.opencode/AGENTS.md` |
+| Copilot | `.github/skills`, `.github/instructions`, `.github/hooks` |
+| Codex | `.agents/skills`, `.codex/instructions`, `.codex/AGENTS.md` |
+| Cursor | `.agents/skills`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
 `AGENTS.md` is the source of truth for agent behavior in a repository. It should
 reference skills instead of duplicating their full procedures.
@@ -425,7 +471,7 @@ destination. Use skills for explicit workflows, and `assets/` or `references/`
 for long examples and recipes.
 
 `geremmyas lint` protects the default context budget: descriptions are limited
-to 240 characters, skill bodies to 250 lines, the `sdd` pack to 10 public
+to 240 characters, skill bodies to 250 lines, the composed `base` workflow to 7 public
 skills, and `content/AGENTS.md` to 700 words. Nested support files must use
 descriptive names instead of `SKILL.md`. See
 [Creating packs, skills, and instructions](docs/creating-packs.md#context-budgets).
@@ -474,43 +520,28 @@ descriptive names instead of `SKILL.md`. See
 | `zod.instructions.md` | schemas and API files | Zod v4 schemas and parsing |
 | `zustand.instructions.md` | store files | Zustand v5 stores and middleware |
 
-#### Agent roles (`content/agents/`)
+#### Runtime delegation
 
-Agents are narrow roles with a specific output contract. They should route to
-skills for reusable workflows instead of duplicating skill procedures.
+Geremmyas no longer distributes permanent custom-agent profiles. Capable
+runtimes create bounded subagents only when isolation, specialization, or
+parallelism materially helps; trivial work remains with the primary agent. Each
+delegation supplies objective, scope, ownership, evidence, unknowns, output, and
+authority. The primary owns integration and Git.
 
-| Agent | Role |
-|-------|------|
-| `spec-writer` | Explores unclear requirements and produces the complete spec/plan/tasks set. |
-| `explorer` | Read-only codebase mapper with a structured project summary. |
-| `reviewer` | Spec-driven reviewer that checks specs, tests, and code alignment. |
-| `architect` | Explores architecture candidates and uses parallel alternatives only for material interface decisions. |
-| `implementer` | Implements one behavior inside explicitly owned code boundaries. |
-| `test-engineer` | Builds acceptance, regression, and harness evidence. |
-| `security-reviewer` | Audits a bounded trust boundary, dependency, or change. |
-| `performance-reviewer` | Measures a bounded workload and diagnoses supported bottlenecks. |
-| `documentation` | Reconciles affected API, setup, architecture, and operational docs. |
-| `auditor` | Independently checks scope, evidence, ownership, and authority boundaries. |
-
-Every agent return is bounded by an explicit scope and separates repository
-evidence from unknowns. Agents may be invoked proactively and editors can run in
-parallel with disjoint file, module, or worktree ownership. The primary agent
-integrates, verifies, and owns Git. Independent review follows each slice or
-verification wave; findings are repaired and reviewed again automatically.
-Claude Code, Cursor, and OpenCode receive native subagent definitions; Codex
-uses portable roles or its supported delegation mechanism.
-
-Agents reference design heuristics in `content/agents/references/` (deep
-modules, interface design, complexity signals, dependency categories,
-pragmatic heuristics, seam finding).
+Independent review is a lazy reference under
+`verify/references/review-contract.md`, not a discoverable skill or permanent
+persona. Targets without subagents execute the same contract inline and report
+that isolated context was unavailable. Generic target-adapter support remains
+available for future custom agents that provide a concrete permission, model,
+tool, MCP, or isolation benefit.
 
 #### When to Use What: Code Review
 
-There are three review surfaces — each for a different context:
+There are three review surfaces, each for a different context:
 
 | Surface | How to invoke | Best for |
 |---------|--------------|----------|
-| `@reviewer` agent | `@reviewer review this change` | **Spec-driven review** — verifies code against specs and tests, checks architecture with deep-module heuristics. Use when specs exist. |
+| `verify` review contract | Runtime subagent after fresh verification, or directly for an explicit read-only review | **Spec-driven review** against acceptance criteria, tests, code, and risk boundaries. |
 | `/review` prompt | Type `/review` in Copilot Chat | **Quick general review** — security, readability, correctness checklist. Use for fast feedback on any code, no specs needed. |
 | Built-in `/review` | `/review` in Copilot CLI | **Diff-based review** — analyzes staged/branch changes automatically. Use for pre-commit or pre-PR checks. |
 
@@ -519,27 +550,25 @@ There are three review surfaces — each for a different context:
 Skills are explicit capabilities. Workflow skills guide multi-step work; utility
 skills provide focused technical recipes or generated artifacts.
 
-Workflow skills ship with the `sdd` pack. Stack-specific recipe skills (for example
+Active workflow skills ship with `coding`; closing capabilities ship with
+`quality`; `base` composes both. Stack-specific recipe skills (for example
 `validate-with-zod`, `model-state-with-xstate`, `migrate-react-router`) install
 when you add the matching pack (`react-data`, `react-router`, etc.); core rules
 live in the paired instruction files.
 
 Use a top-level skill only for a capability users invoke directly. Composition
-steps, checklists, examples, and policy belong in the owning skill's
-`references/`; isolated roles belong in `content/agents/`.
+steps, checklists, examples, review contracts, and policy belong in the owning
+skill's `references/`.
 
 | Skill | Purpose |
 |-------|---------|
-| `requirements-interview` | Explore code and clarify requirements before PRD/spec work |
-| `generate-spec` | Fill a structured spec from direct input (no interview) |
-| `vertical-tdd` | Implement one behavior at a time with red-green-refactor |
-| `bugfix-loop` | Reproduce, diagnose, regression-test, and fix bugs |
-| `update-docs` | Update `docs/` after implementing a feature |
+| `refine` | Resolve material ambiguity before specification; unload when clear |
+| `spec` | Create or update the numbered spec, plan, and tasks package |
+| `tdd` | Implement one observable behavior at a time with red-green-refactor |
+| `bugfix` | Reproduce, diagnose, regression-test, and fix bugs |
+| `docs` | Route lazily to project docs, glossary, ADR/MADR, or RFC support |
 | `git-commit` | Create task-owned atomic Conventional Commits from verified diffs |
-| `generate-glossary` | Extract domain terminology into `GLOSSARY.md` |
-| `generate-adr` | Record an Architectural Decision in MADR 4.0 format |
-| `verification-checklists` | Require fresh execution evidence before completion |
-| `code-review-requesting` | Prepare verified changes for structured review |
+| `verify` | Require fresh execution evidence and expose the lazy independent-review contract |
 | `decision-framework` | Evaluate material decisions (`decision-support` pack) |
 | `skill-authoring` | Create or revise skills (`skill-maintenance` pack) |
 | `game-art-2d` | Create and integrate 2D game art for Phaser and Godot with Codex (`game-art-2d` pack) |
@@ -578,7 +607,7 @@ steps, checklists, examples, and policy belong in the owning skill's
 
 #### Specs index (`specs/README.md`)
 
-The `sdd` pack installs `specs/README.md` as the repository index: **families**,
+The `coding` pack installs `specs/README.md` as the repository index: **families**,
 reserved number blocks, **status** lifecycle (`Draft` → `Ready` → `In Progress`
 → `Verified`), and per-family tables (Spec, Title, Status, Depends on).
 
@@ -655,43 +684,44 @@ Rules are configurable in `guardrails-rules.txt`.
 
 Template for [mise](https://mise.jdx.dev/) tool version management. Uncomment the tools your project uses.
 
-## Spec Driven Development (SDD) Workflow
+## Lazy coding workflow
 
-This project is built around **Spec Driven Development** — specs and tests are the source of truth, code adapts to them.
+The workflow loads only the capability needed by the current phase. A simple,
+well-scoped task needs no workflow skill; ambiguity starts with `refine`, a
+feature advances through `spec` and `tdd`, and completion loads `verify`.
 
 ### The Cycle
 
 ```
-┌─────────┐     ┌──────────┐     ┌────────────┐     ┌──────────┐     ┌──────┐
-│  1.Spec │────▶│ 2.Tests  │────▶│ 3.Implement│────▶│ 4.Review │────▶│5.Docs│
-└─────────┘     └──────────┘     └────────────┘     └──────────┘     └──────┘
- @spec-writer    vertical-tdd      vertical-tdd      @reviewer        update-docs
- or              red phase         green/refactor    agent            skill
- generate-spec                                                       (if API/arch
- skill                                                               changed)
+refine? ──▶ spec ──▶ tdd (red/green/refactor) ──▶ verify ──▶ review? ──▶ docs?
+ ambiguity  durable   one behavior per cycle       evidence   isolated   matching
+ only       artifacts                                      subagent     mode only
 ```
 
 ### Workflow by Change Type
 
 For new features:
 
-1. Use `requirements-interview` to clarify the product and technical shape.
-2. Write or update a PRD.
-3. Use `@spec-writer` or `generate-spec` to create testable specs.
-4. Produce vertical tasks in `tasks.md` as part of `generate-spec`.
-5. Use `vertical-tdd`; its test-generation reference also covers test-only work.
-6. Use `@reviewer` for spec-driven review.
-7. Use `update-docs` when public API, architecture, setup, or configuration changed.
+1. Inspect the request and repository directly; load `refine` only when a
+   material requirement remains ambiguous.
+2. Use `spec` to create the durable `spec.md`, `plan.md`, and `tasks.md` package.
+3. Use `tdd` for one vertical behavior at a time.
+4. Load `verify` only when fresh completion evidence is due.
+5. When independent review is useful, have the runtime create a bounded
+   subagent using `verify/references/review-contract.md`.
+6. Load `docs` only when public API, architecture, setup, configuration,
+   vocabulary, ADR, or RFC work is actually needed.
 
 For existing features:
 
-1. Use `requirements-interview` to decide whether the product flow changes.
+1. Use `refine` only if repository evidence does not establish whether the
+   product flow changes.
 2. If the product flow changes, update the PRD before writing specs.
 3. If the product flow does not change, write targeted specs and continue through tasks, tests, implementation, review, and docs.
 
 For bugs:
 
-1. Use `bugfix-loop` to document the symptom, impact, reproduction, and ranked
+1. Use `bugfix` to document the symptom, impact, reproduction, and ranked
    hypotheses.
 2. Write the regression test at the correct boundary and record its command,
    output, and expected failing reason before changing production code.
@@ -701,13 +731,13 @@ For bugs:
    residual evidence that automation could not establish.
 5. Write a postmortem only when the bug was an outage.
 
-### Using the SDD prompt source
+### Using the base prompt source
 
-After deliberately installing `content/prompts/sdd.prompt.md` as a Copilot
+After deliberately installing `content/prompts/base.prompt.md` as a Copilot
 custom prompt, invoke it in Copilot Chat:
 
 ```
-/sdd Add user authentication with JWT
+/base Add user authentication with JWT
 ```
 
 The prompt advances through machine-readiness, red, green, review, documentation,
@@ -722,24 +752,26 @@ docs, and fails when it finds an unclassified conversational pause.
 
 You can also run each step individually:
 
-#### 1. Write a Spec
+#### 1. Refine only if needed, then write a spec
 
 ```
-@spec-writer I need a feature for user authentication with JWT
+Use the refine skill to resolve the remaining ambiguity in JWT authentication
 ```
 
-The agent interviews you (one question at a time), then produces a structured spec in `specs/`. For large features, it auto-detects scope and proposes vertical slices.
+The agent asks only questions whose answers cannot be established safely from
+the repository. Once the behavior is clear, it unloads that phase and records
+the result in durable artifacts.
 
 If you already know the requirements and don't need an interview:
 
 ```
-Use the generate-spec skill to create a spec for JWT auth
+Use the spec skill to create a spec for JWT auth
 ```
 
 #### 2. Generate Tests
 
 ```
-Use the vertical-tdd test-generation reference for specs/user-auth.md
+Use the tdd skill for the next behavior in specs/user-auth/tasks.md
 ```
 
 Each acceptance criterion from the spec becomes at least one test. Tests must fail initially (red phase).
@@ -751,17 +783,19 @@ Write code to make the tests pass. The golden rule: **never modify the tests**. 
 #### 4. Review
 
 ```
-@reviewer review the user-auth implementation
+Create an independent read-only subagent using the verify review contract
 ```
 
-The reviewer checks alignment between spec → tests → code. It verifies every acceptance criterion has a test, every test has matching code, and flags architecture issues using deep-module heuristics.
+The bounded reviewer checks spec → tests → code alignment and returns findings,
+evidence, unknowns, and a verdict. It is created by the assistant runtime rather
+than installed as a permanent custom agent.
 
 For quick reviews without specs, use the `/review` prompt instead.
 
 #### 5. Update Docs
 
 ```
-Use the update-docs skill for the user-auth feature
+Use the docs skill in project-docs mode for the user-auth feature
 ```
 
 Only needed when public API, architecture, or setup changed. Skip for internal-only changes.
@@ -772,8 +806,9 @@ When the feature involves significant design choices, use these before or alongs
 
 | Need | Tool | Output |
 |------|------|--------|
-| Explore architecture opportunities | `@architect` agent | ADR or implementation plan with evaluated designs |
-| Record a quick decision | `generate-adr` skill | ADR in `docs/decisions/` (MADR 4.0) |
+| Explore architecture opportunities | Dynamic bounded subagent when isolation adds value | Evaluated options and evidence |
+| Record a durable decision | `docs` skill in ADR mode | ADR in `docs/decisions/` (MADR 4.0) |
+| Develop a proposal | `docs` skill in RFC mode | Repository-local RFC |
 
 ## Customization
 

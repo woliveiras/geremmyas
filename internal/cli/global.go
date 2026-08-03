@@ -106,8 +106,22 @@ func globalWriteFile(dest, source string) error {
 	if err != nil {
 		return err
 	}
+	blocked, err := globalPathContainsSymlink(dest)
+	if err != nil {
+		return err
+	}
+	if blocked {
+		return fmt.Errorf("refusing to write global path through symlink: %s", dest)
+	}
 	if err := os.MkdirAll(filepath.Dir(dest), 0o755); err != nil {
 		return err
+	}
+	blocked, err = globalPathContainsSymlink(dest)
+	if err != nil {
+		return err
+	}
+	if blocked {
+		return fmt.Errorf("refusing to write global path through symlink: %s", dest)
 	}
 	return os.WriteFile(dest, data, 0o644)
 }

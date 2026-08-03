@@ -9,12 +9,13 @@ advertised as skills.
 
 | Phase | Public workflow | Guardrail |
 | --- | --- | --- |
-| Requirements | `requirements-interview` | Explore first, record narrow session overrides, classify the change |
-| Specification | `generate-spec` | Create spec, plan, tasks, then prove machine readiness |
-| Implementation | `vertical-tdd` | One observable behavior per red-green-refactor cycle |
-| Bugfix | `bugfix-loop` | Reproduce, rank hypotheses, prove red, fix, prove green, document cause |
-| Completion | `verification-checklists` | Fresh focused and nearby-suite evidence before `[x]` |
-| Review | `code-review-requesting` | Present scope, rationale, tests, risks, and unknowns |
+| Ambiguous requirements | `refine` | Explore first, resolve one focused ambiguity, then unload |
+| Specification | `spec` | Create spec, plan, tasks, then prove machine readiness |
+| Implementation | `tdd` | One observable behavior per red-green-refactor cycle |
+| Bugfix | `bugfix` | Reproduce, rank hypotheses, prove red, fix, prove green, document cause |
+| Completion | `verify` | Fresh focused and nearby-suite evidence before `[x]` |
+| Review | `verify/references/review-contract.md` | Bounded independent runtime subagent after verification |
+| Documentation | `docs` | Load only the project docs, glossary, ADR, or RFC mode needed |
 | Commit | `git-commit` | Commit verified task-owned slices locally; never infer push or history rewrite |
 
 ## Internal References
@@ -23,13 +24,13 @@ These former top-level skills are now loaded only by their owning workflow:
 
 | Former skill | Current owner |
 | --- | --- |
-| Feature readiness | `requirements-interview/references/approval-gates.md` and `AGENTS.md` |
-| `task-breakdown` | `generate-spec/references/task-breakdown.md` |
-| `generate-tests-from-spec` | `vertical-tdd/references/generate-tests-from-spec.md` |
-| `abort-criteria` | `vertical-tdd/references/abort-criteria.md` |
-| `regression-testing` | `bugfix-loop/references/regression-testing.md` |
-| `agent-rationalization-blocking` | `verification-checklists/references/rationalization.md` |
-| `subagent-selection` | `content/agents/references/subagent-selection.md` and `AGENTS.md` |
+| Feature readiness | `refine/references/readiness-and-authority.md` and `AGENTS.md` |
+| `task-breakdown` | `spec/references/task-breakdown.md` |
+| Test generation | `tdd/references/test-generation.md` |
+| `abort-criteria` | `tdd/references/abort-criteria.md` |
+| `regression-testing` | `bugfix/references/regression-testing.md` |
+| Rationalization blocking | `verify/references/rationalization.md` |
+| Independent review | `verify/references/review-contract.md` and `AGENTS.md` |
 
 `decision-framework` remains available through the opt-in `decision-support`
 pack. `skill-authoring` remains available through `skill-maintenance`.
@@ -41,9 +42,7 @@ each conversational pause as removed, a retained authority boundary, residual
 evidence, or deferred release work. `geremmyas lint` scans every catalogued
 source plus prompts, target adapters, this document, and `README.md`; an
 unclassified match fails lint. Rules marked removed remain visible while their
-matching text must stay absent; a match fails lint. Boundaries scheduled for a
-later spec 0008 slice remain classified as retained until that slice changes
-both the workflow and inventory.
+matching text must stay absent; a match fails lint.
 
 ### Feature readiness gate
 
@@ -106,30 +105,16 @@ replaced with a safe alternative instead of becoming routine prompts.
 
 ## Delegation
 
-Proactively delegate specification, architecture, implementation, tests,
-security, performance, documentation, review, and audit when specialization,
-independence, or parallelism helps. Keep trivial work inline. Every editor gets
+Create runtime subagents only when specialization, independent context, or
+parallelism materially helps. Keep trivial work inline. Give every editor
 explicit file, module, or worktree ownership; parallel edits require disjoint
 ownership and preserve unrelated work. The primary agent owns integration and
 Git. Subagents never stage, commit, rewrite history, push, deploy, or publish.
 
-Use one bounded role per question:
-
-| Role | Boundary |
-| --- | --- |
-| `explorer` | Requested subsystem, direct flows, sampled conventions |
-| `spec-writer` | Requested behavior, affected modules, specs, and tests |
-| `reviewer` | Requested diff, governing spec, direct tests, affected boundaries |
-| `architect` | One module cluster and its direct callers and dependencies |
-| `implementer` | One behavior and explicitly owned implementation paths |
-| `test-engineer` | Acceptance, regression, and harness evidence |
-| `security-reviewer` | Trust boundary, dependency, diff, and threat surface |
-| `performance-reviewer` | Measured workload, hot path, and resource budget |
-| `documentation` | Directly affected API, setup, architecture, or operations |
-| `auditor` | Scope, ownership, evidence, and authority boundaries |
-
-Run independent review after each slice or verification wave. Repair findings
-and re-review automatically. Escalate the same blocker only after three
-consecutive cycles with accumulated evidence. On targets without native
-subagents, use the supported delegation mechanism or inline with the same
-bounded role and separate implementation from independent review.
+Describe the bounded task rather than selecting a permanent persona: objective,
+scope, ownership, evidence, unknowns, output, and authority. For independent
+review, load `verify/references/review-contract.md` after fresh verification and
+create a read-only runtime subagent when supported. Repair findings and re-review
+automatically. Escalate the same blocker only after three consecutive cycles
+with accumulated evidence. On targets without runtime subagents, work inline
+with the same bounded contract and report that context isolation was unavailable.

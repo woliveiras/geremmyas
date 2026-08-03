@@ -33,18 +33,13 @@
       ]
     },
     {
-      "name": "sdd",
+      "name": "coding",
       "tier": "core",
-      "description": "Spec-driven development workflow: specs, plans, tasks, tests, review, docs, and bugfix loops.",
+      "description": "Efficient active-development workflow with lazy refinement, specification, TDD, and bugfix capabilities.",
       "depends": [
         "core"
       ],
       "files": [
-        {
-          "kind": "agent",
-          "source": "content/agents",
-          "path": "."
-        },
         {
           "kind": "instruction",
           "source": "content/instructions/testing.instructions.md",
@@ -62,53 +57,23 @@
         },
         {
           "kind": "skill",
-          "source": "content/skills/requirements-interview",
-          "path": "requirements-interview"
+          "source": "content/skills/refine",
+          "path": "refine"
         },
         {
           "kind": "skill",
-          "source": "content/skills/generate-spec",
-          "path": "generate-spec"
+          "source": "content/skills/spec",
+          "path": "spec"
         },
         {
           "kind": "skill",
-          "source": "content/skills/vertical-tdd",
-          "path": "vertical-tdd"
+          "source": "content/skills/tdd",
+          "path": "tdd"
         },
         {
           "kind": "skill",
-          "source": "content/skills/bugfix-loop",
-          "path": "bugfix-loop"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/update-docs",
-          "path": "update-docs"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/git-commit",
-          "path": "git-commit"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/generate-glossary",
-          "path": "generate-glossary"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/generate-adr",
-          "path": "generate-adr"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/verification-checklists",
-          "path": "verification-checklists"
-        },
-        {
-          "kind": "skill",
-          "source": "content/skills/code-review-requesting",
-          "path": "code-review-requesting"
+          "source": "content/skills/bugfix",
+          "path": "bugfix"
         },
         {
           "kind": "template",
@@ -116,6 +81,41 @@
           "path": "specs/README.md"
         }
       ]
+    },
+    {
+      "name": "quality",
+      "tier": "core",
+      "description": "Phase-closing verification, independent review contract, durable documentation, and local commit workflow.",
+      "depends": [
+        "core"
+      ],
+      "files": [
+        {
+          "kind": "skill",
+          "source": "content/skills/verify",
+          "path": "verify"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/docs",
+          "path": "docs"
+        },
+        {
+          "kind": "skill",
+          "source": "content/skills/git-commit",
+          "path": "git-commit"
+        }
+      ]
+    },
+    {
+      "name": "base",
+      "tier": "core",
+      "description": "Complete technology-neutral coding workflow composed from coding and quality.",
+      "depends": [
+        "coding",
+        "quality"
+      ],
+      "files": []
     },
     {
       "name": "decision-support",

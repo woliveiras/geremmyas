@@ -97,9 +97,9 @@ func TestPlanProjectArtifactsUsesKindsInsteadOfGitHubTargets(t *testing.T) {
 			},
 			{
 				Kind:   ArtifactSkill,
-				Source: "content/skills/vertical-tdd",
-				Path:   "vertical-tdd",
-				Target: ".github/skills/vertical-tdd",
+				Source: "content/skills/tdd",
+				Path:   "tdd",
+				Target: ".github/skills/tdd",
 			},
 			{
 				Kind:   ArtifactInstruction,
@@ -122,11 +122,11 @@ func TestPlanProjectArtifactsUsesKindsInsteadOfGitHubTargets(t *testing.T) {
 	}
 	want := []string{
 		"AGENTS.md",
-		".agents/skills/vertical-tdd",
+		".agents/skills/tdd",
 		".codex/instructions/go.instructions.md",
 		".github/copilot-instructions.md",
 		".github/instructions/go.instructions.md",
-		".github/skills/vertical-tdd",
+		".github/skills/tdd",
 	}
 	if strings.Join(plannedTargets(got), ",") != strings.Join(want, ",") {
 		t.Fatalf("targets = %v, want %v", plannedTargets(got), want)
@@ -136,9 +136,9 @@ func TestPlanProjectArtifactsUsesKindsInsteadOfGitHubTargets(t *testing.T) {
 func TestPlanProjectArtifactsIsStableAndDeduplicated(t *testing.T) {
 	entry := FileEntry{
 		Kind:   ArtifactSkill,
-		Source: "content/skills/vertical-tdd",
-		Path:   "vertical-tdd",
-		Target: ".github/skills/vertical-tdd",
+		Source: "content/skills/tdd",
+		Path:   "tdd",
+		Target: ".github/skills/tdd",
 	}
 	packs := []Pack{
 		{Name: "first", Files: []FileEntry{entry}},
@@ -149,7 +149,7 @@ func TestPlanProjectArtifactsIsStableAndDeduplicated(t *testing.T) {
 	if err != nil {
 		t.Fatalf("planProjectArtifacts returned error: %v", err)
 	}
-	want := []string{".agents/skills/vertical-tdd"}
+	want := []string{".agents/skills/tdd"}
 	if strings.Join(plannedTargets(got), ",") != strings.Join(want, ",") {
 		t.Fatalf("targets = %v, want %v", plannedTargets(got), want)
 	}

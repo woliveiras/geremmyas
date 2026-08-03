@@ -10,7 +10,7 @@ func TestParseConfig(t *testing.T) {
 version: 1
 packs:
   - core
-  - sdd
+  - base
   - python-api
 `))
 	if err != nil {
@@ -19,7 +19,7 @@ packs:
 	if cfg.Version != 1 {
 		t.Fatalf("Version = %d, want 1", cfg.Version)
 	}
-	want := []string{"core", "sdd", "python-api"}
+	want := []string{"core", "base", "python-api"}
 	if strings.Join(cfg.Packs, ",") != strings.Join(want, ",") {
 		t.Fatalf("Packs = %v, want %v", cfg.Packs, want)
 	}
@@ -61,9 +61,17 @@ func TestApplyTargetsFlag(t *testing.T) {
 	}
 }
 
+func TestDefaultConfigUsesEfficientCodingPack(t *testing.T) {
+	cfg := defaultConfig()
+	want := []string{"core", "coding"}
+	if strings.Join(cfg.Packs, ",") != strings.Join(want, ",") {
+		t.Fatalf("default packs = %v, want %v", cfg.Packs, want)
+	}
+}
+
 func TestFormatConfigSortsAndDeduplicates(t *testing.T) {
-	got := formatConfig(Config{Version: 1, Packs: []string{"sdd", "core", "sdd"}})
-	want := "version: 1\npacks:\n  - core\n  - sdd\ntargets:\n  - copilot\n"
+	got := formatConfig(Config{Version: 1, Packs: []string{"base", "core", "base"}})
+	want := "version: 1\npacks:\n  - base\n  - core\ntargets:\n  - copilot\n"
 	if got != want {
 		t.Fatalf("formatConfig = %q, want %q", got, want)
 	}

@@ -83,7 +83,17 @@ func adoptKnownGlobalFiles(manifest globalManifest, catalog Catalog) (globalMani
 			}
 		}
 	}
+	if err := addLegacyGlobalHashes(known); err != nil {
+		return manifest, err
+	}
 	for path, expectedHash := range known {
+		blocked, err := globalPathContainsSymlink(path)
+		if err != nil {
+			return manifest, err
+		}
+		if blocked {
+			continue
+		}
 		actualHash, err := fileSHA256(path)
 		if os.IsNotExist(err) {
 			continue
@@ -147,6 +157,15 @@ func reconcileGlobalManifest(previous globalManifest, desiredPaths []string, pac
 		if !isManagedGlobalPath(path) {
 			return summary, fmt.Errorf("manifest path is outside managed roots: %s", path)
 		}
+		blocked, err := globalPathContainsSymlink(path)
+		if err != nil {
+			return summary, err
+		}
+		if blocked {
+			nextFiles[path] = installedHash
+			summary.Preserved++
+			continue
+		}
 		currentHash, err := fileSHA256(path)
 		if os.IsNotExist(err) {
 			continue
@@ -159,6 +178,15 @@ func reconcileGlobalManifest(previous globalManifest, desiredPaths []string, pac
 			summary.Preserved++
 			continue
 		}
+		blocked, err = globalPathContainsSymlink(path)
+		if err != nil {
+			return summary, err
+		}
+		if blocked {
+			nextFiles[path] = installedHash
+			summary.Preserved++
+			continue
+		}
 		if err := os.Remove(path); err != nil {
 			return summary, err
 		}
@@ -167,6 +195,13 @@ func reconcileGlobalManifest(previous globalManifest, desiredPaths []string, pac
 	}
 
 	for path := range desired {
+		blocked, err := globalPathContainsSymlink(path)
+		if err != nil {
+			return summary, err
+		}
+		if blocked {
+			return summary, fmt.Errorf("refusing to record global path through symlink: %s", path)
+		}
 		hash, err := fileSHA256(path)
 		if os.IsNotExist(err) {
 			continue

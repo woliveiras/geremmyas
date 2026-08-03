@@ -3,7 +3,7 @@ spec: "0009"
 title: Lazy workflow harness
 family: multi-assistant
 phase: 7
-status: In Progress
+status: Verified
 owner: ""
 depends_on: ["0006", "0008"]
 origin: Workflow efficiency audit and user-approved capability simplification
@@ -33,59 +33,59 @@ terminology already established by specs 0006 through 0008 and the current CLI.
 
 ### Functional
 
-- [ ] Add `geremmyas global list` with stable human-readable and JSON output.
-- [ ] Classify global artifacts as managed-current, managed-modified,
+- [x] Add `geremmyas global list` with stable human-readable and JSON output.
+- [x] Classify global artifacts as managed-current, managed-modified,
       managed-missing, obsolete, adoptable, unowned, symlink, or external.
-- [ ] Report Geremmyas packs, targets, manifest version, paths, hashes, and
+- [x] Report Geremmyas packs, targets, manifest version, paths, hashes, and
       ownership without treating plugin caches as installed or managed content.
-- [ ] Add `geremmyas global clear --dry-run` that computes and reports the exact
+- [x] Add `geremmyas global clear --dry-run` that computes and reports the exact
       removal and preservation plan without filesystem or manifest writes.
-- [ ] Add `geremmyas global clear` with optional `--targets`,
+- [x] Add `geremmyas global clear` with optional `--targets`,
       `--include-adoptable`, and `--force` behavior.
-- [ ] Reuse the existing manifest, hashing, path validation, and reconciliation
+- [x] Reuse the existing manifest, hashing, path validation, and reconciliation
       logic rather than creating an independent deletion implementation.
-- [ ] Preserve modified, unowned, external, and symlinked paths by default.
+- [x] Preserve modified, unowned, external, and symlinked paths by default.
       `--force` may affect only files whose Geremmyas ownership is proven.
-- [ ] Fail closed on corrupt or incompatible manifests. A missing manifest may
+- [x] Fail closed on corrupt or incompatible manifests. A missing manifest may
       inventory known files but may not silently claim ambiguous ownership.
-- [ ] Replace the public workflow names with `refine`, `spec`, `tdd`, `bugfix`,
+- [x] Replace the public workflow names with `refine`, `spec`, `tdd`, `bugfix`,
       `verify`, `docs`, and `git-commit`.
-- [ ] Add `coding` (`refine`, `spec`, `tdd`, `bugfix`), `quality` (`verify`,
+- [x] Add `coding` (`refine`, `spec`, `tdd`, `bugfix`), `quality` (`verify`,
       `docs`, `git-commit`), and `base` (`coding` plus `quality`) packs.
-- [ ] Keep `base` technology-neutral. It must not select stack packs, plugins,
+- [x] Keep `base` technology-neutral. It must not select stack packs, plugins,
       MCP servers, or custom agents.
-- [ ] Make project-local `coding` the recommended efficient starting point and
+- [x] Make project-local `coding` the recommended efficient starting point and
       avoid advertising closing skills before their phase.
-- [ ] Consolidate update/generation of project documentation, glossary,
+- [x] Consolidate update/generation of project documentation, glossary,
       ADR/MADR, and RFC artifacts in `docs`. Its main body must route to exactly
       the relevant reference and load a template only when one is needed.
-- [ ] Keep PRD, spec, plan, and tasks behavior under `spec`, not `docs`.
-- [ ] Remove all bundled custom-agent profiles and their catalog artifact while
+- [x] Keep PRD, spec, plan, and tasks behavior under `spec`, not `docs`.
+- [x] Remove all bundled custom-agent profiles and their catalog artifact while
       retaining generic target-adapter support for future agents that provide a
       concrete permission, model, tool, MCP, or isolation benefit.
-- [ ] Preserve independent review as a concise, non-discoverable delegation
+- [x] Preserve independent review as a concise, non-discoverable delegation
       contract loaded from `verify` and executed by a runtime-created subagent
       when supported.
-- [ ] Update canonical contracts, prompts, workflow gates, target adapters,
+- [x] Update canonical contracts, prompts, workflow gates, target adapters,
       documentation, tests, and generated-path expectations to the new names.
-- [ ] Reconcile old managed skill and agent destinations on the next project or
+- [x] Reconcile old managed skill and agent destinations on the next project or
       global materialization without deleting modified or unowned legacy files.
-- [ ] Extend context diagnostics or structured output enough to compare no
+- [x] Extend context diagnostics or structured output enough to compare no
       Geremmyas state, global state, project `coding`, and project `base` in
       isolated temporary homes.
 
 ### Non-Functional
 
-- [ ] No new third-party dependencies.
-- [ ] Global clearing never follows symlinks and never deletes plugin or runtime
+- [x] No new third-party dependencies.
+- [x] Global clearing never follows symlinks and never deletes plugin or runtime
       cache content.
-- [ ] Existing `geremmyas global [flags] <pack>...` syntax remains supported.
-- [ ] Human and JSON inventory report the same state deterministically.
-- [ ] Skill directories and frontmatter names match after migration.
-- [ ] No duplicate compatibility skill directories are materialized because
+- [x] Existing `geremmyas global [flags] <pack>...` syntax remains supported.
+- [x] Human and JSON inventory report the same state deterministically.
+- [x] Skill directories and frontmatter names match after migration.
+- [x] No duplicate compatibility skill directories are materialized because
       aliases would restore discovery cost and trigger ambiguity.
-- [ ] `content/AGENTS.md` remains within its 700-word budget.
-- [ ] Tests use temporary `HOME` and `XDG_STATE_HOME`; development never clears
+- [x] `content/AGENTS.md` remains within its 700-word budget.
+- [x] Tests use temporary `HOME` and `XDG_STATE_HOME`; development never clears
       the real user profile.
 
 ## Test Strategy
@@ -101,36 +101,36 @@ integration tests for every clearing mode and materialization migration.
 
 ## Acceptance Criteria
 
-- [ ] Given a valid global manifest, when `global list --json` runs, then every
+- [x] Given a valid global manifest, when `global list --json` runs, then every
       managed path has a deterministic ownership state and the JSON agrees with
       the human report.
-- [ ] Given any global state, when `global clear --dry-run` runs, then its output
+- [x] Given any global state, when `global clear --dry-run` runs, then its output
       describes removals and preservations and no file or manifest byte changes.
-- [ ] Given intact managed artifacts for multiple targets, when one target is
+- [x] Given intact managed artifacts for multiple targets, when one target is
       cleared, then only that target's eligible paths are removed and the
       remaining manifest state is valid.
-- [ ] Given modified, unowned, plugin-cache, or symlink paths, when clear runs,
+- [x] Given modified, unowned, plugin-cache, or symlink paths, when clear runs,
       then those paths are preserved and reported with the reason.
-- [ ] Given a corrupt or incompatible manifest, when list or clear runs, then the
+- [x] Given a corrupt or incompatible manifest, when list or clear runs, then the
       command fails before deletion and explains the recovery boundary.
-- [ ] Given `coding`, when packs resolve, then exactly `refine`, `spec`, `tdd`,
+- [x] Given `coding`, when packs resolve, then exactly `refine`, `spec`, `tdd`,
       and `bugfix` are publicly discoverable workflow skills.
-- [ ] Given `base`, when packs resolve, then exactly seven technology-neutral
+- [x] Given `base`, when packs resolve, then exactly seven technology-neutral
       workflow skills are discoverable and no agent or stack-specific artifact
       is selected.
-- [ ] Given a documentation request, when `docs` runs, then its compact router
+- [x] Given a documentation request, when `docs` runs, then its compact router
       selects project docs, glossary, ADR/MADR, or RFC support without requiring
       another public skill.
-- [ ] Given project or global materialization after an older managed install,
+- [x] Given project or global materialization after an older managed install,
       when reconciliation completes, then eligible old skill/agent paths are
       removed and modified or unowned paths are preserved.
-- [ ] Given any supported target, when `base` is materialized, then it receives
+- [x] Given any supported target, when `base` is materialized, then it receives
       no bundled custom-agent profile and its primary-agent contract describes
       bounded runtime delegation instead.
-- [ ] Given a simple request, when routing policy is inspected, then it prescribes
+- [x] Given a simple request, when routing policy is inspected, then it prescribes
       zero workflow skills; given material ambiguity, it prescribes at most
       `refine` before clarification.
-- [ ] Given isolated temporary homes, when context baselines are collected, then
+- [x] Given isolated temporary homes, when context baselines are collected, then
       no-state, global, `coding`, and `base` results are distinguishable without
       reading or mutating the real home directory.
 

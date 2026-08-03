@@ -24,12 +24,12 @@ const (
 	lintViolationBodyTooLong        = "body-too-long"
 	lintViolationMissingSkillFile   = "missing-skill-md"
 	lintViolationNestedSkillFile    = "nested-skill-md"
-	lintViolationSDDSkillBudget     = "sdd-skill-budget"
+	lintViolationBaseSkillBudget    = "base-skill-budget"
 	lintViolationAgentsWordBudget   = "agents-word-budget"
 	lintViolationWorkflowGate       = "unclassified-workflow-gate"
 	maxSkillDescriptionLength       = 240
 	maxSkillBodyLines               = 250
-	maxSDDPublicSkills              = 10
+	maxBasePublicSkills             = 7
 	maxAgentsWords                  = 700
 )
 
@@ -218,12 +218,12 @@ func collectLintFindings(skillsRoot, root string) ([]lintFinding, int, error) {
 
 func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFinding, error) {
 	findings := []lintFinding{}
-	if count := countSDDPublicSkills(catalog); count > maxSDDPublicSkills {
+	if count := countBasePublicSkills(catalog); count > maxBasePublicSkills {
 		findings = append(findings, lintFinding{
 			Path: "catalog/packs.json",
 			Violations: []lintViolation{{
-				Code:    lintViolationSDDSkillBudget,
-				Message: fmt.Sprintf("sdd pack must expose at most %d skills; found %d", maxSDDPublicSkills, count),
+				Code:    lintViolationBaseSkillBudget,
+				Message: fmt.Sprintf("base pack must expose at most %d skills; found %d", maxBasePublicSkills, count),
 			}},
 		})
 	}
@@ -274,10 +274,10 @@ func collectRepositoryBudgetFindings(catalog Catalog, root string) ([]lintFindin
 	return findings, nil
 }
 
-func countSDDPublicSkills(catalog Catalog) int {
+func countBasePublicSkills(catalog Catalog) int {
 	seen := map[string]struct{}{}
 	for _, pack := range catalog.Packs {
-		if pack.Name != "sdd" {
+		if pack.Name != "coding" && pack.Name != "quality" {
 			continue
 		}
 		for _, entry := range pack.Files {

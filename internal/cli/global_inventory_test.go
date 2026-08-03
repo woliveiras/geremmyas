@@ -16,7 +16,7 @@ func TestRunGlobalListJSONClassifiesManagedFilesWithoutWriting(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", state)
 
 	var installOut strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &installOut, &installOut); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &installOut, &installOut); code != 0 {
 		t.Fatalf("install global exit code = %d, output: %s", code, installOut.String())
 	}
 
@@ -120,7 +120,7 @@ func TestRunGlobalListClassifiesIntactManagedPathOutsideDesiredStateAsObsolete(t
 	t.Setenv("XDG_STATE_HOME", state)
 
 	var installOut strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &installOut, &installOut); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &installOut, &installOut); code != 0 {
 		t.Fatalf("install global exit code = %d, output: %s", code, installOut.String())
 	}
 	manifest, _, err := loadGlobalManifest()
@@ -202,15 +202,15 @@ func TestRunGlobalListIncludesOnlyExactCanonicalAdoptableFiles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("loadCatalog: %v", err)
 	}
-	packs, err := catalog.Resolve([]string{"sdd"})
+	packs, err := catalog.Resolve([]string{"base"})
 	if err != nil {
-		t.Fatalf("resolve sdd: %v", err)
+		t.Fatalf("resolve base: %v", err)
 	}
 	if _, err := globalInstallPacksFiltered(packs, true, false); err != nil {
 		t.Fatalf("seed legacy skills: %v", err)
 	}
-	canonical := filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md")
-	modified := filepath.Join(home, ".agents", "skills", "vertical-tdd", "SKILL.md")
+	canonical := filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md")
+	modified := filepath.Join(home, ".agents", "skills", "tdd", "SKILL.md")
 	if err := os.WriteFile(modified, []byte("modified legacy\n"), 0o644); err != nil {
 		t.Fatalf("modify legacy skill: %v", err)
 	}
@@ -289,7 +289,7 @@ func TestRunGlobalListFiltersTargetSpecificPathsAndKeepsSharedSkills(t *testing.
 	t.Setenv("XDG_STATE_HOME", state)
 
 	var installOut strings.Builder
-	if code := Run([]string{"global", "--targets", "codex,cursor", "sdd"}, &installOut, &installOut); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex,cursor", "base"}, &installOut, &installOut); code != 0 {
 		t.Fatalf("install global exit code = %d, output: %s", code, installOut.String())
 	}
 	var out strings.Builder
@@ -424,14 +424,14 @@ func TestRunGlobalListNormalizesOwnedPathBeforeAdoptableComparison(t *testing.T)
 	if err != nil {
 		t.Fatalf("load catalog: %v", err)
 	}
-	packs, err := catalog.Resolve([]string{"sdd"})
+	packs, err := catalog.Resolve([]string{"base"})
 	if err != nil {
-		t.Fatalf("resolve sdd: %v", err)
+		t.Fatalf("resolve base: %v", err)
 	}
 	if _, err := globalInstallPacksFiltered(packs, true, false); err != nil {
 		t.Fatalf("materialize canonical skill: %v", err)
 	}
-	path := filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md")
+	path := filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md")
 	hash, err := fileSHA256(path)
 	if err != nil {
 		t.Fatalf("hash skill: %v", err)
@@ -439,7 +439,7 @@ func TestRunGlobalListNormalizesOwnedPathBeforeAdoptableComparison(t *testing.T)
 	rawPath := filepath.Dir(path) + string(filepath.Separator) + "." + string(filepath.Separator) + filepath.Base(path)
 	if err := writeGlobalManifest(globalManifest{
 		Version: globalManifestVersion,
-		Packs:   []string{"sdd"},
+		Packs:   []string{"base"},
 		Targets: []string{TargetCodex},
 		Files:   map[string]string{rawPath: hash},
 	}); err != nil {
@@ -603,9 +603,9 @@ func TestRunGlobalListTargetFilterAppliesToObservedRootsAndSharedAdoptables(t *t
 	if err != nil {
 		t.Fatalf("loadCatalog: %v", err)
 	}
-	packs, err := catalog.Resolve([]string{"sdd"})
+	packs, err := catalog.Resolve([]string{"base"})
 	if err != nil {
-		t.Fatalf("resolve sdd: %v", err)
+		t.Fatalf("resolve base: %v", err)
 	}
 	if _, err := globalInstallPacksFiltered(packs, true, false); err != nil {
 		t.Fatalf("seed legacy skills: %v", err)

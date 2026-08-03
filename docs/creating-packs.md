@@ -1,4 +1,4 @@
-# Creating packs, skills, and instructions
+# Creating packs, skills, instructions, and adapters
 
 This guide is for contributors changing canonical content, target adapters, or
 `catalog/packs.json`. End users add pack names to `geremmyas.yml`.
@@ -24,7 +24,6 @@ Put portable artifacts under `content/`:
 | Contract | `content/AGENTS.md` |
 | Instruction | `content/instructions/<name>.instructions.md` |
 | Skill | `content/skills/<name>/SKILL.md` |
-| Agent role | `content/agents/<name>.agent.md` |
 | Template | `content/templates/...` |
 | Prompt | `content/prompts/...` |
 | Guardrail policy | `content/guardrails/...` |
@@ -78,7 +77,6 @@ Codex and other neutral targets.
 - Instructions: `kebab-case.instructions.md` with `description` and `applyTo`.
 - Skills: `kebab-case/SKILL.md`; support files belong in `assets/` or
   `references/` and must not also be named `SKILL.md`.
-- Agent roles: `kebab-case.agent.md`.
 
 `geremmyas lint` enforces:
 
@@ -87,7 +85,7 @@ Codex and other neutral targets.
 | Skill frontmatter description | 240 characters |
 | Top-level skill body | 250 lines |
 | Nested files named `SKILL.md` | 0 |
-| Public skills in the `sdd` pack | 10 |
+| Public skills in the `base` pack | 7 |
 | `content/AGENTS.md` | 700 words |
 
 Keep discovery metadata and top-level workflows compact. Put detailed examples
@@ -100,8 +98,9 @@ and optional variants in named support files.
 3. Reference it from `content/AGENTS.md` only when it is part of default routing.
 4. Run lint, tests, and a target-matrix sync.
 
-General user-invoked workflows may belong to `sdd`. Stack-specific or personal
-capabilities should use their own opt-in pack.
+Phase-local coding workflows belong to `coding`; completion workflows belong to
+`quality`. The technology-neutral `base` pack depends on both. Stack-specific
+or personal capabilities should use their own opt-in pack.
 
 ## Add an instruction
 
@@ -114,18 +113,18 @@ Copilot uses the `applyTo` metadata in `.github/instructions`. Codex receives
 the same source in `.codex/instructions`, with its generated instruction index
 describing when each file applies.
 
-## Add an agent role
+## Add a delegation contract
 
-1. Create `content/agents/<name>.agent.md` with a trigger-focused `description`
-   and the minimum `tools` needed by the role.
-2. Add a `Delegation Contract` covering scope, evidence, unknowns, and output.
-   Editing roles also declare explicit ownership and forbid staging or commits.
-3. Keep review roles read-only and keep Git, release, publication, deployment,
-   and production mutation outside every subagent role.
-4. Add the role to the specialist matrix and verify exact Copilot plus portable
-   materialization plus native Cursor, Claude Code, and OpenCode translations.
-   Targets without native delegation apply the same role proactively through
-   their supported fallback or inline contract.
+Geremmyas does not bundle permanent custom agents. Prefer a compact contract in
+the owning skill's `references/` directory, loaded only when delegation is due.
+It should bound scope and ownership and require evidence, unknowns, findings,
+and a stable output schema. The assistant runtime creates the temporary
+subagent; the primary agent owns integration and Git.
+
+The CLI retains generic `agent` adapter support for future target-specific
+capabilities that provide a concrete guarantee, such as restricted tools or a
+specialized runtime. Adding one is an exceptional adapter change and requires
+focused cross-target generator tests.
 
 ## Add a target-specific adapter
 

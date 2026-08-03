@@ -34,7 +34,7 @@ func TestParseConfigWithTargets(t *testing.T) {
 version: 1
 packs:
   - core
-  - sdd
+  - base
 targets:
   - copilot
   - cursor
@@ -107,7 +107,7 @@ func TestRunInitRejectsUnknownTargetWithoutWritingConfig(t *testing.T) {
 func TestFormatConfigIncludesTargets(t *testing.T) {
 	got := formatConfig(Config{
 		Version: 1,
-		Packs:   []string{"sdd", "core"},
+		Packs:   []string{"base", "core"},
 		Targets: []string{"cursor", "copilot"},
 	})
 	if !strings.Contains(got, "targets:\n") {
@@ -132,7 +132,7 @@ func TestRunSyncGeneratesCursorRules(t *testing.T) {
 	root := withTempCwd(t)
 
 	var out strings.Builder
-	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "copilot,cursor"}, &out, &out); code != 0 {
+	if code := Run([]string{"init", "--packs", "core,base", "--targets", "copilot,cursor"}, &out, &out); code != 0 {
 		t.Fatalf("init exit code = %d, output: %s", code, out.String())
 	}
 	if code := Run([]string{"sync"}, &out, &out); code != 0 {
@@ -148,7 +148,7 @@ func TestRunSyncGeneratesClaudeAndOpenCode(t *testing.T) {
 	root := withTempCwd(t)
 
 	var out strings.Builder
-	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "copilot,claude-code,opencode"}, &out, &out); code != 0 {
+	if code := Run([]string{"init", "--packs", "core,base", "--targets", "copilot,claude-code,opencode"}, &out, &out); code != 0 {
 		t.Fatalf("init exit code = %d, output: %s", code, out.String())
 	}
 	if code := Run([]string{"sync"}, &out, &out); code != 0 {
@@ -200,7 +200,7 @@ func TestRunProjectWithCodexTargetPersistsConfigAndGeneratesDoc(t *testing.T) {
 	if code := Run([]string{"init", "--packs", "core"}, &out, &out); code != 0 {
 		t.Fatalf("init exit code = %d, output: %s", code, out.String())
 	}
-	if code := Run([]string{"project", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"project", "--targets", "codex", "base"}, &out, &out); code != 0 {
 		t.Fatalf("project exit code = %d, output: %s", code, out.String())
 	}
 
@@ -223,7 +223,7 @@ func TestRunSyncGeneratedProjectDocsOnlyReferenceExistingSkills(t *testing.T) {
 			root := withTempCwd(t)
 
 			var out strings.Builder
-			if code := Run([]string{"init", "--packs", "core,sdd", "--targets", target}, &out, &out); code != 0 {
+			if code := Run([]string{"init", "--packs", "core,base", "--targets", target}, &out, &out); code != 0 {
 				t.Fatalf("init exit code = %d, output: %s", code, out.String())
 			}
 			if code := Run([]string{"sync"}, &out, &out); code != 0 {
@@ -260,7 +260,7 @@ func TestRunSyncCodexMultipleTargetsCoexist(t *testing.T) {
 
 	var out strings.Builder
 	// Init with codex, claude-code, and opencode (mixed non-copilot targets)
-	if code := Run([]string{"init", "--packs", "core,sdd", "--targets", "codex,claude-code,opencode"}, &out, &out); code != 0 {
+	if code := Run([]string{"init", "--packs", "core,base", "--targets", "codex,claude-code,opencode"}, &out, &out); code != 0 {
 		t.Fatalf("init exit code = %d, output: %s", code, out.String())
 	}
 	if code := Run([]string{"sync"}, &out, &out); code != 0 {

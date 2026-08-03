@@ -15,7 +15,7 @@ func TestLoadCatalogAndResolveDependencies(t *testing.T) {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
 
-	packs, err := catalog.Resolve([]string{"sdd"})
+	packs, err := catalog.Resolve([]string{"base"})
 	if err != nil {
 		t.Fatalf("Resolve returned error: %v", err)
 	}
@@ -24,7 +24,7 @@ func TestLoadCatalogAndResolveDependencies(t *testing.T) {
 	for _, pack := range packs {
 		got = append(got, pack.Name)
 	}
-	want := []string{"core", "sdd"}
+	want := []string{"core", "coding", "quality", "base"}
 	if len(got) != len(want) {
 		t.Fatalf("resolved packs = %v, want %v", got, want)
 	}
@@ -75,13 +75,13 @@ func TestCatalogTiersValid(t *testing.T) {
 	for _, pack := range catalog.Packs {
 		tiers[pack.Name] = pack.Tier
 	}
-	for _, name := range []string{"core", "sdd"} {
+	for _, name := range []string{"core", "coding", "quality", "base"} {
 		if tiers[name] != TierCore {
 			t.Fatalf("pack %q tier = %q, want %q", name, tiers[name], TierCore)
 		}
 	}
 	for name, tier := range tiers {
-		if name == "core" || name == "sdd" {
+		if name == "core" || name == "coding" || name == "quality" || name == "base" {
 			continue
 		}
 		if tier != TierStack {
@@ -236,160 +236,72 @@ func TestCatalogCoversEveryInstruction(t *testing.T) {
 	}
 }
 
-func TestCatalogSDDCoversEveryAgent(t *testing.T) {
+func TestCatalogDistributesNoBundledAgents(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
-
-	sourceAgents, err := embeddedBasenames("content/agents", ".agent.md")
-	if err != nil {
-		t.Fatalf("embeddedBasenames returned error: %v", err)
-	}
-	sdd, ok := catalog.Pack("sdd")
-	if !ok {
-		t.Fatal("catalog missing sdd pack")
-	}
-	catalogAgents := packSourceBasenames(sdd, "content/agents/", ".agent.md")
-
-	var missing []string
-	for agent := range sourceAgents {
-		if !catalogAgents[agent] {
-			missing = append(missing, agent)
-		}
-	}
-	sort.Strings(missing)
-	if len(missing) > 0 {
-		t.Fatalf("agents missing from sdd pack: %s", strings.Join(missing, ", "))
-	}
-}
-
-func TestAgentContractsBoundDelegatedWork(t *testing.T) {
-	agents := []string{
-		"architect", "auditor", "documentation", "explorer", "implementer",
-		"performance-reviewer", "reviewer", "security-reviewer", "spec-writer",
-		"test-engineer",
-	}
-	required := []string{
-		"## Delegation Contract",
-		"**Scope:**",
-		"**Evidence:**",
-		"**Unknowns:**",
-		"**Output:**",
-	}
-	for _, agent := range agents {
-		agent := agent
-		t.Run(agent, func(t *testing.T) {
-			path := "content/agents/" + agent + ".agent.md"
-			data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
-			if err != nil {
-				t.Fatalf("ReadFile(%q) returned error: %v", path, err)
-			}
-			content := string(data)
-			for _, clause := range required {
-				if !strings.Contains(content, clause) {
-					t.Errorf("%s missing delegation clause %q", path, clause)
-				}
-			}
-		})
-	}
-}
-
-func TestSpecialistAgentsRespectIntegrationBoundary(t *testing.T) {
-	editors := []string{"documentation", "implementer", "spec-writer", "test-engineer"}
-	for _, agent := range editors {
-		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
-		for _, clause := range []string{"explicit ownership", "do not stage", "do not commit"} {
-			if !strings.Contains(content, clause) {
-				t.Errorf("%s missing integration boundary %q", agent, clause)
-			}
-		}
-	}
-
-	readers := []string{"architect", "auditor", "explorer", "performance-reviewer", "reviewer", "security-reviewer"}
-	for _, agent := range readers {
-		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
-		if !strings.Contains(content, "read-only") {
-			t.Errorf("%s must remain read-only", agent)
-		}
-	}
-}
-
-func TestSpecialistAgentToolCapabilities(t *testing.T) {
-	want := map[string]string{
-		"auditor":              "tools: [read, search, execute]",
-		"documentation":        "tools: [read, search, edit, web]",
-		"implementer":          "tools: [read, search, edit, execute]",
-		"performance-reviewer": "tools: [read, search, execute]",
-		"reviewer":             "tools: [read, search, execute]",
-		"security-reviewer":    "tools: [read, search, execute, web]",
-		"spec-writer":          "tools: [read, search, edit, web]",
-		"test-engineer":        "tools: [read, search, edit, execute]",
-	}
-	for agent, tools := range want {
-		content := strings.ToLower(string(mustReadEmbeddedFile(t, "content/agents/"+agent+".agent.md")))
-		if !strings.Contains(content, tools) {
-			t.Errorf("%s tools do not expose required specialist capabilities %q", agent, tools)
-		}
-		if strings.Contains(tools, "execute") {
-			for _, clause := range []string{"do not run git commands", "git status"} {
-				if !strings.Contains(content, clause) {
-					t.Errorf("%s execute capability lacks Git boundary %q", agent, clause)
-				}
+	for _, pack := range catalog.Packs {
+		for _, entry := range pack.Files {
+			if entry.Kind == ArtifactAgent || strings.HasPrefix(entry.Source, "content/agents") {
+				t.Errorf("pack %q still distributes custom agent artifact %+v", pack.Name, entry)
 			}
 		}
 	}
 }
 
-func TestArchitectFanOutIsConditional(t *testing.T) {
-	path := "content/agents/architect.agent.md"
-	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
-	if err != nil {
-		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
-	}
-	content := strings.ToLower(string(data))
-	if !strings.Contains(content, "delegate alternatives when") {
-		t.Fatal("architect contract must allow autonomous alternative delegation")
-	}
-	if strings.Contains(content, "always generate at least 3 alternatives") ||
-		strings.Contains(content, "always generate at least three alternatives") {
-		t.Fatal("architect contract still mandates routine three-way fan-out")
-	}
-}
-
-func mustReadEmbeddedFile(t *testing.T, path string) []byte {
-	t.Helper()
-	data, err := fs.ReadFile(geremmyas.EmbeddedFiles, path)
-	if err != nil {
-		t.Fatalf("ReadFile(%q) returned error: %v", path, err)
-	}
-	return data
-}
-
-func TestCatalogSDDHasFocusedDiscoverableSkills(t *testing.T) {
+func TestGlobalSubcommandNamesAreNotCatalogPacks(t *testing.T) {
 	catalog, err := loadCatalog()
 	if err != nil {
 		t.Fatalf("loadCatalog returned error: %v", err)
 	}
-	sdd, ok := catalog.Pack("sdd")
-	if !ok {
-		t.Fatal("catalog missing sdd pack")
-	}
-	got := packSourceBasenames(sdd, "content/skills/", "")
-	want := map[string]bool{
-		"bugfix-loop": true, "code-review-requesting": true,
-		"generate-adr": true, "generate-glossary": true,
-		"generate-spec": true, "git-commit": true,
-		"requirements-interview": true, "update-docs": true,
-		"verification-checklists": true, "vertical-tdd": true,
-	}
-	if len(got) != len(want) {
-		t.Fatalf("sdd discoverable skills = %v, want %v", got, want)
-	}
-	for name := range want {
-		if !got[name] {
-			t.Errorf("sdd missing discoverable skill %q", name)
+	for _, reserved := range []string{"list", "clear"} {
+		if _, exists := catalog.Pack(reserved); exists {
+			t.Errorf("reserved global subcommand %q is also a pack", reserved)
 		}
+	}
+}
+
+func TestVerifyContainsBoundedRuntimeReviewContract(t *testing.T) {
+	content := strings.ToLower(string(mustReadEmbeddedWorkflowFile(t,
+		"content/skills/verify/references/review-contract.md")))
+	for _, clause := range []string{
+		"runtime subagent", "read-only ownership", "state: findings",
+		"primary agent owns integration", "never stage, commit, push",
+	} {
+		if !strings.Contains(content, clause) {
+			t.Errorf("review contract missing %q", clause)
+		}
+	}
+}
+
+func TestWorkflowPacksHaveFocusedDiscoverableSkills(t *testing.T) {
+	catalog, err := loadCatalog()
+	if err != nil {
+		t.Fatalf("loadCatalog returned error: %v", err)
+	}
+	wants := map[string]map[string]bool{
+		"coding":  {"refine": true, "spec": true, "tdd": true, "bugfix": true},
+		"quality": {"verify": true, "docs": true, "git-commit": true},
+	}
+	for packName, want := range wants {
+		pack, ok := catalog.Pack(packName)
+		if !ok {
+			t.Fatalf("catalog missing %s pack", packName)
+		}
+		got := packSourceBasenames(pack, "content/skills/", "")
+		if len(got) != len(want) {
+			t.Fatalf("%s discoverable skills = %v, want %v", packName, got, want)
+		}
+		for name := range want {
+			if !got[name] {
+				t.Errorf("%s missing discoverable skill %q", packName, name)
+			}
+		}
+	}
+	base, ok := catalog.Pack("base")
+	if !ok || len(base.Files) != 0 || strings.Join(base.Depends, ",") != "coding,quality" {
+		t.Fatalf("base pack = %+v, want dependency-only coding+quality", base)
 	}
 }
 

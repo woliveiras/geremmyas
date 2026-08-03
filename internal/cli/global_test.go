@@ -13,7 +13,7 @@ func TestRunGlobalGeneratesCursorRules(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "copilot,cursor", "core", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "copilot,cursor", "core", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
@@ -22,7 +22,7 @@ func TestRunGlobalGeneratesCursorRules(t *testing.T) {
 	mustExist(t, filepath.Join(home, ".cursor", "rules", "testing.mdc"))
 	mustExist(t, filepath.Join(home, ".cursor", "hooks.json"))
 
-	data, err := os.ReadFile(filepath.Join(home, ".cursor", "rules", "skill-bugfix-loop.mdc"))
+	data, err := os.ReadFile(filepath.Join(home, ".cursor", "rules", "skill-bugfix.mdc"))
 	if err != nil {
 		t.Fatalf("ReadFile skill rule: %v", err)
 	}
@@ -36,7 +36,7 @@ func TestRunGlobalGeneratesClaudeAndOpenCode(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "claude-code,opencode", "core", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "claude-code,opencode", "core", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
@@ -62,11 +62,11 @@ func TestRunGlobalGeneratedAgentTargetsCopySkills(t *testing.T) {
 			t.Setenv("HOME", home)
 
 			var out strings.Builder
-			if code := Run([]string{"global", "--targets", target, "core", "sdd"}, &out, &out); code != 0 {
+			if code := Run([]string{"global", "--targets", target, "core", "base"}, &out, &out); code != 0 {
 				t.Fatalf("global exit code = %d, output: %s", code, out.String())
 			}
 
-			mustExist(t, filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md"))
+			mustExist(t, filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md"))
 		})
 	}
 }
@@ -84,7 +84,7 @@ func TestRunGlobalGeneratedDocsOnlyReferenceInstalledSkills(t *testing.T) {
 			t.Setenv("HOME", home)
 
 			var out strings.Builder
-			if code := Run([]string{"global", "--targets", target, "core", "sdd"}, &out, &out); code != 0 {
+			if code := Run([]string{"global", "--targets", target, "core", "base"}, &out, &out); code != 0 {
 				t.Fatalf("global exit code = %d, output: %s", code, out.String())
 			}
 
@@ -103,7 +103,7 @@ func TestRunGlobalOutputMentionsSkillsForSkillConsumingTargets(t *testing.T) {
 			t.Setenv("HOME", home)
 
 			var out strings.Builder
-			if code := Run([]string{"global", "--targets", target, "sdd"}, &out, &out); code != 0 {
+			if code := Run([]string{"global", "--targets", target, "base"}, &out, &out); code != 0 {
 				t.Fatalf("global exit code = %d, output: %s", code, out.String())
 			}
 
@@ -152,7 +152,7 @@ func TestRunGlobalCursorOnlyCopiesSkills(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "cursor", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "cursor", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
@@ -166,7 +166,7 @@ func TestRunGlobalCodexOnlyDoesNotCreateCopilotInstructions(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "core", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "core", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
@@ -180,7 +180,7 @@ func TestRunGlobalGeneratesCodexDocument(t *testing.T) {
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "core", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "core", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
@@ -252,36 +252,38 @@ func regexpMatches(pattern, text string) []string {
 	return matches
 }
 
-func TestRunGlobalSDDInstallsOnlyPublicWorkflowSkills(t *testing.T) {
+func TestRunGlobalBaseInstallsSevenPublicWorkflowSkills(t *testing.T) {
 	home := t.TempDir()
 	t.Setenv("HOME", home)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 
 	for _, skill := range []string{
-		"requirements-interview",
-		"generate-spec",
-		"vertical-tdd",
-		"bugfix-loop",
-		"update-docs",
+		"refine",
+		"spec",
+		"tdd",
+		"bugfix",
+		"docs",
 		"git-commit",
-		"generate-glossary",
-		"generate-adr",
-		"verification-checklists",
-		"code-review-requesting",
+		"verify",
 	} {
 		t.Run(skill, func(t *testing.T) {
 			mustExist(t, filepath.Join(home, ".agents", "skills", skill, "SKILL.md"))
 		})
 	}
 	for _, internal := range []string{
-		"approval-gates-before-implementation", "task-breakdown",
+		"requirements-interview", "generate-spec", "vertical-tdd", "bugfix-loop",
+		"update-docs", "generate-glossary", "generate-adr", "verification-checklists",
+		"code-review-requesting", "approval-gates-before-implementation", "task-breakdown",
 		"generate-tests-from-spec", "subagent-selection", "regression-testing",
 	} {
 		mustNotExist(t, filepath.Join(home, ".agents", "skills", internal, "SKILL.md"))
+	}
+	for _, root := range []string{".cursor/agents", ".claude/agents", ".config/opencode/agents"} {
+		mustNotExist(t, filepath.Join(home, root))
 	}
 }
 
@@ -373,14 +375,14 @@ func TestRunGlobalReconcilesRemovedPackFiles(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", state)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd", "python-ai"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base", "python-ai"}, &out, &out); code != 0 {
 		t.Fatalf("initial global exit code = %d, output: %s", code, out.String())
 	}
 	stackSkill := filepath.Join(home, ".agents", "skills", "langgraph-agent-design", "SKILL.md")
 	mustExist(t, stackSkill)
 
 	out.Reset()
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &out, &out); code != 0 {
 		t.Fatalf("reconcile global exit code = %d, output: %s", code, out.String())
 	}
 	mustNotExist(t, stackSkill)
@@ -397,7 +399,7 @@ func TestRunGlobalPreservesModifiedAndUnownedFiles(t *testing.T) {
 	t.Setenv("XDG_STATE_HOME", state)
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd", "python-ai"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base", "python-ai"}, &out, &out); code != 0 {
 		t.Fatalf("initial global exit code = %d, output: %s", code, out.String())
 	}
 	modified := filepath.Join(home, ".agents", "skills", "langgraph-agent-design", "SKILL.md")
@@ -413,7 +415,7 @@ func TestRunGlobalPreservesModifiedAndUnownedFiles(t *testing.T) {
 	}
 
 	out.Reset()
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &out, &out); code != 0 {
 		t.Fatalf("reconcile global exit code = %d, output: %s", code, out.String())
 	}
 	mustExist(t, modified)
@@ -437,10 +439,10 @@ func TestRunGlobalRejectsCorruptManifestBeforeWriting(t *testing.T) {
 	}
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code == 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &out, &out); code == 0 {
 		t.Fatalf("global succeeded with corrupt manifest: %s", out.String())
 	}
-	mustNotExist(t, filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md"))
+	mustNotExist(t, filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md"))
 }
 
 func TestRunGlobalAdoptsAndPrunesKnownLegacyFiles(t *testing.T) {
@@ -464,7 +466,7 @@ func TestRunGlobalAdoptsAndPrunesKnownLegacyFiles(t *testing.T) {
 	mustNotExist(t, filepath.Join(state, "geremmyas", "global-manifest.json"))
 
 	var out strings.Builder
-	if code := Run([]string{"global", "--targets", "codex", "sdd"}, &out, &out); code != 0 {
+	if code := Run([]string{"global", "--targets", "codex", "base"}, &out, &out); code != 0 {
 		t.Fatalf("global exit code = %d, output: %s", code, out.String())
 	}
 	mustNotExist(t, legacySkill)

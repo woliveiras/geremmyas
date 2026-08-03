@@ -79,8 +79,8 @@ description: "Use when working on documentation. Do not use for production."
 	assertLintFindingHasCode(t, findings, "content/skills/good-skill/references/SKILL.md", lintViolationNestedSkillFile)
 }
 
-func TestCollectRepositoryBudgetFindingsEnforcesSDDSkillLimit(t *testing.T) {
-	files := make([]FileEntry, maxSDDPublicSkills+1)
+func TestCollectRepositoryBudgetFindingsEnforcesBaseSkillLimit(t *testing.T) {
+	files := make([]FileEntry, maxBasePublicSkills+1)
 	for i := range files {
 		name := fmt.Sprintf("skill-%02d", i)
 		files[i] = FileEntry{
@@ -89,13 +89,13 @@ func TestCollectRepositoryBudgetFindingsEnforcesSDDSkillLimit(t *testing.T) {
 			Target: ".github/skills/" + name,
 		}
 	}
-	catalog := Catalog{Packs: []Pack{{Name: "sdd", Files: files}}}
+	catalog := Catalog{Packs: []Pack{{Name: "coding", Files: files}}}
 
 	findings, err := collectRepositoryBudgetFindings(catalog, t.TempDir())
 	if err != nil {
 		t.Fatalf("collectRepositoryBudgetFindings returned error: %v", err)
 	}
-	assertLintFindingHasCode(t, findings, "catalog/packs.json", lintViolationSDDSkillBudget)
+	assertLintFindingHasCode(t, findings, "catalog/packs.json", lintViolationBaseSkillBudget)
 }
 
 func TestCollectRepositoryBudgetFindingsEnforcesAgentsWordLimit(t *testing.T) {

@@ -356,6 +356,9 @@ func collectAdoptableGlobalFiles(catalog Catalog, owned map[string]string, reque
 			}
 		}
 	}
+	if err := addLegacyGlobalHashes(known); err != nil {
+		return nil, err
+	}
 	paths := make([]string, 0, len(known))
 	for path := range known {
 		paths = append(paths, path)

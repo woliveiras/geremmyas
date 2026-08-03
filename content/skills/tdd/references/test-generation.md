@@ -1,0 +1,76 @@
+---
+name: test-generation
+description: "Generate tests from a Ready spec's acceptance criteria when implementation is not part of the current task."
+---
+
+
+# Test Generation from Spec
+
+Generate tests that cover every acceptance criterion in a **Ready** spec.
+
+## When to Use
+
+- The spec, plan, tasks, acceptance criteria, and test strategy pass the
+  repository's machine-readable readiness checks
+- You're starting the TDD cycle (tests before code)
+- You want to verify spec coverage with tests
+
+Do not run this skill while the feature is `Draft` (see `AGENTS.md`). Human
+approval is not a feature gate.
+
+## Test-Type Decision
+
+1. Read the spec's **Test Strategy** section and each task's `test-type` in
+   `tasks.md` when present.
+2. Choose the test boundary:
+
+| test-type | Write |
+| --- | --- |
+| **unit** | Fast, isolated tests; mock only system boundaries if needed |
+| **integration** | Tests across modules, real DB/API/filesystem per project patterns |
+| **both** | At least one unit and one integration test for the criterion or task |
+
+Signals for **integration**: multiple modules, HTTP/CLI entrypoints, database,
+external services, acceptance criteria describing end-to-end behavior.
+
+Signals for **unit**: pure logic, single function/module, no I/O.
+
+3. Follow the active target's `testing.instructions.md` and
+   `integration-testing.instructions.md` when they apply to edited files.
+
+## Procedure
+
+1. Read `specs/NNNN-<slug>/spec.md` (or path the user gives).
+2. Read `tasks.md` in the same feature folder for per-task `test-type`.
+3. Extract all acceptance criteria (Given/When/Then items).
+4. For each criterion, generate at least one test of the chosen type(s):
+   - Happy path
+   - Edge cases from the spec
+   - Error cases from the spec
+5. Follow **existing test patterns** in the project (framework, naming, fixtures).
+6. If no existing tests are found, use a framework already catalogued by the
+   repository or its active technology instructions. If none applies, compare
+   viable options and escalate before installing an uncatalogued dependency.
+7. Colocate test files with the code they exercise when that is the project norm.
+
+## Rules
+
+- One test per behavior — each test verifies one acceptance criterion or slice
+- Test names must read as documentation
+- Tests must be self-contained — no shared mutable state between tests
+- Do NOT implement production code — only tests (red phase)
+- Tests should fail initially for the expected reason
+- Do not generate tests before the feature passes machine readiness and becomes
+  `Ready`
+
+## Output
+
+For each acceptance criterion:
+
+```
+Criterion: "Given X, when Y, then Z"
+test-type: unit | integration | both
+Test: test_file.ext → test function name
+```
+
+Then write the actual test code.

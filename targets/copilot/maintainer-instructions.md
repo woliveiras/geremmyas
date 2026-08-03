@@ -10,7 +10,7 @@ authority boundaries, and skill routing.
 ## What this repository is
 
 geremmyas is a **Go CLI** that embeds and distributes coding-assistant packs:
-instructions, skills, agents, hooks, and templates. Assistant-neutral content
+instructions, skills, contracts, hooks, and templates. Assistant-neutral content
 lives under `content/`; target adapters live under `targets/`. The root uses
 **symlinks** into those trees for dogfooding.
 Do not run `geremmyas project` in this repo.
@@ -23,7 +23,7 @@ Human docs: [`docs/README.md`](../../docs/README.md). Spec index:
 - **Language**: Go 1.23 (`go.mod`)
 - **CLI UI**: Charm `huh` (interactive init/project/global/remove)
 - **Embed**: `assets.go` embeds `catalog/**`, `content/**`, `targets/**`
-- **Catalog**: `catalog/packs.json` (42 packs, dependency resolution)
+- **Catalog**: `catalog/packs.json` (dependency resolution)
 - **Release**: release-please + GitHub Actions
 
 ## Directory structure
@@ -40,9 +40,9 @@ assets.go                   go:embed
 install.sh / uninstall.sh   Binary install scripts
 ```
 
-Root `AGENTS.md` and `.github/{agents,instructions,skills}` expose canonical
+Root `AGENTS.md`, `.github/instructions`, and `.github/skills` expose canonical
 content; `.github/hooks` and `.github/copilot-instructions.md` expose the
-Copilot adapter.
+Copilot adapter. Permanent custom agents are not bundled.
 
 ## Conventions
 
@@ -67,7 +67,7 @@ Test sync in a temp directory (not this repo):
 
 ```bash
 mkdir /tmp/g-test && cd /tmp/g-test
-/path/to/geremmyas init --packs core,sdd
+/path/to/geremmyas init --packs core,coding
 /path/to/geremmyas sync
 ```
 

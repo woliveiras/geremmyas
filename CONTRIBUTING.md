@@ -53,7 +53,8 @@ improve quality, fix bugs, or add broadly useful defaults are welcome.
 
 - **Packs**: new catalog entries with clear `depends` and focused file lists
 - **Instructions**: language or stack patterns with `applyTo` globs, not project-specific trivia
-- **Agents**: narrow roles with clear triggers (see `content/agents/`)
+- **Delegation contracts**: lazy, bounded runtime-subagent contracts under the
+  owning skill's `references/` directory
 - **Skills**: reusable procedures; use `skill-authoring` skill in repo as reference
 - **Guardrails**: portable policy in `content/guardrails/`; target adapters in `targets/`
 - **CLI**: changes in `internal/cli/` with tests in `*_test.go`

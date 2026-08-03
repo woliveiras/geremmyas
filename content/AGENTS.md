@@ -4,38 +4,50 @@ This is the operating contract. The nearest project-local `AGENTS.md` wins.
 
 ## Instruction Order
 
-1. Read this contract and the active assistant's project overview.
-2. Read `GLOSSARY.md` before domain artifacts or user-facing copy when present.
-3. Load technology instructions only for files being edited.
-4. Load a skill only when its trigger matches the current phase.
-5. Use custom agents for specialist depth, parallelism, or independent review.
+1. Read this contract and the target's project overview.
+2. Read `GLOSSARY.md` before domain artifacts or user copy when present.
+3. Load technology instructions only for edited files.
+4. Load skills only when their trigger matches the current phase.
+
+## Lazy Routing
+
+Classify the request before loading workflow skills:
+
+- Simple question, lookup, trivial edit, or clear docs: load no workflow skill.
+- Material ambiguity: load only `refine`, ask one evidence-backed question at a
+  time, then stop loading it when the objective is clear.
+- Clear feature: start with `spec`; load `tdd` only during implementation.
+- Clear bug: start with `bugfix`.
+- Completion: load `verify` when installed; otherwise follow Completion below.
+- Review: load `verify/references/review-contract.md` when installed; otherwise
+  apply Agent Routing below as the bounded contract.
+- Durable docs: load `docs` when installed; otherwise update the smallest
+  relevant surface directly from repository evidence.
+
+Never preload an entire pack or future-phase skills into the task context.
 
 ## Invariants
 
-- Understand the relevant request, spec, task, or bugfix document before code.
-- Never change tests merely to make them pass; reconcile behavior with the spec.
+- Understand the request or governing artifact before code. Never change tests
+  merely to pass; reconcile behavior with the spec.
 - Every feature needs `spec.md`, `plan.md`, and `tasks.md` before implementation.
-- Feature artifacts advance through `Draft` -> `Ready` -> `In Progress` ->
-  `Verified`. A machine-ready package is established by automatic checks, not
-  human approval.
-- Honor explicit session overrides: read-only, plan-only, no-edits, or
-  no-commits.
+- Lifecycle is `Draft` -> `Ready` -> `In Progress` -> `Verified`; automatic
+  checks establish machine-ready state. Honor read-only, plan-only, no-edits,
+  or no-commits overrides.
 - Every bug needs `docs/bugfixes/YYYY-MM-DD-<slug>.md`, a reproduction, an
   evidence-backed fix proposal, and a regression test that fails before the fix.
-- Create postmortems only for production outages and ADRs only for complex,
-  hard-to-reverse decisions.
-- Preserve user work and never revert unrelated changes.
-- After a task-owned slice passes tests, docs, and review, the primary creates an
-  atomic local Conventional Commit by default. The feature remains `In Progress`
-  while more tasks remain. Do not push or infer history rewrite,
-  merge, tag, release, publication, or production authority.
+- Postmortems require production outages; ADRs require complex,
+  hard-to-reverse decisions. Preserve unrelated user work.
+- An atomic local Conventional Commit by default follows each verified slice.
+  The feature remains `In Progress` while tasks remain. Do not push or infer
+  history rewrite, merge, tag, release, publication, or production authority.
 - Existing project dependencies and catalogued capabilities are autonomous. A
   new uncatalogued direct dependency needs provenance, maintenance, security,
   license, and build-versus-buy evidence plus explicit user choice before installation.
 - Mutate a verified local, disposable, or test target with rollback or recreation.
   Treat an ambiguous target as protected. Every production mutation, deploy,
   release, publication, or policy change needs explicit user authorization.
-- Keep `tasks.md` current: `[~]` while active and `[x]` only after verification.
+- Keep `tasks.md` current: `[~]` active, `[x]` verified.
 
 ## Artifacts
 
@@ -46,48 +58,39 @@ This is the operating contract. The nearest project-local `AGENTS.md` wins.
 - Postmortem: `docs/postmortems/YYYY-MM-DD-<incident-slug>.md`
 - ADR: `docs/decisions/NNNN-title-with-dashes.md`
 
-Use local dates, kebab-case slugs, and global four-digit spec numbers. Maintain
-`specs/README.md` when a spec is created or changes status.
+Use local dates, kebab-case, and four-digit spec numbers. Maintain the index.
 
 ## Work Routing
 
 ### Features and expansions
 
-1. Use `requirements-interview` to inspect existing behavior and resolve
-   ambiguity. Update the PRD first when product flow changes.
-2. Use `generate-spec` to create or update the three feature artifacts.
-3. Mark machine-ready artifacts `Ready`; start `vertical-tdd` and set `In Progress`.
-4. Update and revalidate in-scope assumptions without changing the objective.
-5. Escalate before implementation only when blast radius is high and either
+1. Use `refine` only for ambiguity. Update the PRD when product flow changes.
+2. Use `spec` to create or update the three feature artifacts.
+3. Mark machine-ready artifacts `Ready`; start `tdd` and set `In Progress`.
+4. Revalidate in-scope assumptions without changing the objective.
+5. Escalate only when blast radius is high and either
    rollback is unproven or critical harness evidence is missing. After
    acceptance criteria, tasks, docs, fresh verification, and independent review
    are reconciled with no actionable finding, mark it `Verified`.
-6. Use `update-docs` when API, architecture, setup, or config changed.
-7. Commit each task-owned slice after its evidence passes; do not wait for the
-   whole feature to reach `Verified`.
+6. Use `docs` when installed, or its compact fallback above; commit each slice.
 
 ### Bugs
 
-Use `bugfix-loop`. Reproduce before production edits, rank hypotheses, document
-the proposed fix, and prove the regression test fails. Then apply the smallest
-root-cause fix, rerun the regression test, original reproduction, and nearby
-suite, remove temporary instrumentation, and record the actual cause. Continue
-autonomously unless the objective materially expands, production or external
-authority is required, or the same blocker survives three evidence-driven
-cycles. Record subjective or unavailable checks as residual evidence instead of
-blocking local completion.
+Use `bugfix`. Reproduce before production edits, rank hypotheses, document
+the proposed fix, and prove the regression test fails. Apply the smallest fix;
+rerun it, the original reproduction, and nearby suite; remove temporary
+instrumentation; record the actual cause. Continue unless scope or authority
+changes, or a blocker survives three evidence-driven cycles. Record unavailable
+checks as residual evidence.
 
 ## Agent Routing
 
-Proactively delegate specification, architecture, implementation, tests,
-security, performance, documentation, review, and audit when specialization or
-parallelism helps. Give each editor explicit file, module, or worktree ownership;
-parallel edits require disjoint ownership. Preserve user work. The primary agent
-owns integration and Git; subagents never stage or commit. Run independent review
-after each slice or verification wave, repair findings and re-review automatically,
-and escalate the same blocker only after three consecutive cycles. If the target
-lacks native subagents, use its supported delegation mechanism or inline with the
-same bounded role. Keep trivial work inline.
+Create a runtime subagent only when specialization, isolation, or parallelism
+helps. Give editors explicit ownership; parallel edits must be disjoint. The
+primary agent owns integration and Git; subagents never commit. Run independent
+review after each slice. The primary repairs actionable findings and re-reviews.
+Escalate after three consecutive cycles. Without subagents, work inline with the
+same bounded contract. Keep trivial work inline.
 
 ## Completion
 

@@ -4,7 +4,7 @@
     {
       "id": "feature-material-authority",
       "classification": "retained-authority-boundary",
-      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "path": "content/skills/refine/references/readiness-and-authority.md",
       "pattern": "(?i)ask the user only at a",
       "note": "One focused question remains for a real authority boundary or material objective ambiguity."
     },
@@ -18,7 +18,7 @@
     {
       "id": "bugfix-gate-migration",
       "classification": "removed",
-      "path": "content/skills/bugfix-loop/SKILL.md",
+      "path": "content/skills/bugfix/SKILL.md",
       "pattern": "(?i)(approval gate|user.*approv|stop)",
       "note": "The autonomous bugfix evidence loop no longer pauses for proposal acknowledgement."
     },
@@ -53,16 +53,16 @@
     {
       "id": "commit-intake-migration",
       "classification": "removed",
-      "path": "content/skills/requirements-interview/SKILL.md",
+      "path": "content/skills/refine/SKILL.md",
       "pattern": "(?i)(commit permission|permission to create|ask one question)",
       "note": "The initial commit question was removed; narrow session overrides are recorded instead."
     },
     {
       "id": "commit-prompt-migration",
       "classification": "removed",
-      "path": "content/prompts/sdd.prompt.md",
+      "path": "content/prompts/base.prompt.md",
       "pattern": "(?i)(commit permission|ask whether)",
-      "note": "The SDD prompt commits verified slices by default."
+      "note": "The base prompt commits verified slices by default."
     },
     {
       "id": "commit-docs-migration",
@@ -170,37 +170,30 @@
       "note": "Release-triggered asset upload remains unchanged for the dedicated follow-up."
     },
     {
-      "id": "architecture-choice-migration",
-      "classification": "removed",
-      "path": "content/agents/architect.agent.md",
-      "pattern": "(?i)ask the user",
-      "note": "Routine architecture choices move to specialist comparison and evidence."
-    },
-    {
       "id": "spec-material-question",
       "classification": "retained-authority-boundary",
-      "path": "content/agents/spec-writer.agent.md",
-      "pattern": "(?i)(ask one focused question|user questions)",
+      "path": "content/skills/refine/SKILL.md",
+      "pattern": "(?i)ask one focused question",
       "note": "One focused question remains only for an unresolved material product decision."
     },
     {
       "id": "tool-choice-migration",
       "classification": "removed",
-      "path": "content/skills/vertical-tdd/references/generate-tests-from-spec.md",
+      "path": "content/skills/tdd/references/test-generation.md",
       "pattern": "(?i)ask the user",
       "note": "Framework selection is inferred from repository conventions."
     },
     {
       "id": "abort-escalation-migration",
       "classification": "removed",
-      "path": "content/skills/vertical-tdd/references/abort-criteria.md",
+      "path": "content/skills/tdd/references/abort-criteria.md",
       "pattern": "(?i)(ask (team|user|who|senior|architect|spec owner)|approval)",
       "note": "Routine escalation is replaced by evidence-based replan and three-cycle blocker handling."
     },
     {
       "id": "glossary-choice-migration",
       "classification": "removed",
-      "path": "content/skills/generate-glossary/SKILL.md",
+      "path": "content/skills/docs/references/glossary.md",
       "pattern": "(?i)ask before",
       "note": "Repository vocabulary precedence should resolve routine conflicts."
     },
@@ -214,14 +207,14 @@
     {
       "id": "adr-input-migration",
       "classification": "removed",
-      "path": "content/skills/generate-adr/SKILL.md",
+      "path": "content/skills/docs/references/adr.md",
       "pattern": "(?i)ask the user",
       "note": "ADR inputs should be inferred from the accepted decision and repository evidence."
     },
     {
       "id": "material-spec-escalation",
       "classification": "retained-authority-boundary",
-      "path": "content/skills/vertical-tdd/references/abort-criteria.md",
+      "path": "content/skills/tdd/references/abort-criteria.md",
       "pattern": "(?i)ask the user only if material ambiguity remains",
       "note": "One focused question remains for material product ambiguity."
     },
@@ -319,7 +312,7 @@
     {
       "id": "dependency-choice-readiness",
       "classification": "retained-authority-boundary",
-      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "path": "content/skills/refine/references/readiness-and-authority.md",
       "pattern": "(?i)explicit user choice before installation",
       "note": "Readiness preserves the new direct dependency authority boundary."
     },
@@ -368,7 +361,7 @@
     {
       "id": "production-authority-readiness",
       "classification": "retained-authority-boundary",
-      "path": "content/skills/requirements-interview/references/approval-gates.md",
+      "path": "content/skills/refine/references/readiness-and-authority.md",
       "pattern": "(?i)explicit user authorization",
       "note": "Readiness preserves production authority."
     },

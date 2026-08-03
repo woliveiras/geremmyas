@@ -36,9 +36,9 @@ func TestRunGlobalClearDryRunDoesNotMutateFilesOrManifest(t *testing.T) {
 
 func TestRunGlobalClearTargetKeepsSharedSkillsForRemainingTarget(t *testing.T) {
 	home, _ := setupGlobalClearInstall(t, []string{TargetCodex, TargetCursor})
-	shared := filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md")
+	shared := filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md")
 	codex := filepath.Join(home, ".codex", "AGENTS.md")
-	cursor := filepath.Join(home, ".cursor", "rules", "skill-bugfix-loop.mdc")
+	cursor := filepath.Join(home, ".cursor", "rules", "skill-bugfix.mdc")
 
 	var out strings.Builder
 	if code := Run([]string{"global", "clear", "--targets", "codex", "--json"}, &out, &out); code != 0 {
@@ -61,7 +61,7 @@ func TestRunGlobalClearTargetKeepsSharedSkillsForRemainingTarget(t *testing.T) {
 
 func TestRunGlobalClearPreservesModifiedUnlessForced(t *testing.T) {
 	home, _ := setupGlobalClearInstall(t, []string{TargetCodex})
-	modified := filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md")
+	modified := filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md")
 	if err := os.WriteFile(modified, []byte("custom\n"), 0o644); err != nil {
 		t.Fatalf("modify skill: %v", err)
 	}
@@ -120,14 +120,14 @@ func TestRunGlobalClearIncludeAdoptableRequiresTotalScopeForSharedFiles(t *testi
 	if err != nil {
 		t.Fatalf("load catalog: %v", err)
 	}
-	packs, err := catalog.Resolve([]string{"sdd"})
+	packs, err := catalog.Resolve([]string{"base"})
 	if err != nil {
 		t.Fatalf("resolve pack: %v", err)
 	}
 	if _, err := globalInstallPacksFiltered(packs, true, false); err != nil {
 		t.Fatalf("seed adoptable: %v", err)
 	}
-	adoptable := filepath.Join(home, ".agents", "skills", "bugfix-loop", "SKILL.md")
+	adoptable := filepath.Join(home, ".agents", "skills", "bugfix", "SKILL.md")
 
 	var out strings.Builder
 	if code := Run([]string{"global", "clear", "--targets", "codex", "--include-adoptable"}, &out, &out); code != 0 {
@@ -356,7 +356,7 @@ func setupGlobalClearInstall(t *testing.T, targets []string) (string, string) {
 	t.Setenv("HOME", home)
 	t.Setenv("XDG_STATE_HOME", state)
 	var out strings.Builder
-	args := []string{"global", "--targets", strings.Join(targets, ","), "core", "sdd"}
+	args := []string{"global", "--targets", strings.Join(targets, ","), "core", "base"}
 	if code := Run(args, &out, &out); code != 0 {
 		t.Fatalf("seed global install exit code = %d, output: %s", code, out.String())
 	}

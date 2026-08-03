@@ -15,7 +15,7 @@ targets/                Assistant-specific adapters and templates
 assets.go               //go:embed catalog/** content/** targets/**
 ```
 
-`content/` owns portable contracts, skills, instructions, roles, prompts,
+`content/` owns portable contracts, skills, instructions, prompts,
 templates, guardrails, and tooling. `targets/<assistant>/` exists only when an
 artifact or runtime integration is genuinely assistant-specific. This prevents
 the source tree from treating `.github/` as the universal content model.
@@ -27,7 +27,7 @@ This repository dogfoods the same sources without running `geremmyas project`:
 | Root path | Canonical source |
 | --- | --- |
 | `AGENTS.md` | `content/AGENTS.md` |
-| `.github/agents`, `instructions`, `skills` | `content/` |
+| `.github/instructions`, `.github/skills` | `content/` |
 | `.github/hooks` | `targets/copilot/hooks/` |
 | `.github/copilot-instructions.md` | `targets/copilot/maintainer-instructions.md` |
 
@@ -63,13 +63,15 @@ artifacts are deduplicated before target planning.
 version: 1
 packs:
   - core
-  - sdd
+  - coding
 targets:
   - copilot
   - codex
 ```
 
-- Default packs for non-interactive `init`: `core`, `sdd`.
+- Default packs for non-interactive `init`: `core`, `coding`.
+- `AGENTS.md` supplies compact completion, review, docs, and commit fallbacks
+  when `quality` is absent. `base` adds the detailed lazy procedures.
 - Default target when omitted: `copilot`, for compatibility.
 - Valid targets: `copilot`, `codex`, `cursor`, `claude-code`, `opencode`.
 - `add` and `remove` edit configuration only.
@@ -81,11 +83,11 @@ Portable sources can appear at different destinations:
 
 | Target | Principal project outputs |
 | --- | --- |
-| Copilot | `.github/skills`, `.github/agents`, `.github/instructions`, `.github/hooks` |
-| Codex | `.agents/skills`, `.agents/roles`, `.codex/instructions`, `.codex/AGENTS.md` |
-| Cursor | `.agents/skills`, `.agents/roles`, `.cursor/agents`, `.cursor/rules`, `.cursor/hooks.json` |
-| Claude Code | `.agents/skills`, `.agents/roles`, `.claude/agents`, `.claude/instructions`, `CLAUDE.md` |
-| OpenCode | `.agents/skills`, `.agents/roles`, `.opencode/agents`, `.opencode/instructions`, `.opencode/AGENTS.md` |
+| Copilot | `.github/skills`, `.github/instructions`, `.github/hooks` |
+| Codex | `.agents/skills`, `.codex/instructions`, `.codex/AGENTS.md` |
+| Cursor | `.agents/skills`, `.cursor/rules`, `.cursor/hooks.json` |
+| Claude Code | `.agents/skills`, `.claude/instructions`, `CLAUDE.md` |
+| OpenCode | `.agents/skills`, `.opencode/instructions`, `.opencode/AGENTS.md` |
 
 `AGENTS.md`, `mise.toml`, and selected templates are shared project outputs.
 Mixed target selection produces the union, so Copilot paths appear only when
@@ -102,9 +104,12 @@ Each sync computes the complete desired state and removes obsolete files only
 when they are still unchanged and owned.
 
 Modified, unowned, and symlinked files are preserved. A missing manifest adopts
-only exact matches for known legacy Geremmyas outputs. A corrupt or unsupported
-manifest stops the operation before files are copied. Destination traversal is
-symlink-safe and will not write through a selected target path.
+only exact matches from the current catalog or `catalog/legacy-artifacts.json`.
+That migration catalog contains paths and hashes, not installable content, so
+renamed skills and removed portable agent profiles can be retired without
+remaining discoverable. A corrupt or unsupported manifest stops the operation
+before files are copied. Destination traversal is symlink-safe and will not
+write through a selected target path.
 
 ### Sync summary
 
@@ -174,13 +179,23 @@ remain lock-free and read-only.
 
 ## Context diagnostics
 
-`geremmyas context` inventories embedded catalog skills, current project
-skills, `~/.agents/skills`, Codex system skills, and the Codex plugin cache.
-Filesystem walks do not follow symlinks. Managed global paths come from the
-ownership manifest; system and plugin paths are observed only.
+`geremmyas context [--root path] [--json]` inventories embedded catalog skills,
+Copilot and portable project roots, `~/.agents/skills`, Codex system skills, and
+the Codex plugin cache. It reports project and global manifest selections so
+isolated no-state, `coding`, and `base` baselines remain distinguishable.
+Filesystem walks do not follow symlinks. Managed paths come from ownership
+manifests; system and plugin paths are observed only.
 
 Frontmatter cost uses `(bytes + 3) / 4` as a deterministic comparison metric,
-not an exact model tokenizer result.
+not an exact model tokenizer result. JSON includes each catalog skill's
+discovery, body, and support-file upper bounds; human output aggregates those
+figures for `coding`, `quality`, and `base`. Support cost is potential lazy
+content, not a claim that the runtime loaded every reference.
+
+Actual activation, compaction, provider token accounting, and latency remain
+runtime behavior. They require a controlled external A/B with the same
+assistant, model, repository snapshot, prompt suite, cache conditions, and
+repetitions. The CLI does not add an LLM client or infer those values from files.
 
 ## CI and releases
 

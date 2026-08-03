@@ -2,7 +2,7 @@
 
 Spec: [spec.md](./spec.md)
 
-Status: In Progress
+Status: Verified
 
 ## Approach
 

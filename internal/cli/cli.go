@@ -50,7 +50,7 @@ func Run(args []string, stdout, stderr io.Writer) int {
 	case "global":
 		runErr = runGlobal(args[1:], stdout, catalog)
 	case "context":
-		runErr = runContext(stdout)
+		runErr = runContext(args[1:], stdout, catalog)
 	case "lint":
 		if runErr = catalog.ValidateTiers(); runErr == nil {
 			runErr = runLint(stdout, catalog)
@@ -74,7 +74,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "Usage:")
 	fmt.Fprintln(w, "  geremmyas version")
 	fmt.Fprintln(w, "  geremmyas list")
-	fmt.Fprintln(w, "  geremmyas init [--packs core,sdd] [--targets copilot,cursor,...] [--force]")
+	fmt.Fprintln(w, "  geremmyas init [--packs core,coding] [--targets copilot,cursor,...] [--force]")
 	fmt.Fprintln(w, "  geremmyas sync [--force] [--targets copilot,cursor,claude-code,codex,opencode]")
 	fmt.Fprintln(w, "  geremmyas add <pack>...")
 	fmt.Fprintln(w, "  geremmyas remove <pack>...")
@@ -82,7 +82,7 @@ func printHelp(w io.Writer) {
 	fmt.Fprintln(w, "  geremmyas global [--targets copilot,cursor,...] [--force] <pack>...")
 	fmt.Fprintln(w, "  geremmyas global list [--targets ...] [--include-adoptable] [--json]")
 	fmt.Fprintln(w, "  geremmyas global clear [--targets ...] [--include-adoptable] [--dry-run] [--force] [--json]")
-	fmt.Fprintln(w, "  geremmyas context")
+	fmt.Fprintln(w, "  geremmyas context [--root path] [--json]")
 	fmt.Fprintln(w, "  geremmyas lint")
 	fmt.Fprintln(w, "  geremmyas doctor")
 }
@@ -374,6 +374,9 @@ func runDoctor(w io.Writer, catalog Catalog) error {
 	}
 	if err := catalog.ValidateTiers(); err != nil {
 		return err
+	}
+	if _, err := loadLegacyArtifactCatalog(); err != nil {
+		return fmt.Errorf("legacy artifact catalog: %w", err)
 	}
 
 	if _, err := os.Stat(configFileName); os.IsNotExist(err) {
